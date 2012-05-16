@@ -92,7 +92,7 @@ package screens
 		override public function update(e:Event):void
 		{
 			Input.update();
-			hero.update();
+			hero.update(tilemap);
 			/*
 			trace( 
 			Input.mouseX, 
