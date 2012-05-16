@@ -15,7 +15,11 @@ package flashjack
 	/**
 	 * ...
 	 * @author YopSolo
+	 * 
+	 * todo, une methode de bounding box
+	 * 
 	 */
+	
 	public class Hero
 	{
 		[Embed(source="../../media/kliff_complete_v2/kliff.xml",mimeType="application/octet-stream")]
@@ -31,20 +35,11 @@ package flashjack
 		private var _state:int = STAND;
 		private var _anim:MovieClip;
 		
-		/*
-		public var onGround:Boolean = true;
-		public const JUMP:Number = 16;
-		public var dx:int = 6;
-		public var dy:Number = 0.0;
-		*/
-		
 		private var _posx:int;
 		private var _posy:int;
 		private var _dx:Number;
 		private var _dy:Number;
 		private var _onGround:Boolean;
-		
-		//private var _bb:Sprite;
 		
 		public function Hero()
 		{
@@ -65,19 +60,25 @@ package flashjack
 			state = STAND;
 			
 			var atlas:TextureAtlas = DynamicAtlas.fromMovieClipContainer(new AnimContainer, 1, 0, true, true);
+			
 			_stand = new MovieClip(atlas.getTextures("Stand"), 15);
 			_stand.pivotX = 16;
 			_stand.pivotY = 32;
+			
 			_walk = new MovieClip(atlas.getTextures("Walk"), 15);
 			_walk.pivotX = 32;
 			_walk.pivotY = 64;
 			
-			//_posx = Constants.DEF_X;
-			//_posy = Constants.DEF_Y;
+			init();
+		}
+		
+		public function init():void {
+			_posx = Constants.HERO_DEF_X;
+			_posy = Constants.HERO_DEF_Y;
 			_dx = 0;
 			_dy = 0;
-			_onGround = true;
-		}
+			_onGround = false;
+		}		
 		
 		public function get posx():int
 		{
@@ -140,35 +141,25 @@ package flashjack
 		
 		public function update(/*map:Map*/):void
 		{
+			//changeVelocity();
+			//detectCollision(map);
+			//adjustDisplayPosition();
+			
+			
+			_anim.x = _posx;
+			_anim.y = _posy;
 			/*
 			changeVelocity();
 			//detectCollision(map);
 			//adjustDisplayPosition();
 			
-			if ( _posy >  Constants.MAP_HEIGHT + Constants.HERO_HALF_HEIGHT )
-			{
+			if (_posy > WonderflWorld.MAP_HEIGHT + Plumber.HALF_HEIGHT) {
 				initialize();
 			}
 			*/
 		}
-	
-	/*
-	   public function get bb():Sprite
-	   {
-	   if ( _bb == null ) {
-	   var bb:Shape = new Shape;
-	   //bb.graphics.lineStyle(1, 0xFF0000, 1);
-	   bb.graphics.drawRect(0, 0, 32, 32);
-	   var dat:BitmapData = new BitmapData( bb.width, bb.height, true, 0x80FF0000 );
-	   var img:Image = new Image( Texture.fromBitmapData(dat, false, false ) );
-	   _bb = new Sprite;
-	   _bb.addChild( img );
-	   _bb.flatten();
-	   }
-	
-	   return _bb;
-	   }
-	 */
+		
+		
 	
 	}
 

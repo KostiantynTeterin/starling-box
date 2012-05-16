@@ -26,7 +26,7 @@ package screens
 	import starlingBox.SB;
 	import starlingBox.Screen;
 	import starlingBox.SoundBox;
-	import fr.kouma.starling.utils.Stats;
+	//import fr.kouma.starling.utils.Stats;
 	import starlingBox.SupaBox;
 	
 	public class Jeu extends Screen
@@ -72,9 +72,11 @@ package screens
 			
 			if (SB.debug)
 			{
+				/*
 				addChild(new Stats());
 				SB.addConsole(this, SB.width - (SB.console.width + 5), 10);
 				SB.console.addMessage(stage.stageWidth, "px * ", stage.stageHeight, "px");
+				*/
 			}
 			
 			init();

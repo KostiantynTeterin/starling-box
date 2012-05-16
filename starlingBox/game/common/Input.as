@@ -160,7 +160,7 @@ package starlingBox.game.common
 		 * Invoked by the engine at regular intervals. Synchronizes internal data with Flash's.
 		 * @param	pDT	Time step in seconds.
 		 */
-		public static function update(pDT:Number = .0):void
+		public static function update(/*pDT:Number = .0*/):void
 		{
 			mousePosition.x = _stage.mouseX; // Pixelizer.engine.scale;
 			mousePosition.y = _stage.mouseY; // Pixelizer.engine.scale;

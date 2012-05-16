@@ -3,10 +3,11 @@ package screens
 	import flash.events.TimerEvent;
 	import flashjack.Hero;
 	import flashjack.HUD;
+	import starling.extensions.BaseTileMap;
+	import starling.extensions.BaseTileMap;	
 	import flashjack.TileMapNiveau1;
 	import starling.display.Image;
 	import starling.events.Event;
-	import starling.extensions.TileMap;
 	import starlingBox.game.common.Input;
 	import starlingBox.malbolge.Safe;
 	import starlingBox.SB;
@@ -23,8 +24,7 @@ package screens
 	 * un controller clavier
 	 * collision
 	 * mon HUD
-	 * 	temps/points
-	 * 
+	 * temps/points
 	 * 
 	 * 1ere couche build du background + tile ( une texture unique avec le background et les tiles dessus );
 	 * 2eme couche build des bonus
@@ -32,9 +32,9 @@ package screens
 	 * 	-> le score qui monte
 	 * controles
 	 * 	-> clavier
-	 * 		-> saut, OK
-	 * 		-> float, OK
-	 * 		-> vérifier la joaubilité pendant le float, il me semble que le joueur ne peut pas se stopper en l'air
+	 * 		-> saut,
+	 * 		-> float,
+	 * 		-> vérifier la joubilité pendant le float, il me semble que le joueur ne peut pas se stopper en l'air
 	 * 	-> virtual gamepad
 	 * 	-> remote gamepad (usb/wifi)
 	 * 
@@ -50,7 +50,7 @@ package screens
 	{
 		// supabox
 		protected var safe:Safe;
-		protected var tilemap:TileMap;
+		protected var tilemap:BaseTileMap;
 		protected var hero:Hero;
 		
 		public function BaseNiveau()
@@ -65,9 +65,6 @@ package screens
 			// layer 1, hero
 			hero = new Hero();
 			hero.state = Hero.STAND;
-			hero.animation.x = 32;
-			hero.animation.y = 64;
-			
 		}
 		
 		// ========================================================================================		
@@ -76,9 +73,16 @@ package screens
 		override public function begin():void
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: BEGIN ==");
-			addChild( tilemap.image );
-			addChild( hero.animation );
+			if (tilemap) addChild( tilemap.image );
+			if (hero) addChild( hero.animation );			
+			
+			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
+			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
+			tilemap.miniature.y = 64;
+			
+			if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
+			
 			safe.start();
 			Input.init( SB.nativeStage );
 			startOEF();
@@ -87,15 +91,16 @@ package screens
 		// base 
 		override public function update(e:Event):void
 		{
-			/*
 			Input.update();
+			hero.update();
+			/*
 			trace( 
 			Input.mouseX, 
 			Input.mouseY, 
 			Input.mouseDown, 
 			Input.mouseUp, 
 			Input.mouseDelta, 
-			Input.isDown( Input.KEY_SPACE) 
+			Input.isDown( Input.KEY_SPACE )
 			);
 			*/
 		}		
@@ -124,12 +129,13 @@ package screens
 			safe.removeEventListener(TimerEvent.TIMER, _onTimer);
 			safe.removeEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 			
-			// TODO 
+			// == TODO ==
 			// destroy le safe
 			// destroy le hero
 			// destroy le niveau
 			// destroy l'image de fond
 			// destroy la tilemap
+			// l'ecouteur clavier
 			
 			super.destroy();
 		}

@@ -4,7 +4,7 @@ package screens
 	import flash.display.BitmapData;
 	import flashjack.TileMapNiveau1;
 	import starling.display.Image;
-	import starling.extensions.TileMap;
+	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
 	import starlingBox.SB;
 	
