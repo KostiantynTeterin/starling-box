@@ -6,18 +6,20 @@ package flashjack
 	import starling.display.Image;
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
+	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starling.core.Starling;
 	import starlingBox.SB;
 	import starling.extensions.DynamicAtlas;
+	import starlingBox.game.common.Input;
 	
 	/**
 	 * ...
 	 * @author YopSolo
-	 * 
+	 *
 	 * todo, une methode de bounding box
-	 * 
+	 *
 	 */
 	
 	public class Hero
@@ -44,18 +46,18 @@ package flashjack
 		public function Hero()
 		{
 			/*
-			var texture:Texture = Texture.fromBitmap(new SpriteSheet() as Bitmap, true, true);
-			var xml:XML = XML(new SpriteSheetXML);
+			   var texture:Texture = Texture.fromBitmap(new SpriteSheet() as Bitmap, true, true);
+			   var xml:XML = XML(new SpriteSheetXML);
 			
-			var tAtlas:TextureAtlas = new TextureAtlas(texture, xml);
+			   var tAtlas:TextureAtlas = new TextureAtlas(texture, xml);
 			
-			_stand = new MovieClip(tAtlas.getTextures("stand"), 15);
-			_stand.pivotX = 35;
-			_stand.pivotY = 188;
-			_walk = new MovieClip(tAtlas.getTextures("walk"), 15);
-			_walk.pivotX = 35;
-			_walk.pivotY = 187;
-			*/
+			   _stand = new MovieClip(tAtlas.getTextures("stand"), 15);
+			   _stand.pivotX = 35;
+			   _stand.pivotY = 188;
+			   _walk = new MovieClip(tAtlas.getTextures("walk"), 15);
+			   _walk.pivotX = 35;
+			   _walk.pivotY = 187;
+			 */
 			
 			state = STAND;
 			
@@ -72,13 +74,14 @@ package flashjack
 			init();
 		}
 		
-		public function init():void {
+		public function init():void
+		{
 			_posx = Constants.HERO_DEF_X;
 			_posy = Constants.HERO_DEF_Y;
 			_dx = 0;
 			_dy = 0;
 			_onGround = false;
-		}		
+		}
 		
 		public function get posx():int
 		{
@@ -139,27 +142,92 @@ package flashjack
 			//_anim.visible = true;
 		}
 		
-		public function update(/*map:Map*/):void
+		public function update( map:BaseTileMap ):void
 		{
-			//changeVelocity();
-			//detectCollision(map);
-			//adjustDisplayPosition();
-			
-			
-			_anim.x = _posx;
-			_anim.y = _posy;
-			/*
 			changeVelocity();
-			//detectCollision(map);
+			detectCollision( map );
 			//adjustDisplayPosition();
-			
-			if (_posy > WonderflWorld.MAP_HEIGHT + Plumber.HALF_HEIGHT) {
-				initialize();
-			}
+		
+			//_anim.x = _posx;
+			//_anim.y = _posy;
+			/*
+			   if (_posy > WonderflWorld.MAP_HEIGHT + Plumber.HALF_HEIGHT) {
+			   initialize();
+			   }
 			*/
 		}
 		
+		private function changeVelocity():void
+		{
+			
+			if (Input.isDown(Input.KEY_RIGHT))
+			{
+				_dx = Constants.HERO_WALKING_SPEED;
+			}
+			else if (Input.isDown(Input.KEY_LEFT))
+			{
+				_dx = -(Constants.HERO_WALKING_SPEED);
+			}
+			else
+			{
+				_dx = 0;
+			}
+			
+			if (_onGround && Input.isDown(Input.KEY_A))
+			{
+				_dy = -(Constants.HERO_JUMPING_ABILITY);
+			}
+			_dy += Constants.GRAVITY;
+			_onGround = false;
+		}
 		
+		private function detectCollision(map:BaseTileMap):void
+		{
+			var directionX:int = ((_dx < 0) ? -1 : 1);
+			var directionY:int = ((_dy < 0) ? -1 : 1);
+			
+			var nextX:int = int(_posx + _dx);
+			var nextY:int = int(_posy + _dy);
+			
+			// [HERE]
+			/*
+			var edgeNextXGrid:Point = map.getGridFromPosition(nextX + (directionX * Plumber.HALF_WIDTH), nextY);
+			var edgeNextYGrid:Point = map.getGridFromPosition(nextX, nextY + (directionY * Plumber.HALF_HEIGHT));
+			var edgeNextXYGrid:Point = map.getGridFromPosition(nextX + (directionX * Plumber.HALF_WIDTH), nextY + (directionY * Plumber.HALF_HEIGHT));
+			
+			if (map.model[edgeNextXGrid.y][edgeNextXGrid.x].isSolid())
+			{
+				_posx = Math.floor(_posx / WonderflWorld.GRID_SIZE) * WonderflWorld.GRID_SIZE + ((directionX == 1) ? (WonderflWorld.GRID_SIZE - Plumber.HALF_WIDTH) : Plumber.HALF_WIDTH);
+				_dx = 0;
+			}
+			
+			if (map.model[edgeNextYGrid.y][edgeNextYGrid.x].isSolid())
+			{
+				_posy = Math.floor(_posy / WonderflWorld.GRID_SIZE) * WonderflWorld.GRID_SIZE + ((directionY == 1) ? (WonderflWorld.GRID_SIZE - Plumber.HALF_HEIGHT) : Plumber.HALF_HEIGHT);
+				_dy = 0;
+				
+				if (directionY == 1)
+				{
+					_onGround = true;
+				}
+			}
+			
+			if ((_dx != 0 && _dy != 0) && map.model[edgeNextXYGrid.y][edgeNextXYGrid.x].isSolid())
+			{
+				_posx = Math.floor(_posx / WonderflWorld.GRID_SIZE) * WonderflWorld.GRID_SIZE + ((directionX == 1) ? (WonderflWorld.GRID_SIZE - Plumber.HALF_WIDTH) : Plumber.HALF_WIDTH);
+				_dx = 0;
+			}
+			
+			if (_dx != 0)
+			{
+				_posx = nextX;
+			}
+			if (_dy != 0)
+			{
+				_posy = nextY;
+			}
+			*/
+		}
 	
 	}
 

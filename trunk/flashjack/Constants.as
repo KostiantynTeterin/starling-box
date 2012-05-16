@@ -17,6 +17,7 @@ package flashjack
 		static public const HERO_HALF_HEIGHT:int = 32;
 		static public const HERO_WALKING_SPEED:Number = 3;
 		static public const HERO_JUMPING_ABILITY:Number = 8;
+		public static const GRAVITY:Number = 0.1125;
 		static public const HERO_DEF_X:int = 32;
 		static public const HERO_DEF_Y:int = 64;
 	}
