@@ -3,8 +3,9 @@ package flashjack
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
+	import screens.BaseNiveau;
 	import starling.display.Image;
-	import starling.extensions.TileMap;
+	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
 	import starlingBox.SB;
 	
@@ -13,7 +14,7 @@ package flashjack
 	 * @author YopSolo
 	 */
 	 
-	public class TileMapNiveau1 extends TileMap
+	public class TileMapNiveau1 extends BaseTileMap
 	{
 		
 		[Embed(source="../../media/bgMaya.jpg")]

@@ -4,25 +4,31 @@ package starling.extensions
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import starling.display.Image;
-	import starling.extensions.TileMap;
+	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
 	import starlingBox.SB;
+	import flashjack.Constants;
 	
 	/**
 	 * ...
 	 * @author YopSolo
 	 *
 	 */
-	public class TileMap
+	public class BaseTileMap
 	{
+		protected var _datMiniature:BitmapData;
 		protected var _bg:Bitmap;
+		
 		protected var _image:Image;
 		protected var _miniature:Image;
-		protected var _arr:Array;
-		protected var _xml:XML;
-		protected var _blocs:Array;
 		
-		public function TileMap()
+		protected var _blocs:Array; 
+		
+		protected var _xml:XML;		// 
+		//protected var _arr:Array; 	// row datas
+		protected var _model:Array; // objetcs
+		
+		public function BaseTileMap()
 		{
 			_blocs = [];
 		}
@@ -41,9 +47,11 @@ package starling.extensions
 			var _datImage:BitmapData = new BitmapData(640, 640, false, 0x0);
 			
 			// creation de l'image de fond
-			_datImage.copyPixels(_bg.bitmapData, _bg.bitmapData.rect, _bg.bitmapData.rect.topLeft);
-			_bg.bitmapData.dispose();
-			_bg = null;
+			if (_bg) {
+				_datImage.copyPixels(_bg.bitmapData, _bg.bitmapData.rect, _bg.bitmapData.rect.topLeft);
+				_bg.bitmapData.dispose();
+				_bg = null;
+			}
 			
 			var nb:int = _xml.bloc.length();
 			var bmp:Bitmap;
@@ -67,7 +75,7 @@ package starling.extensions
 			(_blocs["blocBordDroite"] as Bitmap).bitmapData.dispose();
 			
 			// Creation de la miniature
-			var _datMiniature:BitmapData = new BitmapData(20, 20, false, 0x0);
+			_datMiniature = new BitmapData(20, 20, false, 0x0);
 			for (i = 0; i < nb; i++)
 			{
 				classe = _xml.bloc[i].@type;
@@ -78,6 +86,7 @@ package starling.extensions
 				}
 			}
 			_miniature = new Image(Texture.fromBitmapData(_datMiniature, true, false));
+			/*
 			var w:int = _datMiniature.width;
 			var h:int = _datMiniature.height;
 			var k:int = 0;
@@ -88,28 +97,43 @@ package starling.extensions
 				
 				for (var x:int = 0; x < w; x++, k++)
 				{
-					_arr[y][x] = (_datMiniature.getPixel(x, y) == 0) ? 0 : 1;
+					_arr[y][x] = (value(x, y) == 0) ? 0 : 1;
 				}
 			}
-			
-			_datMiniature.dispose();
+			*/
+			//_datMiniature.dispose();
 		}
 		
 		// --
 		public function get miniature():Image
 		{
+			if (_miniature == null) {
+				throw new Error("NO MINIATURE !, extends  this class and init this value in your contructor");
+			}
 			return _miniature;
 		}
 		
 		public function get image():Image
 		{
+			if (_image == null) {
+				throw new Error("NO IMAGE !, extends  this class and init this value in your contructor");
+			}
 			return _image;
 		}
 		
 		// --
+		/*
 		public function get arr():Array
 		{
+			if (_arr == null) {
+				throw new Error("NO ARRAY !, extends  this class and init this value in your contructor");
+			}			
 			return _arr;
+		}
+		*/
+		public function value(x:int, y:int):int
+		{
+			return _datMiniature.getPixel(x, y);
 		}
 	
 	}
