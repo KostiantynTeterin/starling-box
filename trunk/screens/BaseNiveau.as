@@ -1,12 +1,13 @@
 package screens
 {
+	import alienfleet.Explosion;
+	import alienfleet.Vaisseau;
 	import flash.events.TimerEvent;
 	import flashjack.Hero;
 	import flashjack.HUD;
 	import starling.extensions.BaseTileMap;
 	import starling.extensions.BaseTileMap;	
 	import flashjack.TileMapNiveau1;
-	import starling.display.Image;
 	import starling.events.Event;
 	import starlingBox.game.common.Input;
 	import starlingBox.malbolge.Safe;
@@ -82,6 +83,11 @@ package screens
 			
 			if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
+			
+			var test:Explosion = new Explosion;
+			test.x = 200;
+			test.y = 200;
+			addChild( test );
 			
 			safe.start();
 			Input.init( SB.nativeStage );
