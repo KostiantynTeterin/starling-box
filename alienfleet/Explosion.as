@@ -54,6 +54,7 @@ package alienfleet
 			this.scaleY = this.scaleX = .5 + Math.random() ;			
 			this.alpha = .5 + Math.random();
 			this.rotation = Math.random() * (Math.PI * 2);
+			this.color = int(Math.random() * 0xFFFFFF);
 		}
 		
 		public function get centerX():int
