@@ -75,7 +75,10 @@ package screens
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: BEGIN ==");
 			if (tilemap) addChild( tilemap.image );
-			if (hero) addChild( hero.animation );			
+			if (hero) { 
+				hero.collisionMap = tilemap.datMiniature;
+				addChild( hero.animation );			
+			}			
 			
 			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
@@ -98,7 +101,8 @@ package screens
 		override public function update(e:Event):void
 		{
 			Input.update();
-			hero.update(tilemap);
+			hero.update();
+            //_map.update(_plumber.posx);			
 			/*
 			trace( 
 			Input.mouseX, 
