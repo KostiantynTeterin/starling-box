@@ -3,6 +3,7 @@ package starling.extensions
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import starling.display.Image;
 	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
@@ -75,7 +76,7 @@ package starling.extensions
 			(_blocs["blocBordDroite"] as Bitmap).bitmapData.dispose();
 			
 			// Creation de la miniature
-			_datMiniature = new BitmapData(20, 20, false, 0x0);
+			_datMiniature = new BitmapData(20, 21, false, 0x0);
 			for (i = 0; i < nb; i++)
 			{
 				classe = _xml.bloc[i].@type;
@@ -85,6 +86,7 @@ package starling.extensions
 					_datMiniature.setPixel(_xml.bloc[i].@x / 32, _xml.bloc[i].@y / 32, 0xFFFFFF);
 				}
 			}
+			_datMiniature.fillRect( new Rectangle(0, 20, 20, 1), 0xFFFFFF);
 			_miniature = new Image(Texture.fromBitmapData(_datMiniature, true, false));
 			/*
 			var w:int = _datMiniature.width;
@@ -119,6 +121,11 @@ package starling.extensions
 				throw new Error("NO IMAGE !, extends  this class and init this value in your contructor");
 			}
 			return _image;
+		}
+		
+		public function get datMiniature():BitmapData 
+		{
+			return _datMiniature;
 		}
 		
 		// --
