@@ -5,6 +5,7 @@ package
 	import screens.Intro;
 	import screens.Jeu;
 	import screens.BaseNiveau;
+	import screens.SimulationFluides;
 	import starling.display.Sprite;
 	import starlingBox.SB;
 	import screens.Niveau1;
