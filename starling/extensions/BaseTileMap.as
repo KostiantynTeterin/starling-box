@@ -26,7 +26,7 @@ package starling.extensions
 		protected var _blocs:Array; 
 		
 		protected var _xml:XML;		// 
-		//protected var _arr:Array; 	// row datas
+		protected var _arr:Array; 	// raw datas
 		protected var _model:Array; // objetcs
 		
 		public function BaseTileMap()
@@ -88,7 +88,7 @@ package starling.extensions
 			}
 			_datMiniature.fillRect( new Rectangle(0, 20, 20, 1), 0xFFFFFF);
 			_miniature = new Image(Texture.fromBitmapData(_datMiniature, true, false));
-			/*
+			
 			var w:int = _datMiniature.width;
 			var h:int = _datMiniature.height;
 			var k:int = 0;
@@ -102,7 +102,7 @@ package starling.extensions
 					_arr[y][x] = (value(x, y) == 0) ? 0 : 1;
 				}
 			}
-			*/
+			
 			//_datMiniature.dispose();
 		}
 		
@@ -129,7 +129,6 @@ package starling.extensions
 		}
 		
 		// --
-		/*
 		public function get arr():Array
 		{
 			if (_arr == null) {
@@ -137,7 +136,7 @@ package starling.extensions
 			}			
 			return _arr;
 		}
-		*/
+		
 		public function value(x:int, y:int):int
 		{
 			return _datMiniature.getPixel(x, y);

@@ -76,7 +76,8 @@ package screens
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: BEGIN ==");
 			if (tilemap) addChild( tilemap.image );
 			if (hero) { 
-				hero.collisionMap = tilemap.datMiniature;
+				//hero.collisionMap = tilemap.arr;
+				hero.levelDat = tilemap.datMiniature;
 				addChild( hero.animation );			
 			}			
 			
@@ -87,10 +88,12 @@ package screens
 			if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
 			
+			/*
 			var test:Explosion = new Explosion;
 			test.x = 200;
 			test.y = 200;
 			addChild( test );
+			*/
 			
 			safe.start();
 			Input.init( SB.nativeStage );
@@ -102,7 +105,6 @@ package screens
 		{
 			Input.update();
 			hero.update();
-            //_map.update(_plumber.posx);			
 			/*
 			trace( 
 			Input.mouseX, 
@@ -123,13 +125,13 @@ package screens
 		
 		override public function pause():void
 		{
-			super.pause();
+			//super.pause();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: PAUSE ==");
 		}
 		
 		override public function resume():void
 		{
-			super.resume();
+			//super.resume();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: RESUME ==");
 		}
 		
