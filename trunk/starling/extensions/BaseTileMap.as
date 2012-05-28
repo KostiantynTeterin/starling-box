@@ -25,7 +25,7 @@ package starling.extensions
 		
 		protected var _blocs:Array; 
 		
-		protected var _xml:XML;		// 
+		protected var _xml:XML;		// xml
 		protected var _arr:Array; 	// raw datas
 		protected var _model:Array; // objetcs
 		
@@ -135,6 +135,11 @@ package starling.extensions
 				throw new Error("NO ARRAY !, extends  this class and init this value in your contructor");
 			}			
 			return _arr;
+		}
+		
+		public function get xml():XML 
+		{
+			return _xml;
 		}
 		
 		public function value(x:int, y:int):int
