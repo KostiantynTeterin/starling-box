@@ -1,18 +1,27 @@
 package screens
 {
-	import alienfleet.Explosion;
-	import alienfleet.Vaisseau;
+	import flash.display.Bitmap;
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flashjack.Blast;
+	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
-	import starling.extensions.BaseTileMap;
-	import starling.extensions.BaseTileMap;	
-	import flashjack.TileMapNiveau1;
+	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
+	import starling.extensions.BaseTileMap;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	import starlingBox.game.common.Input;
 	import starlingBox.malbolge.Safe;
 	import starlingBox.SB;
 	import starlingBox.Screen;
+	import starlingBox.utils.LinkedList;
+	import starlingBox.utils.LinkedListNode;
 	
 	
 	/**
@@ -49,10 +58,17 @@ package screens
 	
 	public class BaseNiveau extends Screen
 	{
+		[Embed(source="../../media/bonus-spritesheet.png")]
+		private const bonusTextureClass:Class;		
+		
 		// supabox
 		protected var safe:Safe;
+		
 		protected var tilemap:BaseTileMap;
 		protected var hero:Hero;
+		protected var bonusLayer:Sprite;		
+		protected var bonusList:LinkedList;
+		protected var blast:Blast;
 		
 		public function BaseNiveau()
 		{
@@ -66,6 +82,11 @@ package screens
 			// layer 1, hero
 			hero = new Hero();
 			hero.state = Hero.STAND;
+			
+			// layer 2, bonus
+			bonusLayer = new Sprite;
+			bonusList = new LinkedList();
+			
 		}
 		
 		// ========================================================================================		
@@ -74,12 +95,50 @@ package screens
 		override public function begin():void
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: BEGIN ==");
+			
 			if (tilemap) addChild( tilemap.image );
+			
 			if (hero) { 
 				//hero.collisionMap = tilemap.arr;
 				hero.levelDat = tilemap.datMiniature;
 				addChild( hero.animation );			
-			}			
+			}
+			
+			if (tilemap) 
+			{
+				var bonusXML:XML =      <TextureAtlas imagePath="spritesheet.png">
+						<SubTexture name="bonus0001" x="0" y="0" width="32" height="32"/>
+						<SubTexture name="bonus0002" x="32" y="0" width="32" height="32"/>
+						<SubTexture name="bonus0003" x="64" y="0" width="32" height="32"/>
+						<SubTexture name="bonus0004" x="96" y="0" width="32" height="32"/>
+					</TextureAtlas>;
+				
+				var bonusTextureAtlas:TextureAtlas = new TextureAtlas(Texture.fromBitmap(new bonusTextureClass as Bitmap, true, false), bonusXML);
+				var bonusXMLList:XMLList = tilemap.xml.bloc.(@type == "bonus");
+				
+				bonusXMLList = sortXMLList(bonusXMLList);
+				
+				var bonus:BonusMC;
+				var sp:Array;
+				for each (var pBonus:XML in bonusXMLList)
+				{
+					bonus = new BonusMC(bonusTextureAtlas.getTextures());
+					bonus.x = pBonus.@x;
+					bonus.y = pBonus.@y;
+					sp = (pBonus.@name).split("_");
+					bonus.name = sp[1];
+					bonus.stop();
+					bonusList.push(bonus);
+					bonusLayer.addChild(bonus);
+				}
+				
+				blast = new Blast(new Rectangle(0, 0, 64, 64));	
+				bonusLayer.addChild(blast);
+				addChild(bonusLayer);
+				bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
+			}
+			
+			
 			
 			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
@@ -87,13 +146,6 @@ package screens
 			
 			if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
-			
-			/*
-			var test:Explosion = new Explosion;
-			test.x = 200;
-			test.y = 200;
-			addChild( test );
-			*/
 			
 			safe.start();
 			Input.init( SB.nativeStage );
@@ -204,7 +256,53 @@ package screens
 		// ========================================================================================		
 		// BONUS
 		
-		/*
+		private function _onTouchlayerBonus(e:TouchEvent):void
+		{
+			var touch:Touch = e.getTouch(this.stage);
+			var pos:Point = touch.getLocation(this.stage);
+			// --
+			if (touch.phase == TouchPhase.BEGAN)
+			{
+				if (e.target is BonusMC)
+				{
+					var cur:BonusMC = e.target as BonusMC;
+					blast.x = cur.x;
+					blast.y = cur.y;
+					blast.init();
+					blast.start();
+					
+					// 100 points si le bonus en cours est actif
+					// 10 points sinon
+					if (bonusList.length == 35)
+					{
+						HUD.instance.incScore(100);
+					}
+					else
+					{
+						if (cur.isPlaying)
+						{
+							HUD.instance.incScore(100);
+						}
+						else
+						{
+							HUD.instance.incScore(10);
+						}
+					}
+					
+					// puis on passe au bonus suivant dans la liste chainée.
+					highlightNext(cur);
+				}
+			}
+			
+			if (touch.phase == TouchPhase.ENDED)
+			{
+				if (bonusList.length == 0)
+				{
+					safe.stop();
+				}
+			}
+		}		
+		
 		protected function highlightNext(bonus:BonusMC):void
 		{
 			// stoppe tous les bonus
@@ -239,10 +337,6 @@ package screens
 			bonusList.remove(bonus);
 			bonus.visible = false;
 		}		
-		*/
-		
-		// ========================================================================================		
-		// COLLISIONS
 	
 	}
 

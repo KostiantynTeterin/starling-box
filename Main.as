@@ -19,19 +19,31 @@ package
 	 * mise a jour de fox hole
 	 * mise a jour du dynamic atlas
 	 * 
-	 * TODO :
+	 * TODO STARLING BOX :
 	 * deplacer les assets du jeu dans une classe assets
 	 * hook sur l'initialisation des assets
 	 * tester le system.pause et le system.resume
 	 * starling.start(); ou starling.stop(); 
-	 * mettre les assets dans une classe statique Assets
 	 * gerer le added dans les screen
-	 * utiliser un swc de starling pour accel la compil
 	 * verifier que la displaylist ne monte pas
 	 * faire un flash de transition
 	 * une phase d'initialisation avec un loader 
 	 * pb de pause/reprise d'un son avec le SM
 	 * integration de nape avec le juggler de starling
+	 * 
+	 * TODO ALIEN FLEET :
+	 * 
+	 * TODO FLASH JACK :
+	 * refactor du systeme de bonus => générique dans baseNiveau et Specialisation dans Niveau1,2,3 etc.
+	 * collision avec les bonus
+	 * 
+	 * monstres
+	 * IA des monstres
+	 * 
+	 * Animation des 
+	 * 
+	 * plate forme mobiles ?
+	 * 
 	 */	
 	public class Main extends Sprite
 	{
