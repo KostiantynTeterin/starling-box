@@ -138,8 +138,6 @@ package screens
 				bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
 			}
 			
-			
-			
 			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
 			tilemap.miniature.y = 64;
@@ -156,7 +154,9 @@ package screens
 		override public function update(e:Event):void
 		{
 			Input.update();
-			hero.update();
+			hero.update(); // collide avec le decor
+			collideBonus(); // collide avec les bonus
+			collideMonsters(); // collide avec les ennemies
 			/*
 			trace( 
 			Input.mouseX, 
@@ -256,6 +256,35 @@ package screens
 		// ========================================================================================		
 		// BONUS
 		
+		protected function collideBonus():void 
+		{
+			var cur:LinkedListNode = bonusList.head;
+			var tail:LinkedListNode = bonusList.tail;
+			var bns:BonusMC;
+			
+			// mhhh
+			while (cur != tail)
+			{
+				bns = (cur.value as BonusMC);
+				if ( hero.aabb.intersects( bns.aabb ) ) 
+				{
+					bns.color = 0x000FFF;
+				}else {
+					bns.color = 0xFFFFFF;
+				}
+				cur = cur.next;
+			}
+			
+			bns = (cur.value as BonusMC);
+			if ( hero.aabb.intersects( bns.aabb ) ) 
+			{
+				bns.color = 0x000FFF;
+			}else {
+				bns.color = 0xFFFFFF;
+			}
+			
+		}	
+		
 		private function _onTouchlayerBonus(e:TouchEvent):void
 		{
 			var touch:Touch = e.getTouch(this.stage);
@@ -337,6 +366,14 @@ package screens
 			bonusList.remove(bonus);
 			bonus.visible = false;
 		}		
+		
+		// ========================================================================================		
+		// COLLIDE MONSTERS
+		protected function collideMonsters():void 
+		{
+			
+		}
+		
 	
 	}
 
