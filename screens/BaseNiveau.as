@@ -135,7 +135,7 @@ package screens
 				blast = new Blast(new Rectangle(0, 0, 64, 64));	
 				bonusLayer.addChild(blast);
 				addChild(bonusLayer);
-				bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
+				//bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
 			}
 			
 			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
@@ -260,31 +260,58 @@ package screens
 		{
 			var cur:LinkedListNode = bonusList.head;
 			var tail:LinkedListNode = bonusList.tail;
-			var bns:BonusMC;
+			if (!tail) return
 			
-			// mhhh
-			while (cur != tail)
-			{
-				bns = (cur.value as BonusMC);
-				if ( hero.aabb.intersects( bns.aabb ) ) 
+			// --
+			var bns:BonusMC = tail.value as BonusMC;
+			var hit:Boolean = hero.aabb.intersects( bns.aabb );
+			
+			if(!hit){
+				while (cur != tail)
 				{
-					bns.color = 0x000FFF;
-				}else {
-					bns.color = 0xFFFFFF;
+					bns = (cur.value as BonusMC);
+					if ( hero.aabb.intersects( bns.aabb ) )
+					{
+						hit = true;
+						break;
+					}
+					cur = cur.next;
+				}	
+			}
+			
+			if (hit) {
+				blast.x = bns.x + 16;
+				blast.y = bns.y + 16;
+				blast.init();
+				blast.start();
+				
+				if (bonusList.length == 35)
+				{
+					HUD.instance.incScore(100);
 				}
-				cur = cur.next;
+				else
+				{
+					if (bns.isPlaying)
+					{
+						HUD.instance.incScore(100);
+					}
+					else
+					{
+						HUD.instance.incScore(10);
+					}
+				}
+				
+				highlightNext( bns );
+				
 			}
 			
-			bns = (cur.value as BonusMC);
-			if ( hero.aabb.intersects( bns.aabb ) ) 
+			if (bonusList.length == 0)
 			{
-				bns.color = 0x000FFF;
-			}else {
-				bns.color = 0xFFFFFF;
-			}
-			
+				safe.stop();
+			}			
 		}	
 		
+		/*
 		private function _onTouchlayerBonus(e:TouchEvent):void
 		{
 			var touch:Touch = e.getTouch(this.stage);
@@ -331,7 +358,7 @@ package screens
 				}
 			}
 		}		
-		
+		*/
 		protected function highlightNext(bonus:BonusMC):void
 		{
 			// stoppe tous les bonus
