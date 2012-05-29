@@ -13,7 +13,7 @@ package flashjack
 	 * ...
 	 * @author YopSolo
 	 */
-	 
+	
 	public class TileMapNiveau1 extends BaseTileMap
 	{
 		
@@ -24,13 +24,13 @@ package flashjack
 		private const blocClass:Class;
 		
 		/*
-		[Embed(source="../../media/blocBas.png")]
-		private const blocBasClass:Class;
-		[Embed(source="../../media/blocBasDroit.png")]
-		private const blocBasDroitClass:Class;
-		[Embed(source="../../media/blocBasGauche.png")]
-		private const blocBasGaucheClass:Class;
-		*/
+		   [Embed(source="../../media/blocBas.png")]
+		   private const blocBasClass:Class;
+		   [Embed(source="../../media/blocBasDroit.png")]
+		   private const blocBasDroitClass:Class;
+		   [Embed(source="../../media/blocBasGauche.png")]
+		   private const blocBasGaucheClass:Class;
+		 */
 		
 		[Embed(source="../../media/blocBordDroite.png")]
 		private const blocBordDroiteClass:Class;
@@ -39,21 +39,21 @@ package flashjack
 		private const blocBordGaucheClass:Class;
 		
 		/*
-		[Embed(source="../../media/blocHaut.png")]
-		private const blocHautClass:Class;
-		[Embed(source="../../media/blocHautDroit.png")]
-		private const blocHautDroitClass:Class;
-		[Embed(source="../../media/blocHautGauche.png")]
-		private const blocHautGaucheClass:Class;
-		[Embed(source="../../media/blocVertical.png")]
-		private const blocVerticalClass:Class;
-		[Embed(source="../../media/blocVerticalBas.png")]
-		private const blocVerticalBasClass:Class;
-		[Embed(source="../../media/blocVerticalDroit.png")]
-		private const blocVerticalDroitClass:Class;
-		[Embed(source="../../media/blocverticalGauche.png")]
-		private const blocverticalGaucheClass:Class;
-		*/
+		   [Embed(source="../../media/blocHaut.png")]
+		   private const blocHautClass:Class;
+		   [Embed(source="../../media/blocHautDroit.png")]
+		   private const blocHautDroitClass:Class;
+		   [Embed(source="../../media/blocHautGauche.png")]
+		   private const blocHautGaucheClass:Class;
+		   [Embed(source="../../media/blocVertical.png")]
+		   private const blocVerticalClass:Class;
+		   [Embed(source="../../media/blocVerticalBas.png")]
+		   private const blocVerticalBasClass:Class;
+		   [Embed(source="../../media/blocVerticalDroit.png")]
+		   private const blocVerticalDroitClass:Class;
+		   [Embed(source="../../media/blocverticalGauche.png")]
+		   private const blocverticalGaucheClass:Class;
+		 */
 		
 		public function TileMapNiveau1()
 		{
@@ -66,7 +66,7 @@ package flashjack
 			_blocs["blocBordDroite"] = new blocBordDroiteClass;
 			
 			// datas
-			_xml = <niveau niveau="1" blocsize="32" width="640" height="640">
+			_xml =  <niveau niveau="1" blocsize="32" width="640" height="640">
 					<bloc x="96" y="448" type="blocBordGauche" name="instance2">1</bloc>
 					<bloc x="128" y="448" type="bloc" name="instance4">1</bloc>
 					<bloc x="160" y="448" type="blocBordDroite" name="instance6">1</bloc>
@@ -88,16 +88,6 @@ package flashjack
 					<bloc x="160" y="192" type="bloc" name="instance38">1</bloc>
 					<bloc x="128" y="192" type="blocBordGauche" name="instance40">1</bloc>
 					<bloc x="352" y="128" type="blocBordGauche" name="instance42">1</bloc>
-					<bloc x="416" y="576" type="bloc" name="instance44">1</bloc>
-					<bloc x="384" y="576" type="blocBordGauche" name="instance46">1</bloc>
-					<bloc x="448" y="576" type="bloc" name="instance48">1</bloc>
-					<bloc x="480" y="576" type="bloc" name="instance50">1</bloc>
-					<bloc x="512" y="576" type="blocBordDroite" name="instance52">1</bloc>
-					<bloc x="416" y="608" type="bloc" name="instance54">1</bloc>
-					<bloc x="384" y="608" type="blocBordGauche" name="instance56">1</bloc>
-					<bloc x="448" y="608" type="bloc" name="instance58">1</bloc>
-					<bloc x="480" y="608" type="bloc" name="instance60">1</bloc>
-					<bloc x="512" y="608" type="blocBordDroite" name="instance62">1</bloc>
 					<bloc x="32" y="32" type="bonus" name="bonus_1">1</bloc>
 					<bloc x="64" y="32" type="bonus" name="bonus_2">1</bloc>
 					<bloc x="96" y="32" type="bonus" name="bonus_3">1</bloc>
@@ -137,7 +127,7 @@ package flashjack
 			
 			super.buildImage();
 		}
-		
+	
 	}
 
 }

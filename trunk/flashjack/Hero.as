@@ -55,11 +55,12 @@ package flashjack
 		{
 			state = STAND;
 			
+			
 			var texture:Texture = Texture.fromBitmap(new SpriteSheet() as Bitmap, true, true);
 			var xml:XML = XML(new SpriteSheetXML);
-
+			
 			var tAtlas:TextureAtlas = new TextureAtlas(texture, xml);
-
+			
 			_stand = new MovieClip(tAtlas.getTextures("stand"), 15);
 			_stand.pivotX = 35;
 			_stand.pivotY = 188;
@@ -159,6 +160,11 @@ package flashjack
 			
 			Starling.juggler.add(_anim);
 			//_anim.visible = true;
+		}
+		
+		public function get aabb():Rectangle 
+		{
+			return _aabb;
 		}
 		
 		public function update():void
