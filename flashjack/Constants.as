@@ -13,8 +13,8 @@ package flashjack
 		static public const COLS:int = 20;
 		
 		// HERO		
-		static public const HERO_WALKING_SPEED:Number = 3.;
-		static public const HERO_JUMPING_ABILITY:Number = 8.;
+		static public const HERO_WALKING_SPEED:Number = 4.;
+		static public const HERO_JUMPING_ABILITY:Number = 10.5;
 		public static const GRAVITY:Number = 0.1125;
 		static public const HERO_DEF_X:int = 32 * 2;
 		static public const HERO_DEF_Y:int = (32 * 16);

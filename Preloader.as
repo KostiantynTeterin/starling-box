@@ -50,7 +50,6 @@ package
 		
 		public function updateLoop(e:Event):void
 		{
-			
 			//trace( "preload updateLoop: ",preloader.value );
 			
 			if (preloader.value >= preloader.maximum)
