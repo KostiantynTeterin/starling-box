@@ -53,9 +53,6 @@ package flashjack
 		
 		public function Hero()
 		{
-			state = STAND;
-			
-			
 			var texture:Texture = Texture.fromBitmap(new SpriteSheet() as Bitmap, true, true);
 			var xml:XML = XML(new SpriteSheetXML);
 			
@@ -68,6 +65,10 @@ package flashjack
 			_walk.pivotX = 35;
 			_walk.pivotY = 187;
 			
+			_aabb = new Rectangle(0, 0, 32, 64);
+			
+			state = STAND;
+			//state = WALK;
 			/*
 			var atlas:TextureAtlas = DynamicAtlas.fromMovieClipContainer(new AnimContainer, 1, 0, true, true);
 			
@@ -79,7 +80,6 @@ package flashjack
 			_walk.pivotX = 16;
 			_walk.pivotY = 64;
 			*/
-			_aabb = new Rectangle(0, 0, 32, 64);
 			
 			init();
 		}
@@ -131,9 +131,7 @@ package flashjack
 				Starling.juggler.remove(_anim);
 			}
 			
-			_state = value;
-			
-			switch (_state)
+			switch (value)
 			{
 				case STAND: 
 					if (_anim)
@@ -171,7 +169,6 @@ package flashjack
 		{
 			changeVelocity();
 			detectCollision();
-			
 			_anim.x = _posx;
 			_anim.y = _posy;			
 		}

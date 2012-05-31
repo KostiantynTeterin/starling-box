@@ -81,12 +81,10 @@ package screens
 			
 			// layer 1, hero
 			hero = new Hero();
-			hero.state = Hero.STAND;
 			
 			// layer 2, bonus
 			bonusLayer = new Sprite;
 			bonusList = new LinkedList();
-			
 		}
 		
 		// ========================================================================================		
@@ -99,7 +97,6 @@ package screens
 			if (tilemap) addChild( tilemap.image );
 			
 			if (hero) { 
-				//hero.collisionMap = tilemap.arr;
 				hero.levelDat = tilemap.datMiniature;
 				addChild( hero.animation );			
 			}
@@ -138,15 +135,15 @@ package screens
 				//bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
 			}
 			
-			//tilemap.miniature.scaleX = tilemap.miniature.scaleY = 2;
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
 			tilemap.miniature.y = 64;
 			
 			if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
 			
-			safe.start();
-			Input.init( SB.nativeStage );
+			// --
+			safe.start();			
+			Input.init( SB.nativeStage );			
 			startOEF();
 		}
 		
