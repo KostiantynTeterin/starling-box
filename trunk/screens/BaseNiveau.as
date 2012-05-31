@@ -52,6 +52,10 @@ package screens
 	 * 	-> update des positions
 	 * 	-> recup des bonus
 	 * 
+	 * ATTENTION
+	 * dans l'update addChild a repetition
+	 * animation de saut
+	 * 
 	 * bomb jack twins
 	 * http://planetemu.net/index.php?section=articles&id=273&numPage=3
 	 */	 
