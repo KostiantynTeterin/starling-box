@@ -33,7 +33,7 @@ package flashjack
 		private var _walk:MovieClip;
 		static public const WALK:int = 1;
 		
-		private var _state:int = STAND;
+		private var _state:int;
 		private var _anim:MovieClip;
 		
 		private var _posx:int;
@@ -67,8 +67,8 @@ package flashjack
 			
 			_aabb = new Rectangle(0, 0, 32, 64);
 			
-			state = STAND;
-			//state = WALK;
+			_anim = _stand;
+			
 			/*
 			var atlas:TextureAtlas = DynamicAtlas.fromMovieClipContainer(new AnimContainer, 1, 0, true, true);
 			
@@ -125,45 +125,40 @@ package flashjack
 		
 		public function set state(value:int):void
 		{
-			if (_anim)
+			if (value != _state) 
 			{
+				_state = value;
 				_anim.visible = false;
-				Starling.juggler.remove(_anim);
-			}
-			
-			switch (value)
-			{
-				case STAND: 
-					if (_anim)
-					{
+				Starling.juggler.remove(_anim);				
+				/* ************************ */
+				switch ( value )
+				{
+					case STAND :
 						_stand.x = _anim.x;
 						_stand.y = _anim.y;
-						_stand.scaleX = _anim.scaleX;
-					}
-					_anim = _stand;
-					break;
-				
-				case WALK: 
-					if (_anim)
-					{
+						_anim = _stand;
+						break;
+					
+					case WALK : 
 						_walk.x = _anim.x;
 						_walk.y = _anim.y;
-					}
-					_anim = _walk;
-					break;
-				
-				default: 
-					trace("Error !");
+						_anim = _walk;
+						break;
+					
+					default: 
+						trace("Error !");
+				}
+				/* ************************ */
+				_anim.visible = true;
+				Starling.juggler.add(_anim);
 			}
 			
-			Starling.juggler.add(_anim);
-			//_anim.visible = true;
 		}
 		
 		public function get aabb():Rectangle 
 		{
 			return _aabb;
-		}
+		}		
 		
 		public function update():void
 		{
@@ -171,28 +166,32 @@ package flashjack
 			detectCollision();
 			_anim.x = _posx;
 			_anim.y = _posy;			
-		}
+		}		
 		
 		private function changeVelocity():void
 		{
 			
 			if (Input.isDown(Input.KEY_RIGHT))
 			{
+				_anim.scaleX = -1;				
 				_dx = Constants.HERO_WALKING_SPEED;
-				_anim.scaleX = -1;
+				state = WALK;
 			}
 			else if (Input.isDown(Input.KEY_LEFT))
 			{
+				_anim.scaleX = 1;				
 				_dx = -(Constants.HERO_WALKING_SPEED);
-				_anim.scaleX = 1;
+				state = WALK;
 			}
 			else
 			{
 				_dx = 0;
+				state = STAND;				
 			}
 			
 			if (_onGround && Input.isDown(Input.KEY_A))
 			{
+				// _anim jump
 				_dy = -(Constants.HERO_JUMPING_ABILITY);
 			}
 			

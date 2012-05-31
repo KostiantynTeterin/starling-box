@@ -98,7 +98,7 @@ package screens
 			
 			if (hero) { 
 				hero.levelDat = tilemap.datMiniature;
-				addChild( hero.animation );			
+				addChild( hero.animation );
 			}
 			
 			if (tilemap) 
@@ -152,6 +152,7 @@ package screens
 		{
 			Input.update();
 			hero.update(); // collide avec le decor
+			addChild( hero.animation );
 			collideBonus(); // collide avec les bonus
 			collideMonsters(); // collide avec les ennemies
 			/*
