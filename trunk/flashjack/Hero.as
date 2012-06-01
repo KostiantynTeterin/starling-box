@@ -32,6 +32,8 @@ package flashjack
 		static public const STAND:int = 0;
 		private var _walk:MovieClip;
 		static public const WALK:int = 1;
+		private var _jump:MovieClip;
+		static public const JUMP:int = 2;
 		
 		private var _state:int;
 		private var _anim:MovieClip;
@@ -63,7 +65,11 @@ package flashjack
 			_stand.pivotY = 188;
 			_walk = new MovieClip(tAtlas.getTextures("walk"), 15);
 			_walk.pivotX = 35;
-			_walk.pivotY = 187;
+			_walk.pivotY = 187;			
+			_jump = new MovieClip(tAtlas.getTextures("jump"), 15);
+			_jump.pivotX = 28;
+			_jump.pivotY = 173 - 23;
+			_jump.loop = false;
 			
 			_aabb = new Rectangle(0, 0, 32, 64);
 			
@@ -144,9 +150,17 @@ package flashjack
 						_walk.y = _anim.y;
 						_anim = _walk;
 						break;
+						
+					case JUMP : 
+						_jump.x = _anim.x;
+						_jump.y = _anim.y;
+						_anim = _jump;
+						_anim.currentFrame = 1;
+						_anim.play();
+						break;						
 					
 					default: 
-						trace("Error !");
+						trace("State non défini");
 				}
 				/* ************************ */
 				_anim.visible = true;
@@ -186,13 +200,14 @@ package flashjack
 			else
 			{
 				_dx = 0;
-				state = STAND;				
+				//state = STAND;				
 			}
 			
 			if (_onGround && Input.isDown(Input.KEY_A))
 			{
 				// _anim jump
 				_dy = -(Constants.HERO_JUMPING_ABILITY);
+				state = JUMP;
 			}
 			
 			_dy += Constants.GRAVITY;
