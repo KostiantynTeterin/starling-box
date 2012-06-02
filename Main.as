@@ -36,6 +36,11 @@ package
 	 * 
 	 * 
 	 * * * TODO FLASH JACK * * *
+	 * 
+	 * tester un delayed stage.framerate = 0, ca va eviter d'avoir a implémenter des methodes pause/resume à chaque objet
+	 * du coup attention a n'activer les ecouteurs activate/deactivate qu'une fois que tout est chargé
+	 * a etudier/tester.
+	 * 
 	 * animation win
 	 * ecran de fin
 	 * monstres 
