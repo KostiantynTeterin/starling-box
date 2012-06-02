@@ -9,6 +9,7 @@ package
 	import starling.display.Sprite;
 	import starlingBox.SB;
 	import screens.Niveau1;
+	import screens.TitleScreenFlashJack;
 	
 	
 	/**
@@ -35,10 +36,8 @@ package
 	 * 
 	 * 
 	 * * * TODO FLASH JACK * * *
-	 * refactor du systeme de bonus => générique dans baseNiveau et Specialisation dans Niveau1,2,3 etc.
-	 * collision avec les bonus
-	 * animation de deplacement
-	 * animation de saut
+	 * animation win
+	 * ecran de fin
 	 * monstres 
 	 * deplacement des monstres
 	 * 
@@ -51,7 +50,8 @@ package
 		public function Main() 
 		{
 			SB.root		= this;			
-			SB.screen	= new Niveau1;
+			//SB.screen	= new Niveau1;
+			SB.screen	= new TitleScreenFlashJack;			
 		}
 	}
 

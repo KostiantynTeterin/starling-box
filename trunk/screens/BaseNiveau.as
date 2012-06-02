@@ -9,6 +9,7 @@ package screens
 	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.extensions.BaseTileMap;
@@ -63,6 +64,10 @@ package screens
 		[Embed(source="../../media/bonus-spritesheet.png")]
 		private const bonusTextureClass:Class;		
 		
+		[Embed(source = "../../media/fj-pause.png")]
+		private const pauseTextureClass:Class;
+		private var pauseBMP:Image;
+		
 		// supabox
 		protected var safe:Safe;
 		
@@ -92,6 +97,10 @@ package screens
 			// layer 2, bonus
 			bonusLayer = new Sprite;
 			bonusList = new LinkedList();
+			
+			pauseBMP = new Image( Texture.fromBitmap( new pauseTextureClass as Bitmap ) );
+			pauseBMP.x = int( (640 - pauseBMP.width) / 2 );
+			pauseBMP.y = 215;
 		}
 		
 		// ========================================================================================		
@@ -145,7 +154,7 @@ package screens
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
 			tilemap.miniature.y = 64;
 			
-			if (tilemap) addChild( tilemap.miniature );
+			//if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
 			
 			// --
@@ -159,7 +168,7 @@ package screens
 		{
 			Input.update();
 			hero.update(); // collide avec le decor
-			addChild( hero.animation );
+			if(!SB.engine.paused)addChild( hero.animation );
 			collideBonus(); // collide avec les bonus
 			collideMonsters(); // collide avec les ennemies
 			/*
@@ -189,6 +198,9 @@ package screens
 				positionBgMusic = sc.position;
 				sc.stop();
 			}
+			hero.pause();
+			
+			addChild( pauseBMP );
 		}
 		
 		override public function resume():void
@@ -198,6 +210,9 @@ package screens
 			safe.start();
 			sc = bgMusic.play( positionBgMusic );
 			sc.soundTransform.volume = volumeBgMusic;
+			hero.resume();
+			
+			removeChild( pauseBMP );
 		}
 		
 		override public function destroy():void

@@ -112,6 +112,17 @@ package flashjack
 			return _aabb;
 		}		
 		
+		// == PAUSE/RESUME ================
+		public function pause():void
+		{
+			Starling.juggler.remove(_anim);
+		}
+		
+		public function resume():void
+		{
+			Starling.juggler.add(_anim);
+		}		
+		
 		// == PRIVE =======================		
 		
 		protected function get posx():int
@@ -142,18 +153,21 @@ package flashjack
 					case STAND: 
 						_stand.x = _anim.x;
 						_stand.y = _anim.y;
+						_stand.scaleX = _anim.scaleX;
 						_anim = _stand;
 						break;
 					
 					case WALK: 
 						_walk.x = _anim.x;
 						_walk.y = _anim.y;
+						_walk.scaleX = _anim.scaleX;
 						_anim = _walk;
 						break;
 					
 					case JUMP: 
 						_jump.x = _anim.x;
 						_jump.y = _anim.y;
+						_jump.scaleX = _anim.scaleX;
 						_anim = _jump;
 						_anim.currentFrame = 1;
 						_anim.play();
@@ -162,6 +176,7 @@ package flashjack
 					case FALL: 
 						_fall.x = _anim.x;
 						_fall.y = _anim.y;
+						_fall.scaleX = _anim.scaleX;
 						_anim = _fall;
 						break;
 					
@@ -187,7 +202,6 @@ package flashjack
 				{
 					if (_dx == 0)
 					{
-						_stand.scaleX = _anim.scaleX; // oriente dans le bons sens
 						state = STAND;
 					}
 					else
