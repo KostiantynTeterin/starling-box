@@ -2,17 +2,15 @@ package screens
 {
 	import flash.display.Bitmap;
 	import flash.events.TimerEvent;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	import flashjack.Blast;
 	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
@@ -73,6 +71,11 @@ package screens
 		protected var bonusLayer:Sprite;		
 		protected var bonusList:LinkedList;
 		protected var blast:Blast;
+		
+		protected var sc:SoundChannel;
+		protected var bgMusic:Sound;
+		protected var positionBgMusic:Number = .0;
+		protected var volumeBgMusic:Number = .05;
 		
 		public function BaseNiveau()
 		{
@@ -181,12 +184,20 @@ package screens
 		{
 			//super.pause();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: PAUSE ==");
+			safe.stop();
+			if (sc) {
+				positionBgMusic = sc.position;
+				sc.stop();
+			}
 		}
 		
 		override public function resume():void
 		{
 			//super.resume();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: RESUME ==");
+			safe.start();
+			sc = bgMusic.play( positionBgMusic );
+			sc.soundTransform.volume = volumeBgMusic;
 		}
 		
 		override public function destroy():void

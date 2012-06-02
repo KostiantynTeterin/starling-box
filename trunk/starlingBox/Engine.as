@@ -78,6 +78,7 @@ package starlingBox
 				//SoundBox.instance.global().mute();
 				//SoundBox.instance.item(SoundBox.BG_MUSIC).stop();
 				
+				
 				if (screen)
 					screen.pause();
 				_paused = true;
