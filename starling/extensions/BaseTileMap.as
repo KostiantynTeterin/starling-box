@@ -4,6 +4,7 @@ package starling.extensions
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.extensions.BaseTileMap;
 	import starling.textures.Texture;
@@ -71,6 +72,8 @@ package starling.extensions
 				}
 			}
 			_image = new Image(Texture.fromBitmapData(_datImage, true, false));
+			_image.blendMode = BlendMode.NONE;
+			
 			(_blocs["bloc"] as Bitmap).bitmapData.dispose();
 			(_blocs["blocBordGauche"] as Bitmap).bitmapData.dispose();
 			(_blocs["blocBordDroite"] as Bitmap).bitmapData.dispose();
