@@ -48,6 +48,20 @@ package
 	 * 
 	 * plate forme mobiles ?
 	 * 
+	 * effets de poussieres, impacts, explosions
+	 * 
+	 * * * OPTIMS * * *
+	 * http://wiki.starling-framework.org/manual/performance_optimization
+	 * vérifier les histoires 
+	 * 		->minimiser les states change
+	 * 		-> de texte bitmap
+	 * 		-> de flatten
+	 * 
+	 * faire 1 seul texture atlas -pour toutes les animations- taille max 2048 * 2048 (dans la mesure du possible)
+	 * background.blendmode = BlendMode.none (mis sur baseTileMap)
+	 * précalculer les with/height , a priori ok
+	 * container.touchable = false, tous les niveaux sont en touchable = false :)
+	 * object.dispatchEventWith("lol", bubbles);, pour l'instant c'est pas utilisé
 	 */	
 	 
 	public class Main extends Sprite

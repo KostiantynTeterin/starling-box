@@ -1,5 +1,6 @@
 ﻿package starlingBox
 {
+	import starling.display.BlendMode;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	

@@ -9,6 +9,7 @@ package screens
 	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
+	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -101,6 +102,9 @@ package screens
 			pauseBMP = new Image( Texture.fromBitmap( new pauseTextureClass as Bitmap ) );
 			pauseBMP.x = int( (640 - pauseBMP.width) / 2 );
 			pauseBMP.y = 215;
+			
+			//
+			this.touchable = false;
 		}
 		
 		// ========================================================================================		
@@ -168,7 +172,7 @@ package screens
 		{
 			Input.update();
 			hero.update(); // collide avec le decor
-			if(!SB.engine.paused)addChild( hero.animation );
+			if(!SB.engine.paused)addChild( hero.animation ); // hack temporaire pour eviter qu'il ne passe devant l'image de pause
 			collideBonus(); // collide avec les bonus
 			collideMonsters(); // collide avec les ennemies
 			/*
