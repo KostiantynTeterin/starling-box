@@ -88,7 +88,7 @@ package screens
 			SB.console.addMessage(this, "== NIVEAU SCREEN ==");
 			
 			// datas
-			safe = new Safe(1000, 90);
+			safe = new Safe(1000, 5);
 			safe.addEventListener(TimerEvent.TIMER, _onTimer);
 			safe.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 			
@@ -123,7 +123,7 @@ package screens
 			
 			if (tilemap) 
 			{
-				var bonusXML:XML =      <TextureAtlas imagePath="spritesheet.png">
+				var bonusXML:XML = <TextureAtlas imagePath="spritesheet.png">
 						<SubTexture name="bonus0001" x="0" y="0" width="32" height="32"/>
 						<SubTexture name="bonus0002" x="32" y="0" width="32" height="32"/>
 						<SubTexture name="bonus0003" x="64" y="0" width="32" height="32"/>
@@ -242,6 +242,7 @@ package screens
 		protected function _onTimerComplete(e:TimerEvent):void
 		{
 			HUD.instance.temps = 0;
+			hero.gameOver( );
 		}
 		
 		protected function _onTimer(e:TimerEvent):void

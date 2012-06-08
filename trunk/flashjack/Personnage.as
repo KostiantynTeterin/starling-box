@@ -112,6 +112,11 @@ package flashjack
 			return _aabb;
 		}		
 		
+		public function gameOver( /*motif:int = -1*/ ):void
+		{
+			// --
+		}
+		
 		// == PAUSE/RESUME ================
 		public function pause():void
 		{
@@ -123,7 +128,7 @@ package flashjack
 			Starling.juggler.add(_anim);
 		}		
 		
-		// == PRIVE =======================		
+		// == PRIVEE ======================		
 		
 		protected function get posx():int
 		{
@@ -179,7 +184,7 @@ package flashjack
 						_fall.scaleX = _anim.scaleX;
 						_anim = _fall;
 						break;
-					
+						
 					default: 
 						trace("State non défini");
 				}
