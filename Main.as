@@ -45,7 +45,7 @@ package
 	 * ecran de fin
 	 * monstres 
 	 * deplacement des monstres
-	 * 
+	 * plate forme disparaissent
 	 * plate forme mobiles ?
 	 * 
 	 * effets de poussieres, impacts, explosions

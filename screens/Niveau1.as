@@ -30,14 +30,14 @@ package screens
 			
 			super.begin();	
 			
-			
+			/*
 			bgMusic = new Sound( new URLRequest("http://yopsolo.fr/ressources/gees_tacatac_44100.mp3"), new SoundLoaderContext() );
 			
 			volumeBgMusic = 0.5;
 			
 			sc = bgMusic.play();			
 			sc.soundTransform = new SoundTransform(volumeBgMusic);				
-			
+			*/
 		}		
 
 	}

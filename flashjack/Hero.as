@@ -8,6 +8,7 @@ package flashjack
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starlingBox.game.common.Input;
+	import starlingBox.SB;
 	
 	/**
 	 * @author YopSolo
@@ -16,10 +17,14 @@ package flashjack
 	
 	public class Hero extends Personnage
 	{
-		[Embed(source="../../media/kliff_complete_v2/kliff.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../media/kliff_complete_v2/anim_bitmap/kliff.xml",mimeType="application/octet-stream")]
 		private const SpriteSheetXML:Class;
-		[Embed(source="../../media/kliff_complete_v2/kliff.png")]
-		private const SpriteSheet:Class;
+		[Embed(source="../../media/kliff_complete_v2/anim_bitmap/kliff.png")]
+		private const SpriteSheet:Class;		
+		
+		private const TIME_UP:int = 4;		
+		
+		private var _timeUp:MovieClip;
 		
 		public function Hero()
 		{
@@ -31,7 +36,6 @@ package flashjack
 			
 			var texture:Texture = Texture.fromBitmap(new SpriteSheet() as Bitmap, true, true);
 			var xml:XML = XML(new SpriteSheetXML);
-			
 			var tAtlas:TextureAtlas = new TextureAtlas(texture, xml);
 			
 			_stand = new MovieClip(tAtlas.getTextures("stand"), 15);
@@ -46,12 +50,22 @@ package flashjack
 			_jump.loop = false;
 			_fall = new MovieClip(tAtlas.getTextures("fall"), 10);
 			_fall.pivotX = 28;
-			_fall.pivotY = 170;
+			_fall.pivotY = 170;			
+			_timeUp = new MovieClip(tAtlas.getTextures("timeout"), 6);
+			_timeUp.pivotX = 45;
+			_timeUp.pivotY = 188;
 			
 			_anim = _stand;
 			state = STAND;
 			
 			init();
+		}
+		
+		override public function gameOver():void {
+			trace("GAME - OVER");
+			_dx = .0;
+			_dy = 5.0
+			state = TIME_UP;
 		}
 		
 		override protected function init():void
@@ -66,6 +80,8 @@ package flashjack
 		
 		override protected function changeVelocity():void
 		{
+			if (state == TIME_UP) return;
+			
 			if (Input.isDown(Input.KEY_RIGHT))
 			{
 				_dx = Constants.HERO_WALKING_SPEED;
@@ -88,7 +104,36 @@ package flashjack
 			_dy += Constants.GRAVITY;
 			
 			super.changeVelocity();
+			
 		}
+		
+		override protected function set state( value:int ):void
+		{
+			if (value != _state)
+			{
+				// trace("# set State", value, _state);
+				switch ( value )
+				{
+					case TIME_UP : 
+						_state = value;
+						_anim.visible = false;
+						Starling.juggler.remove(_anim);
+						_timeUp.x = _anim.x;
+						_timeUp.y = _anim.y;
+						_timeUp.scaleX = _anim.scaleX;
+						_anim = _timeUp;
+						_anim.visible = true;
+						Starling.juggler.add(_anim);
+					break;						
+					
+					default: 
+						// --
+				}
+				
+				super.state = value;
+			}
+			
+		}		
 	
 	}
 

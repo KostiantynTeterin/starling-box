@@ -7,8 +7,10 @@ package starlingBox
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.SecurityErrorEvent;
+	import flash.events.TimerEvent;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
+	import flash.utils.Timer;
 	import starling.core.Starling;
 	import starlingBox.debug.Console;
 	
@@ -79,9 +81,16 @@ package starlingBox
 					screen.pause();
 				_paused = true;
 				
-				if (SB.nativeStage)
-					SB.nativeStage.stage.frameRate = 4;
+				var t:Timer = new Timer(SB.original_framerate,1);
+				t.addEventListener(TimerEvent.TIMER_COMPLETE, _onDeactivateTimerComplete );
+				t.start();
 			}
+		}
+		
+		private function _onDeactivateTimerComplete(e:TimerEvent):void 
+		{
+			if (SB.nativeStage)
+				SB.nativeStage.stage.frameRate = 0;
 		}
 		
 		public function _onActivate(e:Event):void
