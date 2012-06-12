@@ -191,12 +191,11 @@ package screens
 		{
 			//super.pause();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: PAUSE ==");
-			safe.stop();
-			
-			SB.soundBox.pauseBGM();
-			
-			hero.pause();
-			
+			if (!safe.end) {			
+				safe.stop();			
+				SB.soundBox.pauseBGM();			
+				hero.pause();
+			}
 			addChild( pauseBMP );
 		}
 		
@@ -204,10 +203,11 @@ package screens
 		{
 			//super.resume();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: RESUME ==");
-			safe.start();
-			SB.soundBox.resumeBGM();
-			hero.resume();
-			
+			if (!safe.end) {
+				safe.start();
+				SB.soundBox.resumeBGM();
+				hero.resume();				
+			}			
 			removeChild( pauseBMP );
 		}
 		
@@ -231,8 +231,9 @@ package screens
 		// ========================================================================================		
 		// TIMER
 		
-		protected function _onTimerComplete(e:TimerEvent):void
+		protected function _onTimerComplete(e:TimerEvent = null):void
 		{
+			safe.end = true;
 			HUD.instance.temps = 0;
 			hero.gameOver();
 			SB.soundBox.fadeOut();
@@ -334,6 +335,7 @@ package screens
 			if (bonusList.length == 0)
 			{
 				safe.stop();
+				_onTimerComplete();
 			}			
 		}	
 		
