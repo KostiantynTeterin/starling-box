@@ -81,7 +81,7 @@ package screens
 			SB.console.addMessage(this, "== NIVEAU SCREEN ==");
 			
 			// datas
-			safe = new Safe(1000, 5);
+			safe = new Safe(1000, 30);
 			safe.addEventListener(TimerEvent.TIMER, _onTimer);
 			safe.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 			
@@ -145,7 +145,7 @@ package screens
 				blast = new Blast(new Rectangle(0, 0, 64, 64));	
 				bonusLayer.addChild(blast);
 				addChild(bonusLayer);
-				//bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);				
+				//bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);
 			}
 			
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
@@ -153,7 +153,7 @@ package screens
 			
 			//if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
-			
+			HUD.instance.temps = safe.repeatCount;
 			// --
 			safe.start();			
 			Input.init( SB.nativeStage );			
