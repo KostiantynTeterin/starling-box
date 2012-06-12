@@ -3,13 +3,10 @@ package screens
 	import flash.display.Bitmap;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
-	import flash.media.Sound;
-	import flash.media.SoundChannel;
 	import flashjack.Blast;
 	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
-	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -186,6 +183,7 @@ package screens
 		override public function end():void
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: END ==");
+			SB.soundBox.stopAllSound();
 			super.end();
 		}		
 		
@@ -236,7 +234,8 @@ package screens
 		protected function _onTimerComplete(e:TimerEvent):void
 		{
 			HUD.instance.temps = 0;
-			hero.gameOver( );
+			hero.gameOver();
+			SB.soundBox.fadeOut();
 		}
 		
 		protected function _onTimer(e:TimerEvent):void
