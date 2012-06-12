@@ -74,9 +74,6 @@ package starlingBox
 			// TODO
 			// sans ce flag, ikl y a un double appel, à creuser.
 			if (!_paused) {
-				//SoundBox.instance.global().mute();
-				//SoundBox.instance.item(SoundBox.BG_MUSIC).stop();
-				
 				if (screen)
 					screen.pause();
 				_paused = true;
@@ -100,9 +97,6 @@ package starlingBox
 			if (_paused) {
 				if (SB.nativeStage)
 					SB.nativeStage.stage.frameRate = SB.original_framerate;				
-					
-				//SoundBox.instance.global().unmute();	
-				//SoundBox.instance.item(SoundBox.BG_MUSIC).play();
 					
 				if (screen)
 					screen.resume();
