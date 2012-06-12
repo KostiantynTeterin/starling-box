@@ -41,7 +41,7 @@ package
 	 * du coup attention a n'activer les ecouteurs activate/deactivate qu'une fois que tout est chargé
 	 * a etudier/tester.
 	 * 
-	 * animation win
+	 * animation win et écran de fin score / 3500
 	 * ecran de fin
 	 * monstres 
 	 * deplacement des monstres
