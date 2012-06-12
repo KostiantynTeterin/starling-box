@@ -67,12 +67,14 @@
 		public function pause():void
 		{
 			SB.console.addMessage(this, "DEFAULT SCREEN PAUSE");
-			stopOEF();			
+			SB.soundBox.pauseBGM();
+			stopOEF();
 		}
 		
 		public function resume():void
 		{
 			SB.console.addMessage(this, "DEFAULT SCREEN RESUME");
+			SB.soundBox.resumeBGM();
 			if (_updateLoop)
 				startOEF();
 		}

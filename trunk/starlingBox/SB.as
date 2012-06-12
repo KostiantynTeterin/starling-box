@@ -125,6 +125,13 @@
 			return describeType(value).@name
 		}
 		
+		// -- SOUND HELPER
+		// --				
+		public static function get soundBox():SoundBox
+		{
+			return SoundBox.instance;
+		}		
+		
 		// -- GFX HELPER
 		// --
 		
@@ -163,6 +170,18 @@
 		{
 			return (value ^ (value >> 31)) - (value >> 31);
 		}
+		
+		public static function clamp(value:Number, min:Number, max:Number):Number
+		{
+			if (max > min)
+			{
+				value = value < max ? value : max;
+				return value > min ? value : min;
+			}
+			value = value < min ? value : min;
+			return value > max ? value : max;
+		}		
+		
 		
 		// -- GLOBAL
 		public static var width:int;

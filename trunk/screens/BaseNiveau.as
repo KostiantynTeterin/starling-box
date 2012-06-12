@@ -25,7 +25,7 @@ package screens
 	
 	
 	/**
-	 * ...
+	 * 
 	 * @author YopSolo
 	 * 
 	 * un timer
@@ -77,11 +77,7 @@ package screens
 		protected var bonusLayer:Sprite;		
 		protected var bonusList:LinkedList;
 		protected var blast:Blast;
-		
-		protected var sc:SoundChannel;
-		protected var bgMusic:Sound;
-		protected var positionBgMusic:Number = .0;
-		protected var volumeBgMusic:Number = .05;
+
 		
 		public function BaseNiveau()
 		{
@@ -198,10 +194,9 @@ package screens
 			//super.pause();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: PAUSE ==");
 			safe.stop();
-			if (sc) {
-				positionBgMusic = sc.position;
-				sc.stop();
-			}
+			
+			SB.soundBox.pauseBGM();
+			
 			hero.pause();
 			
 			addChild( pauseBMP );
@@ -212,8 +207,7 @@ package screens
 			//super.resume();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: RESUME ==");
 			safe.start();
-			sc = bgMusic.play( positionBgMusic );
-			sc.soundTransform.volume = volumeBgMusic;
+			SB.soundBox.resumeBGM();
 			hero.resume();
 			
 			removeChild( pauseBMP );
