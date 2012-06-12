@@ -53,6 +53,9 @@
 		// donnees
 		private var _datas:Vector.<Digits> = new Vector.<Digits>;
 		
+		// état
+		public var end:Boolean = false;
+		
 		// ----------------------------------------------------------------------------------------
 		// CONSTRUCTEUR
 
