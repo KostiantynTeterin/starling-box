@@ -62,7 +62,6 @@ package flashjack
 		}
 		
 		override public function gameOver():void {
-			trace("GAME - OVER");
 			_dx = .0;
 			_dy = 5.0
 			state = TIME_UP;
@@ -104,7 +103,6 @@ package flashjack
 			_dy += Constants.GRAVITY;
 			
 			super.changeVelocity();
-			
 		}
 		
 		override protected function set state( value:int ):void

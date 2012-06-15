@@ -43,13 +43,16 @@ package flashjack
 		protected var HALF_WIDTH:int;
 		protected var HALF_HEIGHT:int;
 		
-		public function Personnage()
+		public function Personnage( posX:int = 0 , posY:int = 0 )
 		{
 			
 			WIDTH = 32;
 			HEIGHT = 64;
 			HALF_WIDTH = 16;
 			HALF_HEIGHT = 32;
+			
+			_posx = posX;
+			_posy = posY;
 			
 			_aabb = new Rectangle(0, 0, 32, 64);
 			
