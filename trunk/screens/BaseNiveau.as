@@ -7,6 +7,7 @@ package screens
 	import flashjack.BonusMC;
 	import flashjack.Hero;
 	import flashjack.HUD;
+	import flashjack.Personnage;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -74,6 +75,8 @@ package screens
 		protected var bonusLayer:Sprite;		
 		protected var bonusList:LinkedList;
 		protected var blast:Blast;
+		protected var ennemisLayer:Sprite;
+		protected var ennemis:Vector.<Personnage>;
 
 		
 		public function BaseNiveau()
@@ -91,6 +94,10 @@ package screens
 			// layer 2, bonus
 			bonusLayer = new Sprite;
 			bonusList = new LinkedList();
+			
+			// layer 3, ennemis
+			ennemisLayer = new Sprite;
+			ennemis = new Vector.<Personnage>();
 			
 			pauseBMP = new Image( Texture.fromBitmap( new pauseTextureClass as Bitmap ) );
 			pauseBMP.x = int( (640 - pauseBMP.width) / 2 );
@@ -146,6 +153,14 @@ package screens
 				bonusLayer.addChild(blast);
 				addChild(bonusLayer);
 				//bonusLayer.addEventListener(TouchEvent.TOUCH, _onTouchlayerBonus);
+				
+				var nb:int = ennemis.length;
+				for (var i:int = 0 ; i < nb ; i++ ) {
+					ennemisLayer.addChild( ennemis[i].animation );
+					
+				}				
+				addChild( ennemisLayer );
+				
 			}
 			
 			tilemap.miniature.x = 640 - tilemap.miniature.width - 5;
@@ -236,6 +251,10 @@ package screens
 			safe.end = true;
 			HUD.instance.temps = 0;
 			hero.gameOver();
+			var nb:int = ennemis.length;
+			for (var i:int = 0 ; i < nb ; i++ ) {
+				ennemis[i].gameOver();
+			}			
 			SB.soundBox.fadeOut();
 		}
 		
@@ -426,9 +445,30 @@ package screens
 		// COLLIDE MONSTERS
 		protected function collideMonsters():void 
 		{
+			var nb:int = ennemis.length;
 			
-		}
-		
+			// déplacement
+			for (var i:int = 0 ; i < nb ; i++ ) {
+				ennemis[i].update();				
+			}
+			
+			// collision
+			var hit:Boolean = false;
+			for (i = 0 ; i < nb ; i++ ) 
+			{
+				//trace( hero.aabb, ennemis[i].aabb );
+				if ( hero.aabb.intersects( ennemis[i].aabb ) ) 
+				{
+					hit = true;
+					break;
+				}
+			}
+			
+			if (hit) {
+				safe.stop();
+				_onTimerComplete();				
+			}
+		}		
 	
 	}
 

@@ -173,14 +173,14 @@ package starlingBox
 		// OK
 		public function pauseBGM():void {
 			_position = _channelBGM.position;
-			trace( "+++", _position );
+			//trace( "+++", _position );
 			_channelBGM.stop();			
 		}
 		
 		// OK
 		public function resumeBGM():void {
 			if (_currentBGM == -1) {
-				throw new Error("ERROR: No current track");
+				// throw new Error("ERROR: No current track");
 			}else {
 				playBGM( _currentBGM, 999 );
 			}
