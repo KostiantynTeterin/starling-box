@@ -23,6 +23,7 @@ package flashjack
 		
 		private var _targetX:int;
 		private var _targetY:int;
+		private var _dist:Number = -999;
 		
 		private var gameover:Boolean = false;
 		
@@ -34,7 +35,7 @@ package flashjack
 			HALF_HEIGHT = 16;
 			
 			_posx = posX;
-			_posy = posY;
+			_posy = 32*15;
 			
 			_targetX = 16 + int(Math.random() * 624);
 			_targetY = 16 + int(Math.random() * 624);	
@@ -61,6 +62,7 @@ package flashjack
 			
 			_dx = Constants.TRACKER_FLYING_SPEED;
 			_dy = Constants.TRACKER_FLYING_SPEED;
+			
 			_onGround = false;
 			// --
 			Starling.juggler.add(_anim);
@@ -68,46 +70,36 @@ package flashjack
 		
 		override protected function changeVelocity():void
 		{
-			var dist:Number = Point.distance( new Point(_posx, _posy), new Point(_targetX, _targetY) );
-			//trace( _posx, _posy, _targetX, _targetY, dist );
 			
-			//trace( dist );
-			if ( dist < 128 ) {
-				_targetX = 16 + int(Math.random() * 624);
-				_targetY = 16 + int(Math.random() * 624);				
-			}
-			
+			if (gameover) return;
+
+			var dy:Number = _targetY - _posy;			
+			var dx:Number = _targetX - _posx;			
+			animation.scaleX = (dx > 0) ? -1: 1 ;
+			var nextY:Number = int(dy * .05);
+			_posy += nextY;
+			var nextX:Number = int(dx * .01);			
+			_posx += nextX;				
 			/*
-			else {
-				
-				if ( Math.abs(_targetY - _posy) < 1 )  {
-					_dy = 0;
-				}else if(_targetY < _posy) {
-					_dy = -Constants.TRACKER_FLYING_SPEED;
-				}else {
-					_dy = Constants.TRACKER_FLYING_SPEED;					
-				}
-				
-				if ( Math.abs(_targetX - _posx) < 1 ) {
-					_dx = 0;
-				}else if (_targetX < _posx) {
-					_dx = -Constants.TRACKER_FLYING_SPEED;
-				}else {
-					_dx = Constants.TRACKER_FLYING_SPEED;
-				}				
-			}
+			if(dx<0){ dx *=-1; }
+			if(dy<0){ dy *=-1; }
+			_dist = dx + dy;			
 			*/
 		}
+		
+		override public function update( rect:Rectangle = null ):void
+		{
+			_targetX = rect.x + 16;
+			_targetY = rect.y + 32;			
+			changeVelocity();
+			detectCollision();
+			_anim.x = _posx;
+			_anim.y = _posy;
+		}		
 		
 		override protected function detectCollision():void
 		{
 			if (gameover) return;
-			
-			var nextY:int = ( _targetY - _posy ) * .03;
-			_posy += nextY/2;
-			
-			var nextX:Number = ( _targetX - _posx ) * .03;
-			_posx += nextX/2;
 			
 			_aabb.right = _posx + HALF_WIDTH;
 			_aabb.left = _posx - HALF_WIDTH;

@@ -17,6 +17,8 @@ package flashjack
 		private var _tempsTxt:TextField;
 		private var _temps:int;
 		
+		private var _popFin:PopFin;
+		
 		public function HUD( lock:SingletonLock ) {
 			_score = 0;
 			addChild( new TextField(80, 30, "Score : ", "Verdana", 12, 0xFFFFFF) );
@@ -29,6 +31,8 @@ package flashjack
 			_tempsTxt.x = SB.width - 80;
 			temps = 90;
 			addChild( _tempsTxt );
+			
+			_popFin = new PopFin;			
 		}
 		
         public static function get instance():HUD {
@@ -68,6 +72,12 @@ package flashjack
 		public function incTemps(value:int = 1):void 
 		{
 			temps += value;
+		}
+		
+		public function gameOver():void
+		{
+			_popFin.setFinalScore(_score, _temps);
+			addChild( _popFin );			
 		}
 		
 	}

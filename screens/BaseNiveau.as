@@ -50,6 +50,8 @@ package screens
 	 * 	-> update des positions
 	 * 	-> recup des bonus
 	 * 
+	 * Integration complete de la supabox (pour le score, le temps, l'etat du jeu et le motif de fin (autre ?))
+	 * 
 	 * ATTENTION
 	 * dans l'update addChild a repetition
 	 * animation de saut
@@ -84,7 +86,7 @@ package screens
 			SB.console.addMessage(this, "== NIVEAU SCREEN ==");
 			
 			// datas
-			safe = new Safe(1000, 30);
+			safe = new Safe(1000, 60);
 			safe.addEventListener(TimerEvent.TIMER, _onTimer);
 			safe.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 			
@@ -156,8 +158,7 @@ package screens
 				
 				var nb:int = ennemis.length;
 				for (var i:int = 0 ; i < nb ; i++ ) {
-					ennemisLayer.addChild( ennemis[i].animation );
-					
+					ennemisLayer.addChild( ennemis[i].animation );					
 				}				
 				addChild( ennemisLayer );
 				
@@ -180,7 +181,9 @@ package screens
 		{
 			Input.update();
 			hero.update(); // collide avec le decor
-			if(!SB.engine.paused)addChild( hero.animation ); // hack temporaire pour eviter qu'il ne passe devant l'image de pause
+			if (!SB.engine.paused) addChild( hero.animation ); // hack temporaire pour eviter qu'il ne passe devant l'image de pause
+			if (!safe.end) addChild( hero.animation ); // la même ...
+			//addChild( ennemisLayer );
 			collideBonus(); // collide avec les bonus
 			collideMonsters(); // collide avec les ennemies
 			/*
@@ -211,7 +214,10 @@ package screens
 				SB.soundBox.pauseBGM();			
 				hero.pause();
 			}
-			addChild( pauseBMP );
+			if (!safe.end) {
+				addChild( pauseBMP );
+			}
+			
 		}
 		
 		override public function resume():void
@@ -223,7 +229,9 @@ package screens
 				SB.soundBox.resumeBGM();
 				hero.resume();				
 			}			
-			removeChild( pauseBMP );
+			if (!safe.end) {
+				removeChild( pauseBMP );
+			}
 		}
 		
 		override public function destroy():void
@@ -248,7 +256,9 @@ package screens
 		
 		protected function _onTimerComplete(e:TimerEvent = null):void
 		{
+			addChild( HUD.instance );			
 			safe.end = true;
+			HUD.instance.gameOver();
 			HUD.instance.temps = 0;
 			hero.gameOver();
 			var nb:int = ennemis.length;
@@ -449,7 +459,7 @@ package screens
 			
 			// déplacement
 			for (var i:int = 0 ; i < nb ; i++ ) {
-				ennemis[i].update();				
+				ennemis[i].update( hero.aabb );				
 			}
 			
 			// collision

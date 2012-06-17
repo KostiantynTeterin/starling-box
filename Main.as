@@ -37,18 +37,18 @@ package
 	 * 
 	 * * * TODO FLASH JACK * * *
 	 * 
-	 * tester un delayed stage.framerate = 0, ca va eviter d'avoir a implémenter des methodes pause/resume à chaque objet
-	 * du coup attention a n'activer les ecouteurs activate/deactivate qu'une fois que tout est chargé
-	 * a etudier/tester.
-	 * 
 	 * animation win et écran de fin score / 3500
-	 * ecran de fin
-	 * monstres 
-	 * deplacement des monstres
+	 * ecran de fin (chaine maxi)
+	 * monstres (rebond, tracker, marche (saute ?) );
 	 * plate forme disparaissent
-	 * plate forme mobiles ?
+	 * plate forme mobiles
 	 * 
 	 * effets de poussieres, impacts, explosions
+	 * 
+	 * personnage touché frame + clignotement
+	 * 
+	 * controles tactiles
+	 * 
 	 * 
 	 * * * OPTIMS * * *
 	 * http://wiki.starling-framework.org/manual/performance_optimization
