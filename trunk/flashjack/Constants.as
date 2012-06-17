@@ -20,7 +20,7 @@ package flashjack
 		static public const HERO_DEF_Y:int = 32 * 16;
 		
 		// MONSTRES
-		static public const MINE_FLYING_SPEED:Number = -2.;
-		static public const TRACKER_FLYING_SPEED:Number = 1;
+		static public const MINE_FLYING_SPEED:Number = 2.;
+		static public const TRACKER_FLYING_SPEED:Number = 4.;
 	}
 }

@@ -102,7 +102,7 @@ package flashjack
 			return _anim;
 		}
 		
-		public function update():void
+		public function update( rect:Rectangle = null ):void
 		{
 			changeVelocity();
 			detectCollision();
