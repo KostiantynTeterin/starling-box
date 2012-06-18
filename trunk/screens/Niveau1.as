@@ -34,11 +34,11 @@ package screens
 			SB.console.addMessage(this, "== NIVEAU-1 SCREEN :: BEGIN ==");			
 			
 			super.begin();
-			/*
+			
 			SB.soundBox.addRessource( new Sound( new URLRequest("http://yopsolo.fr/ressources/gees_tacatac_44100.mp3"), new SoundLoaderContext() ), SoundBox.BGM1 );
 			SB.soundBox.setBGMVolume( .5 );
 			SB.soundBox.playBGM();
-			*/
+			
 		}		
 
 	}

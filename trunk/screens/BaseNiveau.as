@@ -274,7 +274,7 @@ package screens
 			SB.soundBox.fadeOut();
 			// --
 			// envoi du score
-			_supaBox.send();
+			//_supaBox.send();
 		}
 		
 		protected function _onSupaBoxSendComplete(e:flash.events.Event):void 
