@@ -72,7 +72,7 @@ package starlingBox
 		public function _onDeactivate(e:Event):void
 		{
 			// TODO
-			// sans ce flag, ikl y a un double appel, à creuser.
+			// sans ce flag, il y a un double appel, à creuser.
 			if (!_paused) {
 				if (screen)
 					screen.pause();
@@ -93,7 +93,7 @@ package starlingBox
 		public function _onActivate(e:Event):void
 		{
 			// TODO
-			// sans ce flag, ikl y a un double appel, à creuser.
+			// sans ce flag, il y a un double appel, à creuser.
 			if (_paused) {
 				if (SB.nativeStage)
 					SB.nativeStage.stage.frameRate = SB.original_framerate;				

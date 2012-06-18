@@ -18,6 +18,7 @@ package screens
 	import starlingBox.malbolge.Safe;
 	import starlingBox.SB;
 	import starlingBox.Screen;
+	import starlingBox.SupaBox;
 	import starlingBox.utils.LinkedList;
 	import starlingBox.utils.LinkedListNode;
 	
@@ -50,7 +51,7 @@ package screens
 	 * 	-> update des positions
 	 * 	-> recup des bonus
 	 * 
-	 * Integration complete de la supabox (pour le score, le temps, l'etat du jeu et le motif de fin (autre ?))
+	 * Integration complete de la supabox (pour le score, le temps (ok), l'etat du jeu (ok) et le motif de fin (ok) (autre ?))
 	 * 
 	 * ATTENTION
 	 * dans l'update addChild a repetition
@@ -70,7 +71,8 @@ package screens
 		private var pauseBMP:Image;
 		
 		// supabox
-		protected var safe:Safe;
+		protected var _supaBox:SupaBox;		
+		protected var _safe:Safe;
 		
 		protected var tilemap:BaseTileMap;
 		protected var hero:Hero;
@@ -79,16 +81,19 @@ package screens
 		protected var blast:Blast;
 		protected var ennemisLayer:Sprite;
 		protected var ennemis:Vector.<Personnage>;
-
 		
 		public function BaseNiveau()
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN ==");
 			
 			// datas
-			safe = new Safe(1000, 60);
-			safe.addEventListener(TimerEvent.TIMER, _onTimer);
-			safe.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
+			_safe = new Safe(1000, 60);
+			_safe.addEventListener(TimerEvent.TIMER, _onTimer);
+			_safe.addEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
+			
+			_supaBox = new SupaBox;			
+			_supaBox.safe = _safe;
+			_supaBox.addEventListener(SupaBox.COMPLETE, _onSupaBoxSendComplete);			
 			
 			// layer 1, hero
 			hero = new Hero();
@@ -169,9 +174,9 @@ package screens
 			
 			//if (tilemap) addChild( tilemap.miniature );
 			addChild( HUD.instance );
-			HUD.instance.temps = safe.repeatCount;
+			HUD.instance.temps = _safe.repeatCount;
 			// --
-			safe.start();			
+			_safe.start();			
 			Input.init( SB.nativeStage );			
 			startOEF();
 		}
@@ -182,7 +187,7 @@ package screens
 			Input.update();
 			hero.update(); // collide avec le decor
 			if (!SB.engine.paused) addChild( hero.animation ); // hack temporaire pour eviter qu'il ne passe devant l'image de pause
-			if (!safe.end) addChild( hero.animation ); // la même ...
+			if (!_safe.gameOver) addChild( hero.animation ); // la même ...
 			//addChild( ennemisLayer );
 			collideBonus(); // collide avec les bonus
 			collideMonsters(); // collide avec les ennemies
@@ -209,12 +214,12 @@ package screens
 		{
 			//super.pause();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: PAUSE ==");
-			if (!safe.end) {			
-				safe.stop();			
+			if (!_safe.gameOver) {			
+				_safe.stop();			
 				SB.soundBox.pauseBGM();			
 				hero.pause();
 			}
-			if (!safe.end) {
+			if (!_safe.gameOver) {
 				addChild( pauseBMP );
 			}
 			
@@ -224,12 +229,12 @@ package screens
 		{
 			//super.resume();
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: RESUME ==");
-			if (!safe.end) {
-				safe.start();
+			if (!_safe.gameOver) {
+				_safe.start();
 				SB.soundBox.resumeBGM();
 				hero.resume();				
 			}			
-			if (!safe.end) {
+			if (!_safe.gameOver) {
 				removeChild( pauseBMP );
 			}
 		}
@@ -237,8 +242,8 @@ package screens
 		override public function destroy():void
 		{
 			SB.console.addMessage(this, "== NIVEAU SCREEN :: DESTROY ==");
-			safe.removeEventListener(TimerEvent.TIMER, _onTimer);
-			safe.removeEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
+			_safe.removeEventListener(TimerEvent.TIMER, _onTimer);
+			_safe.removeEventListener(TimerEvent.TIMER_COMPLETE, _onTimerComplete);
 			
 			// == TODO ==
 			// destroy le safe
@@ -247,18 +252,19 @@ package screens
 			// destroy l'image de fond
 			// destroy la tilemap
 			// l'ecouteur clavier
-			
+			// la SupaBox
 			super.destroy();
 		}
 		
 		// ========================================================================================		
-		// TIMER
+		// TIMER + SUPABOX
 		
 		protected function _onTimerComplete(e:TimerEvent = null):void
 		{
+			if ( e ) _safe.motif = SupaBox.TIME_UP;			
 			addChild( HUD.instance );			
-			safe.end = true;
-			HUD.instance.gameOver();
+			_safe.gameOver = true;
+			HUD.instance.gameOver( _safe.getValue(Safe.SCORE) );
 			HUD.instance.temps = 0;
 			hero.gameOver();
 			var nb:int = ennemis.length;
@@ -266,11 +272,19 @@ package screens
 				ennemis[i].gameOver();
 			}			
 			SB.soundBox.fadeOut();
+			// --
+			// envoi du score
+			_supaBox.send();
+		}
+		
+		protected function _onSupaBoxSendComplete(e:flash.events.Event):void 
+		{
+			SB.console.addMessage("#Motif:", _supaBox.motif, " #Erreur(s):", _supaBox.error);
 		}
 		
 		protected function _onTimer(e:TimerEvent):void
 		{
-			HUD.instance.temps = (safe.repeatCount - safe.currentCount);
+			HUD.instance.temps = (_safe.repeatCount - _safe.currentCount);
 		}
 		
 		// ========================================================================================
@@ -343,17 +357,20 @@ package screens
 				
 				if (bonusList.length == 35)
 				{
-					HUD.instance.incScore(100);
+					_safe.incValue( Safe.SCORE, 100 );
+					HUD.instance.score = _safe.getValue( Safe.SCORE );
 				}
 				else
 				{
 					if (bns.isPlaying)
 					{
-						HUD.instance.incScore(100);
+						_safe.incValue( Safe.SCORE, 100 );
+						HUD.instance.score = _safe.getValue( Safe.SCORE );
 					}
 					else
 					{
-						HUD.instance.incScore(10);
+						_safe.incValue( Safe.SCORE, 10 );
+						HUD.instance.score = _safe.getValue( Safe.SCORE );
 					}
 				}
 				
@@ -363,7 +380,8 @@ package screens
 			
 			if (bonusList.length == 0)
 			{
-				safe.stop();
+				_safe.stop();
+				_safe.motif = SupaBox.GAGNE;
 				_onTimerComplete();
 			}			
 		}	
@@ -475,7 +493,8 @@ package screens
 			}
 			
 			if (hit) {
-				safe.stop();
+				_safe.stop();
+				_safe.motif = SupaBox.PERDU;
 				_onTimerComplete();				
 			}
 		}		

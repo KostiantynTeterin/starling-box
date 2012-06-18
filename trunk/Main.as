@@ -39,7 +39,10 @@ package
 	 * 
 	 * animation win et écran de fin score / 3500
 	 * ecran de fin (chaine maxi)
-	 * monstres (rebond, tracker, marche (saute ?) );
+	 * bonus de temps restant
+	 * anim de hit + mort
+	 * explosion de l'ennemi au contact, electricité ou autre
+	 * monstres (rebond ok, tracker volant, marche aller-retour + chute );
 	 * plate forme disparaissent
 	 * plate forme mobiles
 	 * 
@@ -53,7 +56,7 @@ package
 	 * * * OPTIMS * * *
 	 * http://wiki.starling-framework.org/manual/performance_optimization
 	 * vérifier les histoires 
-	 * 		->minimiser les states change
+	 * 		-> minimiser les states change
 	 * 		-> de texte bitmap
 	 * 		-> de flatten
 	 * 

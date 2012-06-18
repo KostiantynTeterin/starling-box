@@ -8,10 +8,14 @@
 	import flash.utils.Timer;
 	import starlingBox.SB;
 	
+	/*
+	 * Ici toutes les datas sensibles
+	 * */
+	
 	public class Safe extends Timer
 	{
 		// TODO
-		// Signer les valeurs en mémoire ?
+		// Signer les valeurs en mémoire
 		
 		public static const SCORE:int = 0;
 		public static const COMP1:int = 1;
@@ -54,7 +58,8 @@
 		private var _datas:Vector.<Digits> = new Vector.<Digits>;
 		
 		// état
-		public var end:Boolean = false;
+		public var gameOver:Boolean = false;
+		public var motif:String;
 		
 		// ----------------------------------------------------------------------------------------
 		// CONSTRUCTEUR
@@ -145,7 +150,7 @@
 			for( var identifiant:* in couples ){
 				couplesStrings.push( String(identifiant)+"="+String(couples[identifiant]) );
 			}
-			// On les sort dans le désordre, dans un nouveau String
+			// mélange :)
 			var chaine:String = "";
 			while( couplesStrings.length){
 				var indice:Number = Math.floor( couplesStrings.length*Math.random() );
@@ -155,7 +160,7 @@
 					chaine += ";";
 				}
 			}
-			// On encrypte
+			
 			return encrypterComplet( chaine , clefPrivee );			
 		}		
 		
