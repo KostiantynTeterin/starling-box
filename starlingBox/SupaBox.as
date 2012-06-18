@@ -15,23 +15,27 @@
 	{
 		private var _flag:Boolean = false;
 		
+		public static const COMPLETE:String = "supabox_complete";		
 		public static const GAGNE:String = "motif_gagne";
 		public static const PERDU:String = "motif_perdu";
+		public static const AUCUN:String = "motif_aucun";
 		public static const TIME_UP:String = "motif_temps_ecoule";
 		
-		public var motif:String = "motif_aucun";		
 		public var error:String = "";
 		
 		private var _safe:Safe;
 		
-		public function SupaBox(){}
+		public function SupaBox()
+		{
+		}
 		
 		public function send():void
 		{
 			if (!_flag)
 			{
 				_flag = true;
-				if (!_safe) {
+				if (!_safe)
+				{
 					_safe = new Safe(30, 1);
 					SB.console.addMessage("Création d'un objet Safe par défaut");
 				}
@@ -43,9 +47,9 @@
 				couples.DJ = _safe.currentCount;
 				couples.ND = _safe.mouseMove;
 				couples.NC = _safe.mouseClick;
-				couples.NK = 0;
-				couples.CP = 0;
-				couples.V1 = int(Math.random() * 16);
+				couples.NK = int(Math.random() * 16);
+				couples.CP = int(Math.random() * 16);
+				couples.V1 = _safe.motif;
 				couples.V2 = int(Math.random() * 16);
 				couples.V3 = int(Math.random() * 16);
 				couples.V4 = int(Math.random() * 16);
@@ -76,32 +80,36 @@
 				catch (error:Error)
 				{
 					// --
-				}				
+				}
 			}
 		}
 		
 		private function completeHandler(event:Event):void
 		{
-			dispatchEvent(new Event(Event.COMPLETE));
+			dispatchEvent(new Event(COMPLETE));
 		}
 		
 		private function securityErrorHandler(event:SecurityErrorEvent):void
 		{
 			error += event.text + ";";
-			dispatchEvent(new Event(Event.COMPLETE));
+			dispatchEvent(new Event(COMPLETE));
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void
 		{
 			error += event.text + ";";
-			dispatchEvent(new Event(Event.COMPLETE));
+			dispatchEvent(new Event(COMPLETE));
 		}
 		
 		public function set safe(value:Safe):void
 		{
 			_safe = value;
 		}
-	
+		
+		public function get motif():String
+		{
+			return _safe.motif;
+		}
 	}
 
 }

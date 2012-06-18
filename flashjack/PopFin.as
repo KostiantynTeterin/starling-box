@@ -8,7 +8,8 @@ package flashjack
 	
 	public class PopFin extends Sprite 
 	{
-		[Embed(source = "../../media/gameOver.png")]
+		//[Embed(source = "../../media/gameOver.png")]
+		[Embed(source = "../../media/fj-pause.png")]
 		private const pauseTextureClass:Class;
 		private var pauseBMP:Image;		
 		
@@ -20,7 +21,7 @@ package flashjack
 			addChild( pauseBMP );			
 		}
 		
-		public function setFinalScore(score:int, time:int):void
+		public function setFinalScore( score:int ):void
 		{
 			/*
 			var str:String = "TIME BONUS : "+ time +" x 50 = "+String(time*50);

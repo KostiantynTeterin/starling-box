@@ -11,19 +11,16 @@ package flashjack
 	public class HUD extends Sprite 
 	{
 		static private var _instance:HUD;
-		private var _score:int;
 		private var _scoreTxt:TextField;
 		
 		private var _tempsTxt:TextField;
-		private var _temps:int;
 		
 		private var _popFin:PopFin;
 		
 		public function HUD( lock:SingletonLock ) {
-			_score = 0;
 			addChild( new TextField(80, 30, "Score : ", "Verdana", 12, 0xFFFFFF) );
 			
-			_scoreTxt = new TextField(120, 30, _score.toString() , "Verdana", 12, 0xFFFFFF );
+			_scoreTxt = new TextField(120, 30, "0000" , "Verdana", 12, 0xFFFFFF );
 			_scoreTxt.x = 20;
 			addChild( _scoreTxt );
 			
@@ -42,41 +39,19 @@ package flashjack
             return (_instance);
         }
 		
-		public function incScore(value:int):void 
-		{
-			score += value;
-		}
-		
 		public function set score(value:int):void 
 		{
-			_score = value;
-			_scoreTxt.text = _score.toString();
-		}
-		
-		public function get score():int 
-		{
-			return _score;
-		}
-		
-		public function get temps():int 
-		{
-			return _temps;
+			_scoreTxt.text = value.toString();
 		}
 		
 		public function set temps(value:int):void 
 		{
-			_temps = value;
-			_tempsTxt.text = SB.formatTime( _temps );
+			_tempsTxt.text = SB.formatTime( value );
 		}
 		
-		public function incTemps(value:int = 1):void 
+		public function gameOver( score:int ):void
 		{
-			temps += value;
-		}
-		
-		public function gameOver():void
-		{
-			_popFin.setFinalScore(_score, _temps);
+			_popFin.setFinalScore( score );
 			addChild( _popFin );			
 		}
 		
