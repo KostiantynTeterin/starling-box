@@ -73,7 +73,7 @@ package
 		{
 			SB.root		= this;			
 			//SB.screen	= new Niveau1;
-			SB.screen	= new TitleScreenFlashJack;			
+			SB.screen	= new TitleScreenFlashJack;
 		}
 	}
 

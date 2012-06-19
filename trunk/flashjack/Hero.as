@@ -5,6 +5,7 @@ package flashjack
 	import flash.geom.Rectangle;
 	import starling.core.Starling;
 	import starling.display.MovieClip;
+	import starling.events.Event;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starlingBox.game.common.Input;
@@ -25,6 +26,7 @@ package flashjack
 		private const TIME_UP:int = 4;		
 		
 		private var _timeUp:MovieClip;
+		private var _fumee:Fumee;
 		
 		public function Hero()
 		{
@@ -56,9 +58,18 @@ package flashjack
 			_timeUp.pivotY = 188;
 			
 			_anim = _stand;
+			
 			state = STAND;
 			
+			animation.addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage );
+			
 			init();
+		}
+		
+		private function _onAddedToStage(e:Event):void 
+		{
+			animation.removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
+			animation.parent.addChild(_fumee );
 		}
 		
 		override public function gameOver():void {
@@ -72,6 +83,9 @@ package flashjack
 			state = FALL;
 			_posx = Constants.HERO_DEF_X;
 			_posy = Constants.HERO_DEF_Y;
+			
+			_fumee = new Fumee;
+			
 			_dx = .0;
 			_dy = 5.0;
 			_onGround = false;
@@ -94,15 +108,18 @@ package flashjack
 				_dx = 0;
 			}
 			
-			if (_onGround && Input.isDown(Input.KEY_A))
+			if (_onGround && Input.isPressed(Input.KEY_A))
 			{
 				// _anim jump
 				_onGround = false;
 				_dy = -(Constants.HERO_JUMPING_ABILITY);
+				_fumee.init(_posx + (_anim.scaleX * 16), _posy);
+				_fumee.scaleX = -_anim.scaleX;
+				_fumee.play();
 			}
 			_dy += Constants.GRAVITY;
 			
-			super.changeVelocity();
+			super.changeVelocity();			
 		}
 		
 		override protected function set state( value:int ):void

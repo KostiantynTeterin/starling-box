@@ -5,6 +5,7 @@ package screens
 	import flash.geom.Rectangle;
 	import flashjack.Blast;
 	import flashjack.BonusMC;
+	import flashjack.Fumee;
 	import flashjack.Hero;
 	import flashjack.HUD;
 	import flashjack.Personnage;
@@ -51,8 +52,6 @@ package screens
 	 * 	-> update des positions
 	 * 	-> recup des bonus
 	 * 
-	 * Integration complete de la supabox (pour le score, le temps (ok), l'etat du jeu (ok) et le motif de fin (ok) (autre ?))
-	 * 
 	 * ATTENTION
 	 * dans l'update addChild a repetition
 	 * animation de saut
@@ -96,8 +95,7 @@ package screens
 			_supaBox.addEventListener(SupaBox.COMPLETE, _onSupaBoxSendComplete);			
 			
 			// layer 1, hero
-			hero = new Hero();
-			
+			hero = new Hero;
 			// layer 2, bonus
 			bonusLayer = new Sprite;
 			bonusList = new LinkedList();
@@ -112,6 +110,8 @@ package screens
 			
 			//
 			this.touchable = false;
+			
+			
 		}
 		
 		// ========================================================================================		
@@ -125,6 +125,7 @@ package screens
 			
 			if (hero) { 
 				hero.levelDat = tilemap.datMiniature;
+				//addChild( fumee );
 				addChild( hero.animation );
 			}
 			
@@ -184,8 +185,9 @@ package screens
 		// base 
 		override public function update(e:Event):void
 		{
-			Input.update();
-			hero.update(); // collide avec le decor
+			Input.update();						
+			hero.update(); // collide avec le décor
+			//fumee.init( hero.animation.x, hero.animation.y );
 			if (!SB.engine.paused) addChild( hero.animation ); // hack temporaire pour eviter qu'il ne passe devant l'image de pause
 			if (!_safe.gameOver) addChild( hero.animation ); // la même ...
 			//addChild( ennemisLayer );
@@ -253,6 +255,7 @@ package screens
 			// destroy la tilemap
 			// l'ecouteur clavier
 			// la SupaBox
+			
 			super.destroy();
 		}
 		
@@ -261,8 +264,8 @@ package screens
 		
 		protected function _onTimerComplete(e:TimerEvent = null):void
 		{
-			if ( e ) _safe.motif = SupaBox.TIME_UP;			
-			addChild( HUD.instance );			
+			if ( e ) _safe.motif = SupaBox.TIME_UP;
+			addChild( HUD.instance );
 			_safe.gameOver = true;
 			HUD.instance.gameOver( _safe.getValue(Safe.SCORE) );
 			HUD.instance.temps = 0;
@@ -270,11 +273,12 @@ package screens
 			var nb:int = ennemis.length;
 			for (var i:int = 0 ; i < nb ; i++ ) {
 				ennemis[i].gameOver();
-			}			
+			}
 			SB.soundBox.fadeOut();
-			// --
+			
 			// envoi du score
 			//_supaBox.send();
+			
 		}
 		
 		protected function _onSupaBoxSendComplete(e:flash.events.Event):void 

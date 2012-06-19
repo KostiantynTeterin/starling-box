@@ -78,6 +78,8 @@ package flashjack
 			state = STAND;
 			
 			init();
+			
+			_anim.touchable = false;
 		}
 		
 		protected function init():void
