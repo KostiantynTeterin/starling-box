@@ -33,25 +33,23 @@ package
 	 * integration de nape avec le juggler de starling
 	 * 
 	 * * * TODO ALIEN FLEET * * *
-	 * 
+	 * QUANTIC HATE
 	 * 
 	 * * * TODO FLASH JACK * * *
 	 * 
-	 * animation win et écran de fin score / 3500
-	 * ecran de fin (chaine maxi)
-	 * bonus de temps restant
+	 * animation win
 	 * anim de hit + mort
 	 * explosion de l'ennemi au contact, electricité ou autre
 	 * monstres (rebond ok, tracker volant, marche aller-retour + chute );
 	 * plate forme disparaissent
 	 * plate forme mobiles
 	 * 
-	 * effets de poussieres, impacts, explosions
+	 * effets de poussiere au moment du saut (ok)
 	 * 
-	 * personnage touché frame + clignotement
-	 * 
-	 * controles tactiles
-	 * 
+	 * amélio de ce WE
+	 * # controles tactiles
+	 * # nouvelle mécanique de saut
+	 * # explosion au contact d'un monstre (plus le monste qui disparait) ?
 	 * 
 	 * * * OPTIMS * * *
 	 * http://wiki.starling-framework.org/manual/performance_optimization
