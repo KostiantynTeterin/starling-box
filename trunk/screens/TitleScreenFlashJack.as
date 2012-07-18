@@ -3,6 +3,7 @@ package screens
 	import com.greensock.TweenMax;
 	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
+	import starlingBox.game.controller.VirtualJoystick;
 	import starlingBox.SB;
 	import starlingBox.Screen;
 	import screens.Niveau1;
