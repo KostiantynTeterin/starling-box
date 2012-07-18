@@ -1,11 +1,12 @@
 package screens
 {
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flashjack.Blast;
 	import flashjack.BonusMC;
-	import flashjack.Fumee;
 	import flashjack.Hero;
 	import flashjack.HUD;
 	import flashjack.Personnage;
@@ -16,6 +17,7 @@ package screens
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starlingBox.game.common.Input;
+	import starlingBox.game.controller.VirtualJoystick;
 	import starlingBox.malbolge.Safe;
 	import starlingBox.SB;
 	import starlingBox.Screen;
@@ -177,9 +179,12 @@ package screens
 			addChild( HUD.instance );
 			HUD.instance.temps = _safe.repeatCount;
 			// --
-			_safe.start();			
-			Input.init( SB.nativeStage );			
+			_safe.start();
+			Input.init( SB.nativeStage );
 			startOEF();
+			
+			var controller:VirtualJoystick = new VirtualJoystick(150, 150);			
+			addChild( controller );			
 		}
 		
 		// base 
