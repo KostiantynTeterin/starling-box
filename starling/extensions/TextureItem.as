@@ -6,8 +6,7 @@ package starling.extensions
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	
-	public class TextureItem extends Sprite
-	{
+	public class TextureItem extends Sprite{
 		
 		private var _graphic:BitmapData;
 		private var _textureName:String = "";
@@ -17,8 +16,8 @@ package starling.extensions
 		private var _frameWidth:int = 0;
 		private var _frameHeight:int = 0;
 		
-		public function TextureItem(graphic:BitmapData, textureName:String, frameName:String, frameX:int = 0, frameY:int = 0, frameWidth:int = 0, frameHeight:int = 0)
-		{
+		
+		public function TextureItem(graphic:BitmapData, textureName:String, frameName:String, frameX:int = 0, frameY:int=0, frameWidth:int=0, frameHeight:int=0){
 			super();
 			
 			_graphic = graphic;
@@ -34,37 +33,34 @@ package starling.extensions
 			addChild(bm);
 		}
 		
-		public function get textureName():String
-		{
+		public function get textureName():String{
 			return _textureName;
 		}
 		
-		public function get frameName():String
-		{
+		public function get frameName():String{
 			return _frameName;
 		}
 		
-		public function get graphic():BitmapData
-		{
+		public function get graphic():BitmapData{
 			return _graphic;
 		}
 		
-		public function get frameX():int
+		public function get frameX():int 
 		{
 			return _frameX;
 		}
 		
-		public function get frameY():int
+		public function get frameY():int 
 		{
 			return _frameY;
 		}
 		
-		public function get frameWidth():int
+		public function get frameWidth():int 
 		{
 			return _frameWidth;
 		}
 		
-		public function get frameHeight():int
+		public function get frameHeight():int 
 		{
 			return _frameHeight;
 		}
