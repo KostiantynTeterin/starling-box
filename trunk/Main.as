@@ -5,6 +5,8 @@ package
 	import screens.Intro;
 	import screens.Jeu;
 	import screens.BaseNiveau;
+	import screens.Keos_GuildScreen;
+	import screens.KeoS_TitleScreen;
 	import screens.SimulationFluides;
 	import starling.display.Sprite;
 	import starlingBox.SB;
@@ -60,7 +62,7 @@ package
 	 * 
 	 * faire 1 seul texture atlas -pour toutes les animations- taille max 2048 * 2048 (dans la mesure du possible)
 	 * background.blendmode = BlendMode.none (mis sur baseTileMap)
-	 * précalculer les with/height , a priori ok
+	 * précalculer les width/height , a priori ok
 	 * container.touchable = false, tous les niveaux sont en touchable = false :)
 	 * object.dispatchEventWith("lol", bubbles);, pour l'instant c'est pas utilisé
 	 */	
@@ -69,9 +71,11 @@ package
 	{
 		public function Main() 
 		{
-			SB.root		= this;			
+			SB.root		= this;
+			SB.screen	= new KeoS_TitleScreen;
+			//SB.screen	= new Keos_GuildScreen;
 			//SB.screen	= new Niveau1;
-			SB.screen	= new TitleScreenFlashJack;
+			//SB.screen	= new TitleScreenFlashJack;			
 		}
 	}
 
