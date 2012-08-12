@@ -1,4 +1,4 @@
-﻿package 
+﻿package starlingBox
 {
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
@@ -9,7 +9,7 @@
 	
     public class ConfigXML extends EventDispatcher 
 	{ 
-        private static var _instance:Config; 
+        private static var _instance:ConfigXML; 
 		
         private var _datas:XML;
 		private var _url:String		= "";		
@@ -19,9 +19,9 @@
 		
         public function ConfigXML( lock:SingletonLock ) { }
 		
-        public static function get instance():Config {
+        public static function get instance():ConfigXML {
             if (_instance == null){
-                _instance = new Config(new SingletonLock());
+                _instance = new ConfigXML(new SingletonLock());
             };
             return (_instance);
         }
