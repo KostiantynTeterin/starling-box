@@ -65,7 +65,7 @@ package starlingBox
 			
 			SB.original_framerate = stage.frameRate;
 			
-			SB.console.addMessage(this, "== INITSTAGE-3D ==");
+			SB.console.addMessage(this, "== INITSTAGE-3D == Starling v" + Starling.VERSION);
 		}
 		
 		// =============================================================

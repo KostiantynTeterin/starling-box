@@ -9,10 +9,9 @@
 	import flash.utils.getTimer;	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import StarlingBox.game.utils.Ran
+	import starlingBox.game.utils.Ran;
 	
 	// donner la possibilité d'overrider les points d'entree/sortie
-	
 	
 	public class Maze
 	{
@@ -98,10 +97,15 @@
 			update();	
 		}
 		
+		public function destroy():void
+		{
+			trace("TODO");
+		}
+		
 		public function update():void
 		{
 			var p:Point = new Point;
-			_dat.fillRect( _dat.rect, NOIR );			
+			_dat.fillRect( _dat.rect, NOIR );
 			_dat.copyPixels( _labyrinthe_dat, _dat.rect, p );
 			_dat.copyPixels( _path_dat, _dat.rect, p );
 			_dat.copyPixels( _obj_dat, _dat.rect, p );			
@@ -110,11 +114,11 @@
 		private function generate():void
 		{
 			Ran.seed = _WIDTH * _HEIGHT;
-			Ran.reset();			
+			Ran.reset();
 			
 			_labyrinthe_dat.copyPixels( build(_WIDTH,_HEIGHT),new Rectangle(0,0,_WIDTH,_HEIGHT), new Point );
 			
-			if(_autoEntryAndExit) autoEntryExit();			
+			if(_autoEntryAndExit) autoEntryExit();
 		}
 		
 		private function generateFromURL( cleanURL:String ):void
@@ -171,7 +175,8 @@
 		public function get heartPoint():Point { return _heartPoint; }		
 		public function get labyrinthe_dat():BitmapData { return _labyrinthe_dat; }		
 		public function get path_dat():BitmapData { return _path_dat; }
-		public function get obj_dat():BitmapData { return _obj_dat; }		
+		public function get obj_dat():BitmapData { return _obj_dat; }
+		public function get bitmap():Bitmap { return _bmp; }
 		public function get orientation():int { return _orientation; }
 		
 		public function get autoEntryAndExit():Boolean { return _autoEntryAndExit; }
