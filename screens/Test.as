@@ -1,8 +1,13 @@
 package screens 
 {
+	import flash.events.MouseEvent;
+	import KeoS.PanelA;
+	import KeoS.PanelB;
 	import starlingBox.Screen;
 	import starlingBox.SB;	
 	import starlingBox.utils.BrowserLocation;
+	import starlingBox.utils.EventBroker;
+	import KeoS.DataEvent;
 	
 	/**
 	 * ...
@@ -14,6 +19,8 @@ package screens
 	 */
 	public class Test extends Screen 
 	{
+		private var pa:PanelA;
+		private var pb:PanelB;
 		
 		override public function Test() 
 		{
@@ -38,6 +45,24 @@ package screens
 			SB.console.addMessage( 'BrowserLocation.url', BrowserLocation.url );
 			
 			SB.addConsole( this );
+			
+			pa = new PanelA;			
+			pb = new PanelB;
+			
+			EventBroker.subscribe( DataEvent.KEOS_EVENT, _onKeosDataEvent, "ROOT" );
+			SB.nativeStage.addEventListener( MouseEvent.CLICK, _onMouseClick );
+		}
+		
+		private function _onMouseClick(e:MouseEvent):void 
+		{
+			e.stopImmediatePropagation();
+			pa.sendMessage();
+		}
+		
+		private function _onKeosDataEvent(e:DataEvent):void 
+		{
+			SB.console.addMessage(this, '_onKeosDataEvent', e.data);
+			EventBroker.clearAllSubscriptions();
 		}
 		
 	}
