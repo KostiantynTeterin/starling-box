@@ -2,7 +2,7 @@ package starlingBox.utils
 {
 	import flash.external.ExternalInterface;
 	
-	import starlingBox.utils.URL;
+	import starlingBox.utils.URLUtil;
 	
 	/**
 	 * http://code.google.com/p/developmentarc-core/wiki/BrowserLocationUtil
@@ -21,7 +21,7 @@ package starlingBox.utils
 	 *   protocal 
 	 * </listing>              
 	 */
-	public class BrowserLocationUtil
+	public class BrowserLocation
 	{
 		
 		/**
@@ -46,6 +46,14 @@ package starlingBox.utils
 			}
 			
 		}
+		
+		/*
+		 * ajout christophe 
+		 * */
+		public static function set url(url:String):void {
+			_testURL = url;			
+		}
+		
 		/**
 		 * Method encapsulates the URL's getProtocal method returning the protocal of the current url.
 		 * <br/>
@@ -54,7 +62,7 @@ package starlingBox.utils
 		 * @return String Current protocal used on the current url.
 		 */
 		public static function get protocal():String {
-			return URL.getProtocol(BrowserLocationUtil.url);
+			return URLUtil.getProtocol(BrowserLocation.url);
 		}
 		
 		/**
@@ -65,7 +73,7 @@ package starlingBox.utils
 		 * @return String Current server name in url.
 		 */ 
 		public static function get serverName():String {
-			return URL.getServerName(BrowserLocationUtil.url);
+			return URLUtil.getServerName(BrowserLocation.url);
 		}
 		
 		/**
@@ -77,7 +85,7 @@ package starlingBox.utils
 		 * @return String Current port used in the url.
 		 */
 		public static function get port():uint {
-			return URL.getPort(BrowserLocationUtil.url);
+			return URLUtil.getPort(BrowserLocation.url);
 		}
 		
 		/**
@@ -88,8 +96,8 @@ package starlingBox.utils
 		 * @return String Path in the current url.
 		 */
 		public static function get path():String {
-			var url:String = BrowserLocationUtil.url;
-			var serverName:String = URL.getServerNameWithPort(url);
+			var url:String = BrowserLocation.url;
+			var serverName:String = URLUtil.getServerNameWithPort(url);
 			var firstIndex:int = url.indexOf(serverName, 0) + serverName.length;
 			
 			var lastIndex:int;
@@ -117,7 +125,7 @@ package starlingBox.utils
 		 * @return query String of the query portion of the current url in the system.
 		 */
 		public static function get query():String {
-			var parts:Array = BrowserLocationUtil.url.split("?");
+			var parts:Array = BrowserLocation.url.split("?");
 			
 			if(parts.length == 2) {
 				return parts[1].split("#")[0];
@@ -141,11 +149,12 @@ package starlingBox.utils
 		 * @return Object Generic object containing each key/value pair found in the current urls query.
 		 */
 		public static function get parameters():Object {
-			var query:String = BrowserLocationUtil.query;
+			var query:String = BrowserLocation.query;
 			
 				if(query.length > 0) {
 					var parameters:String = query.split("#")[0];
-					return mx.utils.URL.stringToObject(parameters,"&");	
+					return URLUtil.stringToObject(parameters,"&");	
+					//return mx.utils.URL.stringToObject(parameters,"&");	
 				}
 				else {
 					return new Object();
@@ -160,7 +169,7 @@ package starlingBox.utils
 		 * @return String Current fragment in the current url.
 		 */
 		public static function get fragment():String {
-			var parts:Array = BrowserLocationUtil.url.split("#");
+			var parts:Array = BrowserLocation.url.split("#");
 			
 			if(parts.length == 2) {
 				return parts[1];
