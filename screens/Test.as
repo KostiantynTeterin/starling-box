@@ -17,7 +17,7 @@ package screens
 		
 		override public function begin():void
 		{
-			SB.console.addMessage(this, "== TEST :: BEGIN ==");			
+			SB.console.addMessage(this, "== TEST :: BEGIN ==");
 			
 			super.begin();
 		}
