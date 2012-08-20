@@ -11,7 +11,7 @@ package screens
 	
 	public class Niveau1 extends BaseNiveau	
 	{
-		override public function Niveau1()
+		public function Niveau1()
 		{
 			SB.console.addMessage(this, "== NIVEAU1 SCREEN ==");
 			

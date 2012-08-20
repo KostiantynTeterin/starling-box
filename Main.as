@@ -10,6 +10,7 @@ package
 	import screens.Keos_GuildScreen;
 	import screens.KeoS_TitleScreen;
 	import screens.SimulationFluides;
+	import screens.Test;
 	import starling.display.Sprite;
 	import starlingBox.ConfigXML;
 	import starlingBox.SB;
@@ -81,10 +82,13 @@ package
 			//SB.screen	= new Niveau1;
 			//SB.screen	= new TitleScreenFlashJack;			
 			
+			SB.screen = new Test;
+			
 			Config.LANG = SB.flashvar("lang", "FR");
 			ConfigXML.instance.loadDatas( '/lockpickers/assets/lang/'+Config.LANG+'.xml' );
 			ConfigXML.instance.addEventListener(Event.COMPLETE, _onDataComplete, false, 0, true);
 			ConfigXML.instance.addEventListener(Event.CLOSE, _onDataError, false, 0, true);
+			
 			/*
 			SB.addConsole( this );
 			SB.console.addMessage( 'oOo Please wait oOo' );
