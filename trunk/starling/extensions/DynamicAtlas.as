@@ -19,7 +19,8 @@ package starling.extensions
 	import starling.textures.TextureAtlas;
 	import starling.text.TextField;
 	
-	import com.emibap.textureAtlas.TextureItem;
+	//import com.emibap.textureAtlas.TextureItem;
+	import starling.extensions.TextureItem;
 	
 	/**
 	 * DynamicAtlas.as
