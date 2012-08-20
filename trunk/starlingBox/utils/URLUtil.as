@@ -25,7 +25,7 @@ package starlingBox.utils
      *  @playerversion AIR 1.1
      *  @productversion Flex 3
      */
-    public class URL
+    public class URLUtil
     {
         //--------------------------------------------------------------------------
         //
@@ -49,7 +49,7 @@ package starlingBox.utils
         /**
          *  @private
          */
-        public function URL()
+        public function URLUtil()
         {
             super();
         }
@@ -373,7 +373,7 @@ package starlingBox.utils
          *  @playerversion AIR 1.1
          *  @productversion Flex 3
          */
-	/*
+		/*
         public static function replaceTokens(url:String):String
         {             
             var loaderURL:String = LoaderConfig.url == null ? "" : LoaderConfig.url;
@@ -485,8 +485,8 @@ package starlingBox.utils
          *  @playerversion AIR 1.1
          *  @productversion Flex 3
          */  
-        /*
-	public static function hasUnresolvableTokens():Boolean
+		/*
+        public static function hasUnresolvableTokens():Boolean
         {
             return LoaderConfig.url != null;
         }
