@@ -8,12 +8,11 @@ package KeoS
 	 */
 	public class DataEvent extends Event 
 	{
-		public static const KEOS_EVENT:String = 'keos_event';
-		public var data:int = 0;
+		public var data:*;
 		
-		public function DataEvent() 
+		public function DataEvent(type:String) 
 		{
-			super( KEOS_EVENT, true, true );
+			super( type, true, true );
 		}
 		
 	}
