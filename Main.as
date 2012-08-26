@@ -3,6 +3,7 @@ package
 	import alienfleet.StarField;
 	import flash.events.Event;
 	import flash.net.URLRequest;
+	import Ludum24.TitleScreenLD24;
 	import screens.FlashJack;
 	import screens.Intro;
 	import screens.Jeu;
@@ -50,10 +51,20 @@ package
 			//SB.screen	= new TitleScreenFlashJack;			
 			//SB.screen = new Test;
 			
+			SB.screen = new TitleScreenLD24;
+			
+			// output
+			// ..\..\WebLocal\Lockpickers\assets\swf\Lockpickers.swf
+			// 995 * 665
+			// external command
+			// iexplore.exe http://127.0.0.1/lockpickers/index.php?local
+			
+			/*
 			Config.LANG = SB.flashvar("lang", "FR");
 			ConfigXML.instance.loadDatas( '/lockpickers/assets/lang/'+Config.LANG+'.xml' );
 			ConfigXML.instance.addEventListener(Event.COMPLETE, _onDataComplete, false, 0, true);
 			ConfigXML.instance.addEventListener(Event.CLOSE, _onDataError, false, 0, true);			
+			*/
 		}
 		
 		private function _onDataComplete(e:Event):void 

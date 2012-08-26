@@ -9,7 +9,11 @@ package
 	import starlingBox.SB;
 	
 	
-	[SWF(width="995",height="640",frameRate="60",backgroundColor="#dedede")]
+	// keos
+	//[SWF(width="995",height="640",frameRate="60",backgroundColor="#dedede")]
+	
+	//ludum
+	[SWF(width="550",height="400",frameRate="60",backgroundColor="#000000")]
 	
 	public class Preloader extends Sprite
 	{
@@ -40,8 +44,8 @@ package
 			newContextMenu.customItems.push(cmi);			
 			this.contextMenu = newContextMenu;			 
 			 
-			preloader.x = 995 >> 1; // attention c'est important de se baser sur la taille du swf
-			preloader.y = 640 >> 1; // car il peut être embed en w/h 100%
+			preloader.x = 550 >> 1; // attention c'est important de se baser sur la taille du swf
+			preloader.y = 400 >> 1; // car il peut être embed en w/h 100%
 			
 			addChild(preloader);
 			

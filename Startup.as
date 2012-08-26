@@ -10,7 +10,8 @@ package
 	{
 		public function Startup()
 		{
-			super(955, 640, Main, 0, true);
+			super(550, 400, Main, 0, false);
+			//super(955, 640, Main, 0, true);
 		}
 	}
 
