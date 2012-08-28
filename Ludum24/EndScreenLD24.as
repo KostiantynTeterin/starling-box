@@ -43,9 +43,9 @@ package Ludum24
 		{
 			this.name = 'TitleScreenLD24';
 			const definition:String = 'You saved the universe -again-\nAnd more important by finishing this game\nyou stopped a huge memory leak ;)\n\nThis game was coded for luddumdare#25\nby Christophe Bessis an optimist Flash Game developper :)';
-			
+			SoundBox.instance.setBGMVolume(.4);
 			bg = new Background( -1 ); // 0xda1930, 3fbbfc
-			trace( bg.coul.toString(16) );
+			//trace( bg.coul.toString(16) );
 			
 			bg2 = new Background2( bg.coul );			
 			
