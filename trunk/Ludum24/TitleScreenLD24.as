@@ -40,7 +40,8 @@ package Ludum24
 		override public function begin():void
 		{
 			this.name = 'TitleScreenLD24';
-			const definition:String = '"Evolution is the change in the inherited characteristics of biological populations across successive generations. Evolutionary processes give rise to diversity at every level of biological organisation, including species, individual organisms and molecules such as DNA and proteins."';
+			//const definition:String = '"Evolution is the change in the inherited characteristics of biological populations across successive generations. Evolutionary processes give rise to diversity at every level of biological organisation, including species, individual organisms and molecules such as DNA and proteins."';
+			const definition:String = 'Evolution looks cool but things can go wrong.\nYou have to stop the evolution of a new life form.\n\nWhy ? Because one day they will steal\nour ideas and violate our patents.\n\nSo burn that sh*t as quick as you can !\n\n--end transmission '; 
 			
 			SoundBox.instance.streamBGMusic( "http://www.yopsolo.fr/ressources/evolution.mp3" );
 			
@@ -66,7 +67,7 @@ package Ludum24
 			title.y = int(stage.stageHeight * 2 / 15 );	
 			title.touchable = false;
 			
-			defTxt = new TextField(450, 120, definition, EmbedFonts.instance.geo, 19, 0xFFFFFF );			
+			defTxt = new TextField(450, 200, definition, EmbedFonts.instance.geo, 19, 0xFFFFFF );			
 			defTxt.x = (stage.stageWidth - defTxt.width) >> 1;
 			defTxt.y = title.y + title.height;
 			defTxt.touchable = false;

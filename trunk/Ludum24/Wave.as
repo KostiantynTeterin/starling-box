@@ -39,7 +39,7 @@ package Ludum24
 		private var count:Number = 0;
 		private var atlas:TextureAtlas;
 		
-		private var MAX_SIZE:int = 50;
+		private var MAX_SIZE:int = 60;
 		
 		public var positions:Vector.<Amoeba> = new Vector.<Amoeba>;
 		
@@ -50,7 +50,7 @@ package Ludum24
 			motion.perlinNoise(300, 400, 6, int(Math.random() * 0xFFFFFF), false, true, 7);
 			motion.applyFilter( motion, motion.rect, motion.rect.topLeft, bf );
 			atlas = new TextureAtlas(Texture.fromBitmap(new AmoebaClass() as Bitmap), XML(new AmoebaXML));
-			for (var i:int = 0 ; i < 35 ; i++ ) {
+			for (var i:int = 0 ; i < 40 ; i++ ) {
 				positions.push( new Amoeba( atlas ) );
 				positions[i].init( 100 + int(Math.random() * 400 ) , 100 + int(Math.random() * 500 ), Math.random() + 0.5 );
 			}
@@ -71,7 +71,7 @@ package Ludum24
 			var p:Amoeba;
 			var col:Number;
 			var d:Number;
-			var count:int = 0;
+			var count2:int = 0;
 			while ( n-- )
 			{
 				p = positions[n];
@@ -91,16 +91,24 @@ package Ludum24
 					if (p.y < 0) p.y += 800;
 					else if (p.y >= 800) p.y -= 800;	
 					
-					if ( n < MAX_SIZE  ) {
+					if ( positions.length < MAX_SIZE  ) {
 						if (Math.random() < .0008) {
 							divide();
 						}					
 					}
 				}else {
-					count++;
+					// floating bodies
+					if (p.y < 850) {
+						p.vy += .005;
+						p.y += p.vy;						
+					}else {
+						p.destroy();
+					}
+					// -- 
+					count2++;
 				}
 				
-				if (count == positions.length) {
+				if (count2 == positions.length) {
 					this.removeEventListener( Event.ENTER_FRAME, _oef );
 					
 					var support:RenderSupport = new RenderSupport();
@@ -126,16 +134,23 @@ package Ludum24
 		
 		private function divide():void 
 		{
-			var newComer:Amoeba = new Amoeba( atlas );
-			newComer.color = Math.random() * 0xFFFFFF;
-			newComer.init( positions[ int(Math.random()*positions.length) ].x, positions[ int( Math.random() * positions.length) ].y, positions[0].s * 2 );
-			positions.push( newComer );
-			
+			var ran:Number = int(Math.random() * positions.length);
+			if ( positions[ ran ].y < 600 ) {
+				var newComer:Amoeba = new Amoeba( atlas );
+				newComer.color = Math.random() * 0xFFFFFF;
+				newComer.init( positions[ ran ].x, positions[ ran ].y, positions[0].s * 2 );
+				positions.push( newComer );				
+			}
 		}
 		
 		public function destroy():void
 		{
 			this.removeEventListener(Event.ENTER_FRAME, _oef );
+			var n:int = positions.length;
+			while ( n-- ) {			
+				positions[n].dispose();
+			}
+			positions = null;	
 			motion.dispose();
 		}
 		
