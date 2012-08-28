@@ -60,7 +60,13 @@ package Ludum24
 		public function flagMe():void 
 		{
 			flag = true;
-			Starling.juggler.remove(this);	
+			vy = 0;
+			Starling.juggler.remove(this);
+		}
+		
+		public function destroy():void
+		{
+			this.dispose();
 		}
 	
 	}

@@ -25,9 +25,7 @@
 		
 		private var _safe:Safe;
 		
-		public function SupaBox()
-		{
-		}
+		public function SupaBox() { }
 		
 		public function send():void
 		{
@@ -110,6 +108,11 @@
 		{
 			return _safe.motif;
 		}
+		
+		public function stop():void
+		{
+			_safe.stop();
+		}		
 	}
 
 }

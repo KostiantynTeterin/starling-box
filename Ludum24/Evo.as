@@ -30,7 +30,7 @@ package Ludum24
 	 * WARNING really bugged ZONE ! 
 	 * my pooling system is corrupted
 	 * 
-	 * 
+	 * laisser les corps defiler à la vitesse du scrolling
 	 * 
 	 * */
 	
@@ -104,7 +104,7 @@ package Ludum24
 			
 			// POOLS tir, explo et particles
 			_myPool = new Pool(Tir, 10, 5);
-			_myPoolExplo = new Pool(Explosion, 15, 5);
+			_myPoolExplo = new Pool(Explosion, 10, 5);
 			//_myPoolEnnemis = new Pool( Amoeba, 50, 10 );
 			
 			SoundBox.instance.addRessource( new LaserClass(), SoundBox.ACTION1 );
@@ -194,6 +194,11 @@ package Ludum24
 				
 				bNode = nextNodeExplo;
 			}
+			/*
+			myObjExplo = null;
+			nextNodeExplo = null;
+			bNode = null;
+			*/
 			
 			//_jauge.incValue(1);
 			addChild(_tir);
@@ -231,7 +236,7 @@ package Ludum24
 								_explo.init(_wave.positions[i].x, _wave.positions[i].y);
 								addChild(_explo);
 								tg.alpha = .1;								
-								_wave.positions[i].flagMe();
+								tg.flagMe();
 								_wave.incSize();
 								break;
 							}
@@ -268,13 +273,16 @@ package Ludum24
 			SB.console.addMessage(this, "EVENT-SUPABOX-COMPLETE");
 			
 			//_supaBox.motif = SupaBox.TIME_UP;
-			_supaBox.send();
+			//_supaBox.send();
 		}		
 		
 		override public function destroy():void
 		{
-			super.destroy();
-			
+			_supaBox.stop();
+			_waveContainer.removeChildren();
+			_wave.destroy();
+			_wave = null;
+			super.destroy();			
 		}		
 		
 		override public function end():void

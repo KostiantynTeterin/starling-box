@@ -21,7 +21,7 @@ package Ludum24
 		private var vaisseau:Image;
 		
 		// REACTEUR A FUSION !
-		[Embed(source="../../media/particle.pex",mimeType="application/octet-stream")]
+		[Embed(source="../../media/particle2.pex",mimeType="application/octet-stream")]
 		private const ParticlesXML:Class;
 		[Embed(source="../../media/fire_particle.png")]
 		private const ParticleTexture:Class;
@@ -42,14 +42,14 @@ package Ludum24
 		   particles = new PDParticleSystem(XML(new ParticlesXML), Texture.fromBitmap(new ParticleTexture) );
 		   
 		   particles.emitterX = vaisseau.x;
-		   particles.emitterY = vaisseau.y + 32;
+		   particles.emitterY = vaisseau.y + 20;
 		
 		   Starling.juggler.add(particles);
 		   particles.start();
 			
 			// DisplayList
 			addChild(vaisseau);
-			addChild( particles );			
+			addChild( particles );
 		}
 		
 		public function get position():Point
@@ -69,7 +69,7 @@ package Ludum24
 			_position.x = particles.emitterX = vaisseau.x;
 			_position.x = vaisseau.x;
 			_position.y = vaisseau.y
-			particles.emitterY = vaisseau.y + 32;			
+			particles.emitterY = vaisseau.y + 20;			
 		}
 	
 	}
