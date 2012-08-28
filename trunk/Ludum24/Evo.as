@@ -107,8 +107,12 @@ package Ludum24
 			_myPoolExplo = new Pool(Explosion, 10, 5);
 			//_myPoolEnnemis = new Pool( Amoeba, 50, 10 );
 			
+			SoundBox.instance.setBGMVolume( 0.3 );
+			
 			SoundBox.instance.addRessource( new LaserClass(), SoundBox.ACTION1 );
-			SoundBox.instance.setSFXVolume( .4 );
+			SoundBox.instance.setSFXVolume( .3 );
+			
+			
 			
 			// jauge
 			_jauge = new Jauge(100, 20);
@@ -201,6 +205,7 @@ package Ludum24
 			*/
 			
 			//_jauge.incValue(1);
+			SoundBox.instance.playSfx( SoundBox.ACTION1 );
 			addChild(_tir);
 		}
 		
