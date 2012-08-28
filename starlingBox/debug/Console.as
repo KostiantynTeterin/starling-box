@@ -56,6 +56,7 @@
 		
 		public function addMessage(... data):void
 		{
+			/*
 			var s:String = "";
 			if (data)
 			{
@@ -86,13 +87,14 @@
 				var txt:Image = new Image(Texture.fromBitmapData(_txtDat, false));
 				_gfx.addChild(txt);
 			}
+			*/
 			trace(data);
 		}
 		
 		public function message(... data):void
 		{
 			_tf.text = "";
-			addMessage(data);
+			//addMessage(data);
 		}
 		
 		public function set visible(value:Boolean):void

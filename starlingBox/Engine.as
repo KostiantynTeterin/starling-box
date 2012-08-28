@@ -113,8 +113,11 @@ package starlingBox
 		
 		public function set screen(value:Screen):void
 		{
-			if (screen)
-				screen.end();
+			if (_screen) {
+				SB.root.removeChild(_screen);
+				_screen.end();
+				_screen.dispose();
+			}
 				
 			_screen = value;
 			SB.root.addChild(_screen);
