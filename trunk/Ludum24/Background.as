@@ -19,8 +19,8 @@ package Ludum24
 		{
 			this.touchable = false;
 			
-            var back:BitmapData = new BitmapData(275, 200, false, 0xffffff);
-            back.perlinNoise(275, 200, 9, new Date().getTime(), false, true, 7, true);
+            var back:BitmapData = new BitmapData(300, 400, false, 0xffffff);
+            back.perlinNoise(300, 400, 9, new Date().getTime(), false, true, 7, true);
             back.colorTransform(back.rect, new ColorTransform(1, 1, 1, 1, 100, 100, 100, 0));
             var grad:Shape = new Shape();
 			if ( pColor > 0 ) {
@@ -30,15 +30,21 @@ package Ludum24
 			}
 			
             grad.graphics.beginGradientFill(GradientType.RADIAL, [ _coul , 0x000000], [1, 1], [0, 255], new Matrix(0.6, 0, 0, 0.6, 232.5, 232.5));
-            grad.graphics.drawRect(0, 0, 275, 200);
+            grad.graphics.drawRect(0, 0, 300, 400);
             back.draw(grad, null, null, BlendMode.MULTIPLY);
 			super( Texture.fromBitmapData( back, true, true, 1 ) );
+			back.dispose();
 			this.scaleX = this.scaleY = 2;
 		}
 		
 		public function get coul():uint 
 		{
 			return _coul;
+		}
+		
+		public function destroy():void
+		{
+			this.texture.dispose();
 		}
 		
 	}

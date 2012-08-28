@@ -100,7 +100,7 @@ package screens
 			_myPoolExplo = new Pool(Explosion, 15, 5);
 			_myPoolParticles = new Pool(PhysParticle, 15, 5);
 			
-			SoundBox.instance.add("laser", laserClass);
+			//SoundBox.instance.add("laser", laserClass);
 			//SoundBox.instance.add(SoundBox.BG_MUSIC).load("http://video.premiere.fr/premiere/publicite/yop/Portal2-01-Science_is_Fun.mp3").play();
 			
 			// jauge
@@ -262,7 +262,7 @@ package screens
 			
 			SB.console.addMessage(this, "EVENT-SUPABOX-COMPLETE");
 			
-			_supaBox.motif = SupaBox.TIME_UP;
+			//_supaBox.motif = SupaBox.TIME_UP;
 			_supaBox.send();
 		}		
 		

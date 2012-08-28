@@ -1,11 +1,13 @@
 package starlingBox 
 {
+	import flash.events.IOErrorEvent;
 	import flash.events.SampleDataEvent;
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
+	import flash.net.URLRequest;
 	import flash.system.System;
 	import flash.utils.Timer;
 	import com.greensock.TweenLite;
@@ -115,7 +117,8 @@ package starlingBox
 			if ( s == null) {
 				throw new Error("ERROR: No ressource for track " + idx);
 			}else {
-				_channelSFX = s.play(0, 0, _sfxTransform);				
+				trace("### attention je start a 0.3 par defaut, ca peut poser des soucis !");
+				_channelSFX = s.play(.3, 0, _sfxTransform);				
 			}
 		}
 		
@@ -222,7 +225,24 @@ package starlingBox
 				_tracks[i]  = null;
 			}			
 			if (callGarbageCollector) System.gc();			
+		}	
+		
+		// -------------------------------------------------------
+		// EN COURS :)
+		public function streamBGMusic( url:String ):void
+		{
+			var s:Sound = _tracks[BGM1];
+			if ( s == null) {
+				_tracks[BGM1] = new Sound( new URLRequest(url) );
+				_tracks[BGM1].addEventListener(IOErrorEvent.IO_ERROR, _onError );
+				_channelBGM = _tracks[BGM1].play(0, 999, _bgmTransform );
+			}			
 		}		
+		
+		private function _onError(e:IOErrorEvent):void 
+		{
+			trace(e);
+		}
 		
 	}	
 }

@@ -1,5 +1,6 @@
 ﻿package starlingBox
 {
+	import flash.utils.getAliasName;
 	import starling.display.BlendMode;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -41,6 +42,7 @@
 		
 		public function destroy():void
 		{
+			stopOEF();
 			SB.console.addMessage(this, "DEFAULT SCREEN DESTROY");
 		}
 		
