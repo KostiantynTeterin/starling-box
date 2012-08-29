@@ -53,7 +53,7 @@ package Ludum24
 			wait.y = int(stage.stageHeight * 1 / 4 );			
 			addChild( wait );
 			
-			bg = new Background( 0xDD4466 ); // 0xda1930, 3fbbfc
+			bg = new Background( -1 ); // 0xDD4466 0xda1930, 3fbbfc
 			trace( bg.coul.toString(16) );
 			
 			bg2 = new Background2( bg.coul );			
