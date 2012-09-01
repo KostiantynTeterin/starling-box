@@ -17,41 +17,41 @@ package flashjack
 	public class TileMapNiveau1 extends BaseTileMap
 	{
 		
-		[Embed(source="../../media/bgMaya.jpg")]
+		[Embed(source="../../../media/bgMaya.jpg")]
 		protected var bgClass:Class;
 		
-		[Embed(source="../../media/bloc.png")]
+		[Embed(source="../../../media/bloc.png")]
 		private const blocClass:Class;
 		
 		/*
-		   [Embed(source="../../media/blocBas.png")]
+		   [Embed(source="../../../media/blocBas.png")]
 		   private const blocBasClass:Class;
-		   [Embed(source="../../media/blocBasDroit.png")]
+		   [Embed(source="../../../media/blocBasDroit.png")]
 		   private const blocBasDroitClass:Class;
-		   [Embed(source="../../media/blocBasGauche.png")]
+		   [Embed(source="../../../media/blocBasGauche.png")]
 		   private const blocBasGaucheClass:Class;
 		 */
 		
-		[Embed(source="../../media/blocBordDroite.png")]
+		[Embed(source="../../../media/blocBordDroite.png")]
 		private const blocBordDroiteClass:Class;
 		
-		[Embed(source="../../media/blocBordGauche.png")]
+		[Embed(source="../../../media/blocBordGauche.png")]
 		private const blocBordGaucheClass:Class;
 		
 		/*
-		   [Embed(source="../../media/blocHaut.png")]
+		   [Embed(source="../../../media/blocHaut.png")]
 		   private const blocHautClass:Class;
-		   [Embed(source="../../media/blocHautDroit.png")]
+		   [Embed(source="../../../media/blocHautDroit.png")]
 		   private const blocHautDroitClass:Class;
-		   [Embed(source="../../media/blocHautGauche.png")]
+		   [Embed(source="../../../media/blocHautGauche.png")]
 		   private const blocHautGaucheClass:Class;
-		   [Embed(source="../../media/blocVertical.png")]
+		   [Embed(source="../../../media/blocVertical.png")]
 		   private const blocVerticalClass:Class;
-		   [Embed(source="../../media/blocVerticalBas.png")]
+		   [Embed(source="../../../media/blocVerticalBas.png")]
 		   private const blocVerticalBasClass:Class;
-		   [Embed(source="../../media/blocVerticalDroit.png")]
+		   [Embed(source="../../../media/blocVerticalDroit.png")]
 		   private const blocVerticalDroitClass:Class;
-		   [Embed(source="../../media/blocverticalGauche.png")]
+		   [Embed(source="../../../media/blocverticalGauche.png")]
 		   private const blocverticalGaucheClass:Class;
 		 */
 		

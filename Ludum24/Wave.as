@@ -27,9 +27,9 @@ package Ludum24
 		public static const ZOMBIES:int = 6;
 		
 		// TIR
-		[Embed(source="../../media/ennemies.png")]
+		[Embed(source="../../../media/ennemies.png")]
 		private const AmoebaClass:Class;
-		[Embed(source = "../../media/ennemies.xml",mimeType="application/octet-stream")]
+		[Embed(source = "../../../media/ennemies.xml",mimeType="application/octet-stream")]
 		private const AmoebaXML:Class;		
 		
 		private const GRAVITY:Number = -3/100;

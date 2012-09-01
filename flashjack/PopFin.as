@@ -8,8 +8,8 @@ package flashjack
 	
 	public class PopFin extends Sprite 
 	{
-		[Embed(source = "../../media/fj-gameOver.png")]
-		//[Embed(source = "../../media/fj-pause.png")]
+		[Embed(source = "../../../media/fj-gameOver.png")]
+		//[Embed(source = "../../../media/fj-pause.png")]
 		private const pauseTextureClass:Class;
 		private var pauseBMP:Image;		
 		

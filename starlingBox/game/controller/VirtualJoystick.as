@@ -25,9 +25,9 @@ package starlingBox.game.controller
 		private var _joystick:Image;		
 		private var _knobId:int = -1;
 		private var _controller:VirtualJoystickController;
-		[Embed(source = "../../../../media/joystick.png")]
+		[Embed(source = "../../../../../media/joystick.png")]
 		private const joyClass:Class;
-		[Embed(source = "../../../../media/joystick.png")]
+		[Embed(source = "../../../../../media/joystick.png")]
 		private const knobClass:Class;
 		
 		public function VirtualJoystick(x:int, y:int, scale:Number = 1.5){

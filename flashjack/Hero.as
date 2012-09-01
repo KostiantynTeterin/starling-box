@@ -18,9 +18,9 @@ package flashjack
 	
 	public class Hero extends Personnage
 	{
-		[Embed(source="../../media/kliff_complete_v2/anim_bitmap/kliff.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../../media/kliff_complete_v2/anim_bitmap/kliff.xml",mimeType="application/octet-stream")]
 		private const SpriteSheetXML:Class;
-		[Embed(source="../../media/kliff_complete_v2/anim_bitmap/kliff.png")]
+		[Embed(source="../../../media/kliff_complete_v2/anim_bitmap/kliff.png")]
 		private const SpriteSheet:Class;		
 		
 		private const TIME_UP:int = 4;		

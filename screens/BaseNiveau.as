@@ -64,10 +64,10 @@ package screens
 	
 	public class BaseNiveau extends Screen
 	{
-		[Embed(source="../../media/bonus-spritesheet.png")]
+		[Embed(source="../../../media/bonus-spritesheet.png")]
 		private const bonusTextureClass:Class;		
 		
-		[Embed(source = "../../media/fj-pause.png")]
+		[Embed(source = "../../../media/fj-pause.png")]
 		private const pauseTextureClass:Class;
 		private var pauseBMP:Image;
 		

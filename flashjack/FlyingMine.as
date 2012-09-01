@@ -15,9 +15,9 @@ package flashjack
 	
 	public class FlyingMine extends Personnage 
 	{
-		[Embed(source="../../media/ennemi/sprite32.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../../media/ennemi/sprite32.xml",mimeType="application/octet-stream")]
 		private const SpriteSheetXML:Class;
-		[Embed(source="../../media/ennemi/sprite32.png")]
+		[Embed(source="../../../media/ennemi/sprite32.png")]
 		private const SpriteSheet:Class;		
 		
 		public function FlyingMine(posX:int, posY:int) 

@@ -15,9 +15,9 @@ package Ludum24
 	public class Tir extends MovieClip
 	{
 		// TIR
-		[Embed(source="../../media/tir.png")]
+		[Embed(source="../../../media/tir.png")]
 		private const TirClass:Class;
-		[Embed(source="../../media/tir.xml",mimeType="application/octet-stream")]
+		[Embed(source="../../../media/tir.xml",mimeType="application/octet-stream")]
 		private const TirXML:Class;
 		
 		private var _centerX:int = 0;

@@ -35,7 +35,7 @@ package screens
 	
 	 public class TitleScreenFlashJack extends Screen 
 	{
-		[Embed(source = "../../media/title-screen.png")]
+		[Embed(source = "../../../media/title-screen.png")]
 		private const TitleScreenClass:Class;
 		private var bmp:Bitmap;
 		

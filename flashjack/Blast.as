@@ -104,7 +104,7 @@ import starling.textures.Texture;
 
 class Particle extends Image
 {
-	[Embed(source = "../../media/star32.png")]
+	[Embed(source = "../../../media/star32.png")]
 	private const imageClass:Class;
 	
     public var vx:Number;
