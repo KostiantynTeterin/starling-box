@@ -47,11 +47,11 @@ package Ludum24
 		private var _point:Point = new Point;
 		private var _console:Console;
 		
-		[Embed(source="../../media/sounds/83560_1272599-lq.mp3")]
+		[Embed(source="../../../media/sounds/83560_1272599-lq.mp3")]
 		private const LaserClass:Class;
 		
 		private var _jauge:Jauge;
-		[Embed(source="../../media/rail.png")]
+		[Embed(source="../../../media/rail.png")]
 		private const railClass:Class;
 		private var _safe:Safe;
 		private var _supaBox:SupaBox;

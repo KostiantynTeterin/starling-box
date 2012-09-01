@@ -11,9 +11,9 @@ package flashjack
 	 
 	public class Fumee extends MovieClip 
 	{
-		[Embed(source="../../media/fumee96.png")]
+		[Embed(source="../../../media/fumee96.png")]
 		private const ImageClass:Class;
-		[Embed(source = "../../media/fumee96.xml", mimeType = "application/octet-stream")]
+		[Embed(source = "../../../media/fumee96.xml", mimeType = "application/octet-stream")]
 		private const DescriptionXML:Class;
 		
 		public function Fumee() 

@@ -16,9 +16,9 @@ package alienfleet
 	public class Explosion extends MovieClip
 	{
 		// TIR
-		[Embed(source="../../media/explosion2.png")]
+		[Embed(source="../../../media/explosion2.png")]
 		private const ExplosionClass:Class;
-		[Embed(source = "../../media/explosion.xml",mimeType="application/octet-stream")]
+		[Embed(source = "../../../media/explosion.xml",mimeType="application/octet-stream")]
 		private const ExplosionXML:Class;
 		
 		private var _centerX:int = 64;

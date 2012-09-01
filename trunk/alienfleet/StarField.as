@@ -12,10 +12,10 @@ package alienfleet
 	
 	public class StarField extends Sprite 
 	{
-		[Embed(source = "../../media/stars.png")]	
+		[Embed(source = "../../../media/stars.png")]	
 		private const starTexture:Class;
 		
-		[Embed(source = "../../media/stars.xml", mimeType = "application/octet-stream")]
+		[Embed(source = "../../../media/stars.xml", mimeType = "application/octet-stream")]
 		private const starAtlas:Class;
 	
 		private var WIDTH:int 			= 480;

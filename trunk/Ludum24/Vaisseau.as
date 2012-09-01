@@ -16,14 +16,14 @@ package Ludum24
 	public class Vaisseau extends Sprite
 	{
 		// VAISSEAU
-		[Embed(source="../../media/vaisseau.png")]
+		[Embed(source="../../../media/vaisseau.png")]
 		private var VaisseauClass:Class;
 		private var vaisseau:Image;
 		
 		// REACTEUR A FUSION !
-		[Embed(source="../../media/particle2.pex",mimeType="application/octet-stream")]
+		[Embed(source="../../../media/particle2.pex",mimeType="application/octet-stream")]
 		private const ParticlesXML:Class;
-		[Embed(source="../../media/fire_particle.png")]
+		[Embed(source="../../../media/fire_particle.png")]
 		private const ParticleTexture:Class;
 		private var particles:PDParticleSystem;	
 		

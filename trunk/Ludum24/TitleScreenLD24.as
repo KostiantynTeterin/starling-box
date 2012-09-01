@@ -43,10 +43,8 @@ package Ludum24
 			//const definition:String = '"Evolution is the change in the inherited characteristics of biological populations across successive generations. Evolutionary processes give rise to diversity at every level of biological organisation, including species, individual organisms and molecules such as DNA and proteins."';
 			const definition:String = 'Evolution looks cool but things can go wrong.\nYou have to stop the evolution of a new life form.\n\nWhy ? Because one day they will steal\nour ideas and violate our patents.\n\nSo burn that sh*t as quick as you can !\n\n--end transmission '; 
 			
-			/*
 			SoundBox.instance.setBGMVolume(.4);
 			SoundBox.instance.streamBGMusic( "http://www.yopsolo.fr/ressources/evolution.mp3" );
-			*/
 			
 			// wait, while building assets
 			var wait:TextField = new TextField(400, 35, "Building assets, please wait !", EmbedFonts.instance.geo , 21, 0xFFFFFF);

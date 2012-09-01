@@ -16,7 +16,7 @@ package alienfleet
 	 */
 	public class PhysParticle extends Sprite
 	{
-		[Embed(source="../../media/particles.png")]
+		[Embed(source="../../../media/particles.png")]
 		private const physParticleClass:Class;
 		private var physBody:Body;
 		public var flag:Boolean = false;

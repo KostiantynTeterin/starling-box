@@ -33,7 +33,7 @@ package KeoS
 		private var _explorerBtn:PushButton;
 		private var _ouvrirBtn:PushButton;
 		
-		[Embed(source = "../../media/KeoS/closedDoor3.jpg")]
+		[Embed(source = "../../../media/KeoS/closedDoor3.jpg")]
 		private var closeDoorImgClass:Class;		
 		
 		public function PanelEntree() 
