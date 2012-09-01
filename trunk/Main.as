@@ -10,8 +10,8 @@ package
 	import screens.Intro;
 	import screens.Jeu;
 	import screens.BaseNiveau;
-	import screens.Keos_GuildScreen;
-	import screens.KeoS_TitleScreen;
+	//import screens.Keos_GuildScreen;
+	//import screens.KeoS_TitleScreen;
 	import screens.SimulationFluides;
 	import screens.TypeWriterTest;
 	import starling.display.Sprite;
@@ -19,7 +19,7 @@ package
 	import starlingBox.SB;
 	import screens.Niveau1;
 	import screens.TitleScreenFlashJack;
-	import KeoS.Config;
+	//import KeoS.Config;
 	
 	
 	/**
@@ -73,7 +73,7 @@ package
 		private function _onDataComplete(e:Event):void 
 		{
 			e.stopImmediatePropagation();
-			SB.screen	= new KeoS_TitleScreen;
+			//SB.screen	= new KeoS_TitleScreen;
 		}
 		
 		private function _onDataError(e:Event):void 
