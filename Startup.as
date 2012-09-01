@@ -6,6 +6,9 @@ package
 	import starlingBox.Engine;
 	import starlingBox.SB;
 	
+	
+	//ludum
+	[SWF(width="600",height="800",frameRate="60",backgroundColor="#000000")]	
 	public class Startup extends Engine
 	{
 		public function Startup()

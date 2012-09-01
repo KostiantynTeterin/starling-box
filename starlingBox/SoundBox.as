@@ -117,7 +117,7 @@ package starlingBox
 			if ( s == null) {
 				throw new Error("ERROR: No ressource for track " + idx);
 			}else {
-				trace("### attention je start a 0.3 par defaut, ca peut poser des soucis !");
+				//trace("### attention je start a 0.3 par defaut, ca peut poser des soucis !");
 				_channelSFX = s.play(.3, 0, _sfxTransform);				
 			}
 		}
