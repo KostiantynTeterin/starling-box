@@ -1,19 +1,17 @@
 package screens
 {
-	import alienfleet.Vaisseau;
-	import flash.geom.Point;
 	import starling.display.Button;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.text.TextField;
 	import starlingBox.SB;
 	import starlingBox.Screen;
-	import fr.kouma.starling.utils.Stats;	
-	import screens.Jeu;
 	
 	public class Intro extends Screen
 	{
+		private var _tf:TextField;
 		
 		public function Intro()
 		{
@@ -23,30 +21,30 @@ package screens
 		
 		override public function begin():void
 		{
-			stage.addEventListener(TouchEvent.TOUCH, _onTouchThis );
-			
-			// var btn:Button = new Button();			
+			_tf = new TextField(150, 70, "CLICK ME !", "Verdana", 16, 0xFFFFFF );
+			_tf.x = (600 - 150) / 2;
+			_tf.y = 150;
+			_tf.border = true;
+			_tf.useHandCursor = true;
+			_tf.addEventListener(TouchEvent.TOUCH, _onTouchThis );
+			addChild( _tf );
 		}		
 		
 		private function _onTouchThis(e:TouchEvent):void 
 		{
 			e.stopImmediatePropagation();
 			var touch:Touch = e.getTouch(stage);
-			if (touch.phase == TouchPhase.ENDED ) {
-				SB.screen = new Jeu;
+			if (touch.phase == TouchPhase.BEGAN ) {
+				SB.screen = new TypeWriterTest;
 			}
 		}
 		
 		override public function destroy():void 
-		{			
-			//trace("poulet");
-			super.destroy();
-		}
-		
-		override public function end():void
 		{
-			stage.removeEventListener(TouchEvent.TOUCH, _onTouchThis );
-			super.end();
+			super.destroy();
+			
+			_tf.removeEventListeners();
+			_tf.dispose();
 		}
 		
 	}

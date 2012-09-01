@@ -13,6 +13,7 @@ package
 	import screens.Keos_GuildScreen;
 	import screens.KeoS_TitleScreen;
 	import screens.SimulationFluides;
+	import screens.TypeWriterTest;
 	import starling.display.Sprite;
 	import starlingBox.ConfigXML;
 	import starlingBox.SB;
@@ -54,7 +55,7 @@ package
 			//SB.screen = new Jeu;
 			
 			SB.screen = new TitleScreenLD24;
-			
+			//SB.screen = new TypeWriterTest;			
 			// output
 			// ..\..\WebLocal\Lockpickers\assets\swf\Lockpickers.swf
 			// 995 * 665
