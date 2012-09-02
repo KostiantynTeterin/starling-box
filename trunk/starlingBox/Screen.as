@@ -9,10 +9,9 @@
 	{
 		protected var _updateLoop:Boolean;
 		
-		public function Screen(updateLoop:Boolean = false)
+		public function Screen()
 		{
 			SB.console.addMessage(this, "DEFAULT SCREEN CONSTRUCTOR");
-			_updateLoop = updateLoop;
 			addEventListener(Event.ADDED_TO_STAGE, _onAdded );
 		}
 		
@@ -21,8 +20,6 @@
 			removeEventListener(Event.ADDED_TO_STAGE, _onAdded );
 			
 			begin();
-			if (_updateLoop)
-				startOEF();			
 		}
 		
 		// --
@@ -70,6 +67,7 @@
 		{
 			SB.console.addMessage(this, "DEFAULT SCREEN PAUSE");
 			SB.soundBox.pauseBGM();
+			_updateLoop = hasEventListener(Event.ENTER_FRAME); 
 			stopOEF();
 		}
 		

@@ -13,7 +13,7 @@ package
 	//import screens.Keos_GuildScreen;
 	//import screens.KeoS_TitleScreen;
 	import screens.SimulationFluides;
-	import screens.TypeWriterTest;
+	import typewriter.TypeWriterTest
 	import starling.display.Sprite;
 	import starlingBox.ConfigXML;
 	import starlingBox.SB;
@@ -54,8 +54,8 @@ package
 			//SB.screen	= new TitleScreenFlashJack;			
 			//SB.screen = new Jeu;
 			
-			SB.screen = new TitleScreenLD24;
-			//SB.screen = new TypeWriterTest;			
+			//SB.screen = new TitleScreenLD24;
+			SB.screen = new TypeWriterTest;			
 			// output
 			// ..\..\WebLocal\Lockpickers\assets\swf\Lockpickers.swf
 			// 995 * 665

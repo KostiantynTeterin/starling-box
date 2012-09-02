@@ -8,6 +8,7 @@ package starlingBox
 	import flash.events.Event;
 	import flash.events.SecurityErrorEvent;
 	import flash.events.TimerEvent;
+	import flash.geom.Rectangle;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	import flash.utils.Timer;
@@ -44,12 +45,12 @@ package starlingBox
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
 			Starling.handleLostContext = true;
-			_starling = new Starling(_starlingRootClass, this.stage);
+			_starling = new Starling( _starlingRootClass, this.stage );
 			_starling.simulateMultitouch = false;
 			_starling.antiAliasing = SB.antiAliasLevel;
 			_starling.enableErrorChecking = SB.debug;
 			_starling.showStats = SB.debug;
-			_starling.start();
+			_starling.start();			
 			
 			SB.nativeStage = this.stage;
 			
