@@ -8,7 +8,7 @@ package
 	
 	
 	//ludum
-	[SWF(width="640",height="480",frameRate="60",backgroundColor="#000000")]	
+	//[SWF(width="640",height="480",frameRate="60",backgroundColor="#000000")]	
 	public class Startup extends Engine
 	{
 		public function Startup()
