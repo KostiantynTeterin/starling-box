@@ -4,11 +4,16 @@ package typewriter
 	import com.bit101.components.Label;
 	import com.bit101.components.List;
 	import com.bit101.components.PushButton;
-	import starling.animation.Tween;
-	import starling.display.Image;
+	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import starling.display.BlendMode;
+	import starling.display.Image;
+	import starling.events.Event;
+	import starling.extensions.TypeWriter;
 	import starling.textures.Texture;
-	import starlingBox.game.effects.TypeWriter;
 	import starlingBox.SB;
 	import starlingBox.Screen;
 	/**
@@ -17,10 +22,15 @@ package typewriter
 	 */
 	public class TypeWriterTest extends Screen 
 	{
-        [Embed(source = "../../../media/textures/2x/background.png")]
+        [Embed(source = "../../../media/textures/2x/opt-texture.jpg")]
         public static const Background:Class;		
 		
 		private var _tw:TypeWriter;
+		private var play:PushButton;
+		private var speed:HSlider;
+		private var transition:List;
+		private var animation:List;
+	
 		
 		public function TypeWriterTest() 
 		{
@@ -32,11 +42,10 @@ package typewriter
 			
 			_tw = new TypeWriter();
 			_tw.x = 15.0;
-			_tw.init( text, 20.0 );			
-			addChild( _tw );			
+			_tw.init( text );			
+			addChild( _tw );
 			
-			_tw.start();
-			
+			_tw.addEventListener( Event.COMPLETE, _onComplete );
 			
 			// la transition ( combo )
 			// duree de la transition (slider)
@@ -45,12 +54,38 @@ package typewriter
 			// reset
 			// start
 			
-			var resetBTN:PushButton = new PushButton( SB.nativeStage, 10, 450, "PLAY");
-			var speed:HSlider = new HSlider(SB.nativeStage, 125, 455);
-			var lblSpeed:Label = new Label(SB.nativeStage, 125, 435, 'SPEED');
-			var transition:List = new List( SB.nativeStage, 240, 370, ["transition1", "transition2", "transition3"] );
-			var animation:List = new List( SB.nativeStage, 350, 370, ["NONE", "animation1", "animation2", "animation3"] );
+			play = new PushButton( SB.nativeStage, 10, 450, "PLAY", _onClickPlay);
+			speed = new HSlider(SB.nativeStage, 125, 455);
+			speed.minimum = 1;
+			speed.value = 5;
+			speed.maximum = 15;
 			
+			var lblSpeed:Label = new Label(SB.nativeStage, 125, 435, 'SPEED');
+			
+			transition = new List( SB.nativeStage, 240, 370, ["easeIn", "easeInBack", "easeInBounce", "easeInElastic", "easeInOut", "easeInOutBack", "easeInOutBounce", "easeInOutElastic", "easeOut", "easeOutBack", "easeOutBounce", "easeOutElastic", "easeOutIn", "easeOutInBack", "easeOutInBounce", "easeOutInElastic", "linear"] );
+			transition.selectedIndex = 0;
+			transition.setSize( 130, 100 );
+			animation = new List( SB.nativeStage, 380, 370, ["NONE", "ALPHA", "SCALE", "BOING"] );
+			animation.selectedIndex = 1;
+		}
+		
+		private function _onComplete(e:starling.events.Event):void 
+		{
+			play.enabled = true;
+			speed.enabled = true;
+		}
+		
+		private function _onClickPlay(e:MouseEvent):void 
+		{
+			play.enabled = false;
+			speed.enabled = false;		
+			
+			_tw.updateText();
+			_tw.effect 		= animation.selectedIndex;
+			_tw.renderMode	= TypeWriter.RENDER_MODE_LETTER;
+			_tw.resetTween( Number(speed.value), transition.selectedItem.toString() );
+			
+			_tw.start();
 		}
 		
 	}
