@@ -16,7 +16,7 @@ package starling.extensions
 	import starlingBox.SB;
 	
 	/*
-	 * memory leak :/
+	 * >> pooling
 	 * optim quad batch 1 per char
 	 * sound (embed en bytearray, en base64 ?) 
 	 * */
