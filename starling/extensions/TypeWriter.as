@@ -16,10 +16,9 @@ package starling.extensions
 	import starlingBox.SB;
 	
 	/*
-	 * set transition
-	 * gerer les retour arriere
-	 * optmiser
-	 * son (embed en bytearray, en base64 ?)
+	 * memory leak :/
+	 * optim quad batch 1 per char
+	 * sound (embed en bytearray, en base64 ?) 
 	 * */
 	
 	public class TypeWriter extends Sprite
@@ -45,12 +44,13 @@ package starling.extensions
 		private var _curr:int;
 		private var _tween:Tween;
 		
-		private var _temp:Vector.<Letter>;
+		private var _temp:Array;
 		private var _flashTextField:flash.text.TextField;
 		
 		public function TypeWriter()
 		{
 			_time = new Point;
+			_temp = new Array;
 			_time.x = 0;
 			_curr = 0;			
 		}
@@ -60,7 +60,7 @@ package starling.extensions
 		{
 			_text = text;
 			
-			_tween = new Tween(_time, duration, Transitions.EASE_OUT);
+			_tween = new Tween(_time, duration, Transitions.EASE_IN);
 			_tween.onUpdate = _onUpdate;
 			_tween.onComplete = _onFinish;
 			
@@ -90,7 +90,7 @@ package starling.extensions
 			_flashTextField.borderColor = 0x0;
 			SB.nativeStage.addChild(_flashTextField);
 			
-			updateText();		
+			//updateText();
 		}
 		
 		public function initFromFlashTextfield(tf:flash.text.TextField, duration:Number = DEFAULT_DURATION):void
@@ -101,24 +101,28 @@ package starling.extensions
 		public function updateText():void
 		{
 			clear();
-			_text = _flashTextField.text;
-			var nb:int = _text.length;			
-			_temp = new Vector.<Letter>(nb, true);
-			
+
+			// -- new value
+			_text = _flashTextField.text;									
 			// RENDER_MODE_LETTER
-			var boundaries:Rectangle = new Rectangle;			
+			var boundaries:Rectangle = new Rectangle;
+			var fmt:TextFormat = _flashTextField.getTextFormat();
+			var size:Number = (fmt.size) ? Number(fmt.size) : 12 ;
+			var color:Number = (fmt.color) ? Number(fmt.color) : 0x0 ;
+			var nb:int = _text.length;
 			for (var i:int = 0; i < nb; i++)
 			{
 				boundaries = _flashTextField.getCharBoundaries(i); // magic function :D
 				if (boundaries)
 				{
-					_temp[i] = new Letter(boundaries.width + 4, boundaries.height + 4, _text.charAt(i), "Arial", 16, 0x0);
+					_temp[i] = new Letter(boundaries.width + 4, boundaries.height + 4, _text.charAt(i), fmt.font, size, color);
 					_temp[i].x = boundaries.x - 2; //  default padding in regular flash textfield or magic number ?
 					_temp[i].y = boundaries.y - 2; //  default padding in regular flash textfield or magic number ?
 				}
-			}			
+			}
 		}
 		
+		// ok
 		public function resetTween(pDuration:Number, pTransition:String):void
 		{
 			_tween.reset(_time, pDuration, pTransition);
@@ -156,7 +160,6 @@ package starling.extensions
 							ref.animate( _currentEffect );
 							addChild(ref);
 						}
-						;
 					}
 				}
 				else
@@ -207,33 +210,32 @@ package starling.extensions
 		
 		public function skip():void
 		{
-			// stop la tween et affiche tout le texte
+			// TODO
 		}
 		
 		public function pause():void
 		{
-			// pause la tween
+			// TODO
 		}
 		
 		public function resume():void
 		{
-			// resume la tween
+			// TODO
 		}
 		
 		public function clear():void
 		{
 			Starling.juggler.removeTweens(_tween);
 			removeChildren();
-			if(_temp){
-				var i:int = _temp.length;
-				while (i--) {
-					if ( _temp[i] ) {
-						_temp[i].destroy(); 
-						_temp[i] = null;					
-					}
+			//
+			var i:int = _temp.length;				
+			while (i--) {
+				if ( _temp[i] ) {
+					(_temp[i] as Letter).destroy();					
+					_temp[i] = null;	
 				}
-				_temp = null;			
 			}
+			_temp.length = 0;
 			
 		}
 	
@@ -311,7 +313,7 @@ class Letter extends TextField
 	
 	public function destroy():void
 	{
-		_tween = null;
+		_tween = null;		
 		this.dispose();
 	}	
 	
