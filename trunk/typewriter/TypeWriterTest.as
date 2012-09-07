@@ -5,13 +5,6 @@ package typewriter
 	import com.bit101.components.List;
 	import com.bit101.components.PushButton;
 	import flash.events.MouseEvent;
-	import flash.events.SampleDataEvent;
-	import flash.media.Sound;
-	import flash.media.SoundChannel;
-	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFieldType;
-	import flash.text.TextFormat;
-	import flash.text.TextFormatAlign;
 	import starling.display.BlendMode;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -35,13 +28,12 @@ package typewriter
 		private var transition:List;
 		private var animation:List;
 		
-		private var _sc:SoundChannel;
+		//private var _sc:SoundChannel;
 		
 		public function TypeWriterTest()
 		{
 			const text:String = "Starling does not cost a dime.\nStarling is a pure ActionScript 3 library that mimics the conventional Flash display list architecture.\nIn contrast to conventional display objects, however, all content is rendered directly by the GPU — providing a rendering performance unlike anything before. This is made possible by Flash's 'Stage3D' technology.Adobe supports the development of Starling and plans to integrate it tightly into its tools.\nYou get the best of both worlds: corporate commitment and a vivid community.\nStarling's community is praised for its friendliness and is always there for you when you need help — 24 / 7.";
-			
-			_sc = new SoundChannel;
+			//_sc = new SoundChannel;
 			
 			var bg:Image = new Image(Texture.fromBitmap(new Background));
 			bg.blendMode = BlendMode.NONE;
@@ -53,13 +45,6 @@ package typewriter
 			addChild(_tw);
 			
 			_tw.addEventListener(Event.COMPLETE, _onComplete);
-			
-			// la transition ( combo )
-			// duree de la transition (slider)
-			// anim d'apparition ( combo )
-			// text editing
-			// reset
-			// start
 			
 			play = new PushButton(SB.nativeStage, 10, 450, "PLAY", _onClickPlay);
 			speed = new HSlider(SB.nativeStage, 125, 455);
@@ -89,12 +74,12 @@ package typewriter
 			
 			_tw.updateText();
 			_tw.effect = animation.selectedIndex;
-			_tw.renderMode = TypeWriter.RENDER_MODE_LETTER;
+			_tw.renderMode = TypeWriter.RENDER_MODE_LETTER; // [TODO] combo box letter / word / line
 			_tw.resetTween(Number(speed.value), transition.selectedItem.toString());
 			
 			_tw.start();
 		}
-		
+	
 	}
 
 }
