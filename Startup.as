@@ -14,7 +14,7 @@ package
 		public function Startup()
 		{
 			//super(550, 400, Main, 0, false);
-			super(640, 480, Main, 0, false);
+			super(640, 480, Main, 0, true);
 		}
 	}
 
