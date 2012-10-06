@@ -15,12 +15,18 @@ package starling.extensions
 	import starling.text.TextField;
 	import starlingBox.SB;
 	
-	/*
-	 * >> pooling, http://help.adobe.com/en_US/as3/mobile/WS948100b6829bd5a6-19cd3c2412513c24bce-8000.html
-	 * en cours
-	 * reduire le nombre de drawcall
-	 * optim quad batch 1 per char
-	 * sound (embed en bytearray, en base64 ?)
+	/* 
+	 * V 0.0
+	 * 
+	 * [TODO]
+	 * 
+	 * RENDER_MODE_WORD
+	 * RENDER_MODE_LINE
+	 * new effects
+	 * destroy
+	 * sound
+	 * optim drawcall
+	 * 
 	 * */
 	
 	public class TypeWriter extends Sprite
@@ -109,7 +115,6 @@ package starling.extensions
 			if (textfield)
 			{
 				_flashTextField = textfield;
-					// [TODO] copying all properties
 			}
 			else
 			{
