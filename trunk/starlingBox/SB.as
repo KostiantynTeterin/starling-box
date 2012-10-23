@@ -183,6 +183,14 @@
 		}		
 		
 		
+		public static function clone(source:*):Object {
+			var copier:ByteArray = new ByteArray();
+			copier.writeObject(source as Object);
+			copier.position = 0;
+			
+			return copier.readObject();
+		}		
+		
 		// -- GLOBAL
 		public static var width:int;
 		public static var height:int;
