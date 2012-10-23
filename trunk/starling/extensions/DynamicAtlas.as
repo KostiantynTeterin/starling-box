@@ -1,6 +1,7 @@
 package starling.extensions
 {
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -13,6 +14,7 @@ package starling.extensions
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
     import flash.utils.getQualifiedClassName;
+	import starlingBox.SB;
 
     import starling.text.BitmapFont;
 	import starling.textures.Texture;
@@ -114,6 +116,8 @@ package starling.extensions
 		static protected var _mat:Matrix;
 		static protected var _margin:Number;
 		static protected var _preserveColor:Boolean;
+		
+		static protected var _spriteSheet:Bitmap;
 		
 		// Will not be used - Only using one static method
 		public function DynamicAtlas()
@@ -432,9 +436,14 @@ package starling.extensions
 					subText.@frameLabel = itm.frameName;
 				xml.appendChild(subText);
 			}
-			texture = Texture.fromBitmapData(canvasData);
+			texture = Texture.fromBitmapData(canvasData);			
 			atlas = new TextureAtlas(texture, xml);
 			
+			if (SB.debug) {	
+				var dat:BitmapData = new BitmapData( canvasData.width, canvasData.height, false, 0x00FF00FF);
+				dat.copyPixels( canvasData, canvasData.rect, canvasData.rect.topLeft );
+				_spriteSheet = new Bitmap( dat );
+			}
 			_items.length = 0;
 			_canvas.removeChildren();
 			
@@ -573,6 +582,22 @@ package starling.extensions
 			xml = null;
 			_canvas = null;
 			_currentLab = null;
+		}
+		
+		public function pack():void
+		{
+			// mhhhh
+		}
+		
+		static public function get spriteSheet():Bitmap 
+		{
+			if (SB.debug) {
+				_spriteSheet.scaleX = _spriteSheet.scaleY = .5;
+				return _spriteSheet;
+			}else {
+				throw new Error("You can use this feature in DEBUG MODE only !");
+			}
+			
 		}
 		
 	}

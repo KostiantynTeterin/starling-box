@@ -60,7 +60,7 @@ package Ludum24
 		
 		public function Evo( bmp:Bitmap )
 		{
-			super(false);
+			//super(false);
 			SB.nativeStage.addChild(bmp);
 			TweenMax.to(bmp, 1, {delay:0.3, autoAlpha:0});	
 			SB.console.addMessage(this, "== JEU SCREEN ==");

@@ -6,6 +6,7 @@ package
 	import Ludum24.EndScreenLD24;
 	import Ludum24.Evo;
 	import Ludum24.TitleScreenLD24;
+	import rectpacking.Rectpacking;
 	import screens.FlashJack;
 	import screens.Intro;
 	import screens.Jeu;
@@ -49,13 +50,15 @@ package
 		{
 			SB.root		= this;
 			
+			SB.screen	= new Rectpacking;
+			
 			//SB.screen	= new Keos_GuildScreen;
 			//SB.screen	= new Niveau1;
 			//SB.screen	= new TitleScreenFlashJack;			
 			//SB.screen = new Jeu;
 			
 			//SB.screen = new TitleScreenLD24;
-			SB.screen = new TypeWriterTest;			
+			//SB.screen = new TypeWriterTest;			
 			// output
 			// ..\..\WebLocal\Lockpickers\assets\swf\Lockpickers.swf
 			// 995 * 665

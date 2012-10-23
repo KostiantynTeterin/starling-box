@@ -75,15 +75,6 @@
 			return o;
 		}
 		
-		public static function clone(source:*):*
-		{
-			var myBA:ByteArray = new ByteArray();
-			myBA.writeObject(source);
-			myBA.position = 0;
-			
-			return myBA.readObject();
-		}
-		
 		public static function vectorToArray(v:*):Array
 		{
 			var n:int = v.length;
