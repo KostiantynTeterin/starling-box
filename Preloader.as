@@ -44,8 +44,8 @@ package
 			newContextMenu.customItems.push(cmi);			
 			this.contextMenu = newContextMenu;			 
 			 
-			preloader.x = 600 >> 1; // attention c'est important de se baser sur la taille du swf
-			preloader.y = 800 * 1/3; // car il peut être embed en w/h 100%
+			preloader.x = 640 >> 1; // attention c'est important de se baser sur la taille du swf
+			preloader.y = 480 >> 1; // car il peut être embed en w/h 100%
 			
 			addChild(preloader);
 			
