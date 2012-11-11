@@ -12,7 +12,6 @@ package starlingBox.game.controller
 	 * 
 	 * Ajouter le tap
 	 * 
-	 * controle a distance bluetooth, wifi, rtmpf, websocket ? 
 	 **/	
 
 	public class VirtualJoystickController
