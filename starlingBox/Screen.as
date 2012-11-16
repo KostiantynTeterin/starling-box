@@ -11,6 +11,7 @@
 		
 		public function Screen()
 		{
+			trace( SB.console, this );
 			SB.console.addMessage(this, "DEFAULT SCREEN CONSTRUCTOR");
 			addEventListener(Event.ADDED_TO_STAGE, _onAdded );
 		}

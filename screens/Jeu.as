@@ -73,7 +73,6 @@ package screens
 			if (SB.debug)
 			{
 				/*
-				addChild(new Stats());
 				SB.addConsole(this, SB.width - (SB.console.width + 5), 10);
 				SB.console.addMessage(stage.stageWidth, "px * ", stage.stageHeight, "px");
 				*/
