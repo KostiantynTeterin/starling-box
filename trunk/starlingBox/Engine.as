@@ -43,10 +43,13 @@ package starlingBox
 		
 		private function _onAddedToStage(e:Event):void
 		{
-			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);
+			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);			
 			Starling.handleLostContext = true;
+			SB.console.addMessage( "Starling.handleLostContext", Starling.handleLostContext );
+			Starling.multitouchEnabled = true;
+			SB.console.addMessage( "Starling.multitouchEnabled", Starling.multitouchEnabled );
 			_starling = new Starling( _starlingRootClass, this.stage );
-			_starling.simulateMultitouch = false;
+			_starling.simulateMultitouch = SB.debug;
 			_starling.antiAliasing = SB.antiAliasLevel;
 			_starling.enableErrorChecking = SB.debug;
 			_starling.showStats = SB.debug;

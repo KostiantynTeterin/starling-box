@@ -22,19 +22,15 @@ package starlingBox.game.controller
 		public var angle:Number	= 0;		
 		
 		private var _knob:Image;
-		private var _joystick:Image;		
+		private var _joystick:Image;
 		private var _knobId:int = -1;
 		private var _controller:VirtualJoystickController;
-		[Embed(source = "../../../../../media/joystick.png")]
-		private const joyClass:Class;
-		[Embed(source = "../../../../../media/joystick.png")]
-		private const knobClass:Class;
 		
-		public function VirtualJoystick(x:int, y:int, scale:Number = 1.5){
+		public function VirtualJoystick(x:int, y:int, scale:Number = 1) {
 			scaleX = scaleY = scale;			
 			this.x = x;
-			this.y = y;		
-
+			this.y = y;
+			
 			//mouseChildren = false;
 			//mouseEnabled = false;
 			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage );			
@@ -42,8 +38,9 @@ package starlingBox.game.controller
 		
 		protected function _onAddedToStage(event:Event):void
 		{
-			Multitouch.inputMode=MultitouchInputMode.TOUCH_POINT;
-			_controller = new VirtualJoystickController(this);
+			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			
+			_controller = new VirtualJoystickController( this );
 			
 			/*
 			var joy:Shape = new Shape();
@@ -56,16 +53,16 @@ package starlingBox.game.controller
 			var knob:Shape = new Shape();
 			knob.graphics.beginFill(0xCC0000);
 			knob.graphics.drawCircle(0,0,30)
-			knob.graphics.endFill();		
+			knob.graphics.endFill();
 			var dat2:BitmapData = new BitmapData(30, 30, true, 0x0);
-			dat2.draw(knob);	
+			dat2.draw(knob);
 			*/
 			
-			_joystick = new Image( Texture.fromBitmap( new joyClass as Bitmap ) );
+			_joystick = new Image( Texture.fromBitmapData( new Border ) );
 			_joystick.pivotX = int(_joystick.width/2);
 			_joystick.pivotY = int(_joystick.height / 2);
 			
-			_knob = new Image( Texture.fromBitmap( new knobClass as Bitmap ) );
+			_knob = new Image( Texture.fromBitmapData( new Knob ) );
 			_knob.pivotX = int(_knob.width / 2);			
 			_knob.pivotY = int(_knob.height / 2);			
 			

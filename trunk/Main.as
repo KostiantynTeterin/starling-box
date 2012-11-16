@@ -1,6 +1,7 @@
 package
 {
 	import flash.events.Event;
+	import screens.AirStick;
 	import starling.display.Sprite;
 	import starlingBox.SB;
 	import screens.NapeHillsMain;
@@ -36,7 +37,10 @@ package
 		{
 			SB.root		= this;
 			
-			SB.screen	= new NapeHillsMain;			
+			
+			SB.screen	= new AirStick;
+			
+			//SB.screen	= new NapeHillsMain;			
 			
 			//SB.screen	= new Rectpacking;
 			

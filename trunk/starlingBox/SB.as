@@ -99,11 +99,10 @@
 		}
 		
 		// -- DEBUG CONSOLE
-		public static function addConsole(dpo:DisplayObjectContainer, px:int = 200, py:int = 10):void
+		
+		public static function addConsole():void
 		{
-			Console.instance.x = px;
-			Console.instance.y = py;
-			dpo.addChild(Console.instance.gfx);
+			nativeStage.addChild( console );
 		}
 		
 		public static function get console():Console
