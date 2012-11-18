@@ -187,10 +187,13 @@
 		public static var centerX:int;
 		public static var centerY:int;
 		public static var engine:Engine;
+		public static var ratioX:Number = 1.0;
+		public static var ratioY:Number = 1.0;		
 		public static var root:Sprite;
 		public static var antiAliasLevel:int = 0;
 		public static var debug:Boolean = false;
 		public static var nativeStage:Stage;
+		public static var mobile:Boolean;
 		
 		public static var point:Point = new Point;
 		public static var rect:Rectangle = new Rectangle;

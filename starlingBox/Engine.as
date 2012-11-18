@@ -25,7 +25,7 @@ package starlingBox
 		private var _starlingRootClass:Class;
 		private var _starling:Starling;
 		
-		public function Engine(width:int, height:int, rootClass:Class, antiAliasLevel:int = 0, debug:Boolean = true)
+		public function Engine(width:int, height:int, rootClass:Class, mobile:Boolean = true ,antiAliasLevel:int = 0 ,debug:Boolean = true)
 		{
 			_starlingRootClass = rootClass;			
 			
@@ -35,6 +35,7 @@ package starlingBox
 			SB.centerY = height >> 1;
 			SB.antiAliasLevel = antiAliasLevel;
 			SB.debug = debug;
+			SB.mobile = mobile;
 			
 			SB.engine = this;
 			
@@ -43,29 +44,38 @@ package starlingBox
 		
 		private function _onAddedToStage(e:Event):void
 		{
-			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);			
-			Starling.handleLostContext = true;
-			SB.console.addMessage( "Starling.handleLostContext", Starling.handleLostContext );
-			Starling.multitouchEnabled = true;
-			SB.console.addMessage( "Starling.multitouchEnabled", Starling.multitouchEnabled );
-			_starling = new Starling( _starlingRootClass, this.stage );
-			_starling.simulateMultitouch = SB.debug;
-			_starling.antiAliasing = SB.antiAliasLevel;
-			_starling.enableErrorChecking = SB.debug;
-			_starling.showStats = SB.debug;
-			_starling.start();			
-			
-			SB.nativeStage = this.stage;
-			
-			stage.addEventListener(Event.ACTIVATE, _onActivate);
-			stage.addEventListener(Event.DEACTIVATE, _onDeactivate);				
+			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage);		
 			
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;			
 			
 			stage.stageFocusRect = false;
 			stage.tabChildren = false;
-			stage.showDefaultContextMenu = false;
+			stage.showDefaultContextMenu = false;			
+			
+			Starling.handleLostContext = true;
+			SB.console.addMessage( "Starling.handleLostContext", Starling.handleLostContext );
+			Starling.multitouchEnabled = true;
+			SB.console.addMessage( "Starling.multitouchEnabled", Starling.multitouchEnabled );
+			
+			if ( SB.mobile ) {
+				SB.ratioX = stage.fullScreenWidth / SB.width;
+				SB.ratioY = stage.fullScreenHeight / SB.height;
+			}
+			
+			//SB.console.addMessage( "#", SB.ratioX, SB.ratioY );
+			
+			_starling = new Starling( _starlingRootClass, this.stage );
+			_starling.simulateMultitouch = SB.debug;
+			_starling.antiAliasing = SB.antiAliasLevel;
+			_starling.enableErrorChecking = SB.debug;
+			_starling.showStats = SB.debug;
+			_starling.start();
+			
+			SB.nativeStage = this.stage;
+			
+			stage.addEventListener(Event.ACTIVATE, _onActivate);
+			stage.addEventListener(Event.DEACTIVATE, _onDeactivate);			
 			
 			SB.original_framerate = stage.frameRate;
 			
