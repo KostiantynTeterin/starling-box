@@ -36,9 +36,8 @@ package
 		public function Main() 
 		{
 			SB.root		= this;
-			
-			
-			SB.screen	= new AirStick;
+		
+			SB.screen	= new AirStick;			
 			
 			//SB.screen	= new NapeHillsMain;			
 			

@@ -1,93 +1,152 @@
 package starlingBox.game.controller
 {
-	import flash.display.Bitmap;	
-	import flash.display.Stage;
-	import starling.events.Event
-	import flash.events.TouchEvent;
-	import flash.ui.Multitouch;
-	import flash.ui.MultitouchInputMode;
-	import starling.core.Starling;
+	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.textures.Texture;
+	import starlingBox.SB;
 
 	public class VirtualJoystick extends Sprite
 	{
+		// -- conf
+		private var DISTANCE_MIN:int = 50;
+		private var DISTANCE_MAX:int = 100;		
+		
+		// -- DIRS
 		public var UP:Boolean 	= false;
 		public var DW:Boolean 	= false;
 		public var LF:Boolean 	= false;
 		public var RG:Boolean 	= false;
-		public var BTN:Boolean	= false;
-		public var V:Number		= 0;
-		public var angle:Number	= 0;		
+		public var NONE:Boolean = true;		
 		
+		public var speed_factor:Number	= .0;
+		public var angle:Number	= .0;
+		
+		// --
+		private var _knobX:int = 0;
+		private var _knobY:int = 0;
+		
+		// --
 		private var _knob:Image;
 		private var _joystick:Image;
-		private var _knobId:int = -1;
-		private var _controller:VirtualJoystickController;
 		
 		public function VirtualJoystick(x:int, y:int, scale:Number = 1) {
-			scaleX = scaleY = scale;			
 			this.x = x;
 			this.y = y;
-			
-			//mouseChildren = false;
-			//mouseEnabled = false;
+			this.scaleX = this.scaleY = .5;
 			addEventListener(Event.ADDED_TO_STAGE, _onAddedToStage );			
 		}
 		
-		protected function _onAddedToStage(event:Event):void
+		private function _onAddedToStage(event:Event):void
 		{
-			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
-			
-			_controller = new VirtualJoystickController( this );
+			removeEventListener(Event.ADDED_TO_STAGE, _onAddedToStage );	
 			
 			/*
 			var joy:Shape = new Shape();
 			joy.graphics.beginFill(0x333333);
-			joy.graphics.drawRect(0, 0, 60, 60);
+			joy.graphics.drawRect(0, 0, 150, 150);
 			joy.graphics.endFill();
-			var dat:BitmapData = new BitmapData(60, 60, true, 0x0);
+			var dat:BitmapData = new BitmapData(150, 150, true, 0x0);
 			dat.draw( joy );
 			
 			var knob:Shape = new Shape();
 			knob.graphics.beginFill(0xCC0000);
-			knob.graphics.drawCircle(0,0,30)
+			knob.graphics.drawCircle(40,40,40)
 			knob.graphics.endFill();
-			var dat2:BitmapData = new BitmapData(30, 30, true, 0x0);
+			var dat2:BitmapData = new BitmapData(80, 80, true, 0x0);
 			dat2.draw(knob);
 			*/
 			
-			_joystick = new Image( Texture.fromBitmapData( new Border ) );
-			_joystick.pivotX = int(_joystick.width/2);
-			_joystick.pivotY = int(_joystick.height / 2);
+			_joystick = new Image( Texture.fromBitmapData( dat ) );
+			_joystick.pivotX = _joystick.width >> 1;
+			_joystick.pivotY = _joystick.height >> 1;
+			_joystick.addEventListener(TouchEvent.TOUCH, _onTouch);
+			addChild( _joystick );
 			
-			_knob = new Image( Texture.fromBitmapData( new Knob ) );
-			_knob.pivotX = int(_knob.width / 2);			
-			_knob.pivotY = int(_knob.height / 2);			
-			
-			draw();
+			_knob = new Image( Texture.fromBitmapData( dat2 ) );
+			_knob.pivotX = _knob.width >> 1;
+			_knob.pivotY = _knob.height >> 1;
+			_knob.touchable = false;
+			addChild( _knob );
 		}
+		
+		private function _onTouch(e:TouchEvent):void
+		{
+			e.stopImmediatePropagation();
+			var touch:Touch = e.getTouch(this);
+			
+			if (touch)
+			{
+				switch (touch.phase)
+				{
+					
+					case TouchPhase.ENDED: 
+						_knobX = 0;
+						_knobY = 0;
+						LF = false;
+						RG = false;
+						UP = false;
+						DW = false;
+						NONE = true;
+						update();
+						break;
+					
+					case TouchPhase.BEGAN: 
+					case TouchPhase.MOVED: 
+						NONE = false;
+						_onTouchMove(touch);
+						break;
+					
+					default: 
+					// --
+				}
+				
+			}
+		}		
+		
+		private function _onTouchMove(touch:Touch):void
+		{
+			var dx:int = (touch.globalX / SB.ratioX - x);
+			var dy:int = (touch.globalY / SB.ratioY - y);
+			angle = Math.atan2(dy, dx);
+			var dist:int = Math.sqrt(dx * dx + dy * dy);			
+			if (dist < DISTANCE_MAX) {
+				_knobX = dx;
+				_knobY = dy;
+			} else {
+				_knobX = (Math.cos(angle) * DISTANCE_MAX);
+				_knobY = (Math.sin(angle) * DISTANCE_MAX);
+				dist = DISTANCE_MAX;
+			}
+			// ========================================
+			LF = (dx < -DISTANCE_MIN);
+			RG = (dx > DISTANCE_MIN);
+			UP = (dy < -DISTANCE_MIN);
+			DW = (dy > DISTANCE_MIN);
+			
+			// ========================================
+			speed_factor = dist / DISTANCE_MAX;
+			update();
+		}		
 		
 		// ================================================================
 		
 		public function destroy():void
 		{
-			// [TODO]
-			_controller.destroy();
-		}
-		
-		public function draw():void
-		{
-			addChild( _joystick );		
-			addChild( _knob );
-		}
+			_joystick.removeEventListener(TouchEvent.TOUCH, _onTouch);
+			removeChildren();
+		}		
 		
 		public function update():void
 		{
 			if(this.stage != null){
-				_knob.x = _controller.knobX;
-				_knob.y = _controller.knobY;
+				_knob.x = _knobX;
+				_knob.y = _knobY;
 			}
 		}			
 
