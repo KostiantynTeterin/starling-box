@@ -62,13 +62,13 @@ package starlingBox.game.controller
 			dat2.draw(knob);
 			*/
 			
-			_joystick = new Image( Texture.fromBitmapData( dat ) );
+			_joystick = new Image( Texture.fromBitmapData( new Border ) );
 			_joystick.pivotX = _joystick.width >> 1;
 			_joystick.pivotY = _joystick.height >> 1;
 			_joystick.addEventListener(TouchEvent.TOUCH, _onTouch);
 			addChild( _joystick );
 			
-			_knob = new Image( Texture.fromBitmapData( dat2 ) );
+			_knob = new Image( Texture.fromBitmapData( new Knob ) );
 			_knob.pivotX = _knob.width >> 1;
 			_knob.pivotY = _knob.height >> 1;
 			_knob.touchable = false;
