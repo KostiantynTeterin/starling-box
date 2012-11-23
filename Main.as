@@ -2,6 +2,7 @@ package
 {
 	import flash.events.Event;
 	import screens.AirStick;
+	import screens.StarlingPageFlipTest;
 	import starling.display.Sprite;
 	import starlingBox.SB;
 	import screens.NapeHillsMain;
@@ -35,9 +36,11 @@ package
 	{
 		public function Main() 
 		{
-			SB.root		= this;
-		
-			SB.screen	= new AirStick;			
+			SB.root	= this;
+			
+			SB.screen = new StarlingPageFlipTest;
+			
+			// SB.screen	= new AirStick;			
 			
 			//SB.screen	= new NapeHillsMain;			
 			
