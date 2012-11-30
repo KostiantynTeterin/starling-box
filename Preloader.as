@@ -13,7 +13,7 @@ package
 	//[SWF(width="995",height="640",frameRate="60",backgroundColor="#dedede")]
 	
 	//ludum
-	[SWF(width="800",height="600",frameRate="60",backgroundColor="#000000")]
+	//[SWF(width="800",height="600",frameRate="60",backgroundColor="#000000")]
 	//[SWF(width="640",height="480",frameRate="60",backgroundColor="#000000")]
 	public class Preloader extends Sprite
 	{
@@ -44,8 +44,8 @@ package
 			newContextMenu.customItems.push(cmi);			
 			this.contextMenu = newContextMenu;			 
 			 
-			preloader.x = 640 >> 1; // attention c'est important de se baser sur la taille du swf
-			preloader.y = 480 >> 1; // car il peut être embed en w/h 100%
+			preloader.x = 800 >> 1; // attention c'est important de se baser sur la taille du swf
+			preloader.y = 640 >> 1; // car il peut être embed en w/h 100%
 			
 			addChild(preloader);
 			

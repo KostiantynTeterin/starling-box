@@ -29,6 +29,17 @@ package pageFlip
 			return _img;
 		}
 		
+		public function translate( p:Point ):void
+		{
+			corner1 = corner1.add(p);
+			corner2 = corner2.add(p);
+			corner3 = corner3.add(p);
+			corner4 = corner4.add(p);
+			_img.x = corner1.x;
+			_img.y = corner1.y;
+		}
+		
+		
 	}
 
 }
