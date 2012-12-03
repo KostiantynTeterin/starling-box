@@ -2,6 +2,7 @@ package
 {
 	import flash.events.Event;
 	import screens.AirStick;
+	import screens.KeosTacticsMain;
 	import screens.StarlingPageFlipTest;
 	import starling.display.Sprite;
 	import starlingBox.SB;
@@ -38,7 +39,9 @@ package
 		{
 			SB.root	= this;
 			
-			SB.screen = new StarlingPageFlipTest;
+			SB.screen = new KeosTacticsMain;
+			
+			//SB.screen = new StarlingPageFlipTest;
 			
 			// SB.screen	= new AirStick;			
 			
