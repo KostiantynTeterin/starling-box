@@ -7,7 +7,7 @@ package
 	import starlingBox.Engine;
 	import starlingBox.SB;
 	
-	[SWF(width = "800", height = "640", frameRate = "60", backgroundColor = "#000000")]
+	[SWF(width = "1080", height = "1047", frameRate = "60", backgroundColor = "#DEDEDE")]
 	public class Startup extends Engine
 	{
 		
@@ -19,7 +19,7 @@ package
 		
 		public function Startup()
 		{
-			super(800, 640, Main, MOBILE, 0, false);			
+			super(1080, 1047, Main, MOBILE, 0, false);			
 		}
 	}
 
