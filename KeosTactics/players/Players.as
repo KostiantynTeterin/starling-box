@@ -6,6 +6,9 @@ package KeosTactics.players
 	 */
 	public class Players 
 	{
+		public static const PLAYER_1:int = 0;
+		public static const PLAYER_2:int = 1;
+		
 		private var _datas:Vector.<Player>;
 		private static var _instance:Players;		
 		public static var colors:Array = [ 0xCC0000, 0x00CC00, 0x0000CC, 0xCCCC00, 0x00CCCC, 0xCC00CC ];		
@@ -27,6 +30,15 @@ package KeosTactics.players
 		public function get datas():Vector.<Player> 
 		{
 			return _datas;
+		}
+		
+		public function getPlayer(idx:int = 0):Player
+		{
+			if (idx <= _datas.length) {
+				return _datas[idx];
+			}
+			
+			return null;
 		}
 		
 		public function add( player:Player ):void

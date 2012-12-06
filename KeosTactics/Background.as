@@ -1,6 +1,6 @@
 package KeosTactics 
 {
-	import feathers.display.Image;
+	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	
