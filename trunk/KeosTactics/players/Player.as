@@ -15,9 +15,11 @@ package KeosTactics.players
 		private var _units:Vector.<AbstractUnit>;
 		private var _blason:Blason;
 		private var _color:int = 0x0;
+		private var _id:int = -1;
 		
-		public function Player(raceFactory:IRaceFactory)
+		public function Player(id:int, raceFactory:IRaceFactory)
 		{
+			_id = id;
 			_raceFactory = raceFactory;
 			_units = _raceFactory.createStartingUnits(this);
 		}
@@ -50,6 +52,11 @@ package KeosTactics.players
 		public function set color(value:int):void 
 		{
 			_color = value;
+		}
+		
+		public function get id():int 
+		{
+			return _id;
 		}
 	
 	}

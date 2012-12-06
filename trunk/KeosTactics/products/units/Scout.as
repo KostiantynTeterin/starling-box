@@ -24,7 +24,7 @@ package KeosTactics.products.units
 		
 		override public function speech():void
 		{
-			trace(this, _owner.color.toString(16),"Scout toujours !");
+			trace(this, _owner.id,"Scout toujours !");
 		}		
 		
 	}

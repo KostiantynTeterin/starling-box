@@ -2,10 +2,11 @@ package KeosTactics.factory
 {
 	import KeosTactics.players.Player;
 	import KeosTactics.products.units.AbstractUnit;
-	import KeosTactics.products.units.Pretre;
+	import KeosTactics.products.units.Tank;
 	import KeosTactics.products.units.Scout;
 	import KeosTactics.products.units.Sniper;
 	import KeosTactics.Config;
+	import KeosTactics.products.units.Tank;
 	
 	/**
 	 * ...
@@ -28,7 +29,7 @@ package KeosTactics.factory
 			var result:Vector.<AbstractUnit> = new Vector.<AbstractUnit>;
 			result.push(new Scout(owner));
 			result.push(new Sniper(owner));
-			result.push(new Pretre(owner));
+			result.push(new Tank(owner));
 			
 			return result;
 		

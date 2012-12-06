@@ -6,6 +6,9 @@ package KeosTactics.products.units
 	import flash.text.TextFormat;
 	import KeosTactics.players.NullPlayer;
 	import KeosTactics.players.Player;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	/**
 	 * ...
@@ -23,7 +26,19 @@ package KeosTactics.products.units
 			_col = -1;
 			_owner = owner;
 			
-			drawMe();
+			drawMe();		
+			
+			addEventListener( TouchEvent.TOUCH, _onTouch );
+		}
+		
+		private function _onTouch(e:TouchEvent):void 
+		{
+			var touch:Touch = e.getTouch(this);
+			if (touch) {				
+				if (touch.phase == TouchPhase.BEGAN) {
+					this.speech();
+				}				
+			}
 		}
 		
 		protected function drawMe():void

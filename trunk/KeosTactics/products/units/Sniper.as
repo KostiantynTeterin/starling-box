@@ -24,7 +24,7 @@ package KeosTactics.products.units
 		
 		override public function speech():void
 		{
-			trace(this, _owner.color.toString(16), "Dans la ligne de mire.");			
+			trace(this, _owner.id, "Dans la ligne de mire.");			
 		}
 		
 	}
