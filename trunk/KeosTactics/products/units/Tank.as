@@ -19,7 +19,14 @@ package KeosTactics.products.units
 		
 		override protected function drawMe():void
 		{
-			addChild( new Image( Texture.fromBitmap( new TankClass ) ) );
+			var img:Image = new Image( Texture.fromBitmap( new TankClass ) );
+			img.pivotX = img.width >> 1;
+			img.pivotY = img.height >> 1;				
+			
+			addChild( img );
+			this.scaleX = this.scaleY = .5;
+			
+			super.drawMe();
 		}
 		
 		override public function speech():void

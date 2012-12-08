@@ -1,7 +1,11 @@
 package KeosTactics.products.structures
 {
 	import KeosTactics.players.Player;
+	import KeosTactics.players.Players;
 	import starling.display.Sprite;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	
 	/**
 	 * ...
@@ -13,9 +17,32 @@ package KeosTactics.products.structures
 		protected var _col:int;
 		protected var _owner:Player;
 		
-		public function AbstractPiege()
+		public function AbstractPiege(owner:Player)
 		{
+			_lig = -1;
+			_col = -1;
+			_owner = owner;		
+			
+			drawMe();		
+			
+			addEventListener( TouchEvent.TOUCH, _onTouch );			
+		}
 		
+		private function _onTouch(e:TouchEvent):void 
+		{
+			var touch:Touch = e.getTouch(this);
+			if (touch) {				
+				if (touch.phase == TouchPhase.BEGAN) {
+					this.speech();
+				}				
+			}
+		}		
+		
+		protected function drawMe():void
+		{
+			if ( _owner.id == Players.PLAYER_1) {
+				scaleX *= -1;
+			}			
 		}
 		
 		public function get owner():Player

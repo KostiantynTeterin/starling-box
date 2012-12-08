@@ -1,7 +1,8 @@
 package KeosTactics.products.structures 
 {
-	import flash.display.Sprite;
-	import products.structures.IStructure;
+	import KeosTactics.players.Player;
+	import starling.display.Image;
+	import starling.textures.Texture;
 	
 	/**
 	 * ...
@@ -9,14 +10,27 @@ package KeosTactics.products.structures
 	 */
 	public class Mur extends AbstractPiege
 	{
-		
-		public function Mur() 
+		[Embed(source = "../../assets/mur.png")]
+		private const GfxClass:Class;		
+		public function Mur( owner:Player ) 
 		{
-			this.graphics.beginFill( 0x0 );
-			this.graphics.drawRect(-24,-12,48,24)
-			this.graphics.endFill();		
-			
+			super(owner);
 		}
+		
+		override protected function drawMe():void
+		{
+			var img:Image = new Image( Texture.fromBitmap( new GfxClass ) );
+			img.pivotX = img.width >> 1;
+			img.pivotY = img.height >> 1;
+			addChild( img ) ;
+			
+			super.drawMe();
+		}		
+		
+		override public function speech():void
+		{
+			trace(this, _owner.id,"KABOOOOM !");
+		}			
 		
 	}
 

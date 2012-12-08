@@ -1,5 +1,6 @@
 package KeosTactics.products.units 
 {
+	import KeosTactics.players.Players;
 	import starling.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -43,27 +44,9 @@ package KeosTactics.products.units
 		
 		protected function drawMe():void
 		{
-			/*
-			this.graphics.beginFill( 0x0 );
-			this.graphics.drawCircle(0, 0, 48 );
-			this.graphics.endFill();			
-			
-			var fmt:TextFormat = new TextFormat();
-			fmt.font = "Arial";
-			fmt.size = 14;
-			fmt.color = 0xFFFFFF;
-			
-			var _tf:TextField = new TextField();
-			_tf.x = -48;
-			_tf.y = -10;
-			_tf.defaultTextFormat = fmt;
-			_tf.autoSize = TextFieldAutoSize.CENTER;
-			_tf.text = this.toString();
-			_tf.selectable = false;
-			_tf.mouseEnabled = false;
-			
-			addChild( _tf );			
-			*/
+			if ( _owner.id == Players.PLAYER_1) {
+				scaleX *= -1;
+			}
 		}		
 		
 		public function speech():void

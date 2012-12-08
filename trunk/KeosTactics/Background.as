@@ -28,7 +28,7 @@ package KeosTactics
 			var ha:Image = new Image( Texture.fromBitmap(new HAClass) );
 			ha.x = -250;
 			ha.y = 200;
-			addChild( ha );			
+			//addChild( ha );			
 			
 			this.touchable = false;
 		}

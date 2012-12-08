@@ -9,6 +9,7 @@
 	import starling.display.Sprite;
 	import starlingBox.debug.Console;
 	import flash.utils.describeType;
+	import com.furusystems.dconsole2.DConsole;
 	
 	public class SB
 	{
@@ -99,6 +100,25 @@
 		}
 		
 		// -- DEBUG CONSOLE
+		
+		public static function addMessage( ...data ):void
+		{
+			var s:String = "";
+			if (data) 
+			{	
+				if (data.length > 1){
+					var i:int = 0;
+					while (i < data.length)
+					{
+						if (i > 0) s += " ";
+						s += data[i ++].toString();
+					}
+				} else {
+					s = data.toString();
+				}
+			}
+			DConsole.console.print(s);			
+		}
 		
 		public static function addConsole():void
 		{

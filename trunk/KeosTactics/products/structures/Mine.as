@@ -1,19 +1,37 @@
 package KeosTactics.products.structures 
 {
-	import flash.display.Sprite;
+	import KeosTactics.players.Player;
+	import starling.display.Image;
+	import starling.textures.Texture;
+	
 	/**
 	 * ...
 	 * @author YopSolo
-	 */
+	 */	
+	
 	public class Mine extends AbstractPiege
 	{
-		
-		public function Mine() 
+		[Embed(source = "../../assets/bomb.png")]
+		private const GfxClass:Class;
+		public function Mine( owner:Player ) 
 		{
-			this.graphics.beginFill( 0xCC0000 );
-			this.graphics.drawCircle( 0,0, 48 );
-			this.graphics.endFill();
+			super(owner);
 		}
+		
+		override protected function drawMe():void
+		{
+			var img:Image = new Image( Texture.fromBitmap( new GfxClass ) );
+			img.pivotX = img.width >> 1;
+			img.pivotY = img.height >> 1;
+			addChild( img ) ;
+			
+			super.drawMe();
+		}		
+		
+		override public function speech():void
+		{
+			trace(this, _owner.id,"KABOOOOM !");
+		}		
 		
 	}
 
