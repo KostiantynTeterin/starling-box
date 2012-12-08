@@ -2,6 +2,7 @@ package KeosTactics.players
 {
 	import KeosTactics.factory.IRaceFactory;
 	import KeosTactics.products.units.AbstractUnit;
+	import KeosTactics.products.structures.AbstractPiege;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	
@@ -13,6 +14,7 @@ package KeosTactics.players
 	{
 		private var _raceFactory:IRaceFactory;
 		private var _units:Vector.<AbstractUnit>;
+		private var _pieges:Vector.<AbstractPiege>;
 		private var _blason:Blason;
 		private var _color:int = 0x0;
 		private var _id:int = -1;
@@ -22,6 +24,7 @@ package KeosTactics.players
 			_id = id;
 			_raceFactory = raceFactory;
 			_units = _raceFactory.createStartingUnits(this);
+			_pieges = _raceFactory.createStartingPieges(this);
 		}
 		
 		public function get blason():Blason
@@ -57,6 +60,11 @@ package KeosTactics.players
 		public function get id():int 
 		{
 			return _id;
+		}
+		
+		public function get pieges():Vector.<AbstractPiege> 
+		{
+			return _pieges;
 		}
 	
 	}

@@ -1,5 +1,7 @@
 package screens
 {
+	import KeosTactics.Config;
+	import KeosTactics.products.structures.IPiege;
 	import starling.display.Sprite;
 	import flash.display.Shape;
 	import KeosTactics.Background;
@@ -23,56 +25,82 @@ package screens
 	/**
 	 * ...
 	 * @author YopSolo
+	 *
+	 * Faire les ecrans
+	 * loading
+	 * avant-jeu
+	 * jeu
+	 * fin jeu
+	 *
 	 */
 	public class KeosTacticsMain extends Screen
 	{
-		
+		// [ECRAN DE JEU]
 		public function KeosTacticsMain()
 		{
+			// creation des joueurs
 			Players.instance.add(new Player(Players.PLAYER_1, new StangFactory()));
 			Players.instance.add(new Player(Players.PLAYER_2, new StangFactory()));
 			
 			//addEventListener(TouchEvent.TOUCH, onTouch);
+			// DEBUG
+			SB.nativeStage.addChild(DConsole.view);
+			DConsole.createCommand("nextPhase", nextPhase);
+			SB.addMessage("GameManager.instance.phase ", GameManager.instance.phase);
 			
+			// creation du fond
 			addChild(new Background);
 			
-			SB.nativeStage.addChild(DConsole.view);
-			
-			/*
-			DConsole.console.print("LOL");
-			DConsole.addErrorMessage("error message");
-			DConsole.addFatalMessage("fatal message");
-			DConsole.addHoorayMessage("horray message");
-			DConsole.addSystemMessage("system message");
-			DConsole.addWarningMessage("warning message");
-			DConsole.createCommand("drawRect", drawRect);
-			*/
-			
-			DConsole.console.print("GameManager.instance.phase " + GameManager.instance.phase );
-			
-			
-			
+			// creation de l'arene			
 			var arena:Arena = Arena.instance;
+			arena.type = Config.ARENA_4_6;
+			arena.x = 120;
+			arena.y = 150;
+			SB.nativeStage.addChild(arena.debug);
+
+			// creation des pieges du joueur 1
+			arena.setValeur(3, 0, Players.instance.getMe().pieges[0]);
+			arena.setValeur(2, 1, Players.instance.getMe().pieges[1]);
+			arena.setValeur(3, 3, Players.instance.getMe().pieges[2]);			
 			
-			arena.setValeur(0, 0, Players.instance.getPlayer(Players.PLAYER_1).units[0]);
-			arena.setValeur(0, 1, Players.instance.getPlayer(Players.PLAYER_1).units[1]);
-			arena.setValeur(0, 3, Players.instance.getPlayer(Players.PLAYER_1).units[2]);
+			// creation des pieces j1
+			arena.setValeur(0, 0, Players.instance.getMe().units[0]);
+			arena.setValeur(0, 1, Players.instance.getMe().units[1]);
+			arena.setValeur(0, 3, Players.instance.getMe().units[2]);
 			
+			// creation des pieces j2
 			arena.setValeur(arena.colones - 1, 0, Players.instance.getPlayer(Players.PLAYER_2).units[0]);
 			arena.setValeur(arena.colones - 1, 2, Players.instance.getPlayer(Players.PLAYER_2).units[1]);
 			arena.setValeur(arena.colones - 1, 3, Players.instance.getPlayer(Players.PLAYER_2).units[2]);
+			// creation des pieges du j2
+			arena.setValeur(2, 0, Players.instance.getPlayer(Players.PLAYER_2).pieges[0]);
+			arena.setValeur(3, 1, Players.instance.getPlayer(Players.PLAYER_2).pieges[1]);
+			arena.setValeur(2, 2, Players.instance.getPlayer(Players.PLAYER_2).pieges[2]);	
+			
 			
 			// affiche les unites
-			for each(var sp:Sprite in arena.cases) {
-				if (sp is IUnit) {
-					sp.x = (sp as IUnit).col * Arena.CASE_SIZE;
-					sp.y = (sp as IUnit).lig * Arena.CASE_SIZE;
-					addChild( sp );
+			for each (var sp:Sprite in arena.cases)
+			{
+				if (sp is IUnit)
+				{
+					sp.x = (sp as IUnit).col * arena.SIZE + arena.x + int(arena.SIZE/2);
+					sp.y = (sp as IUnit).lig * arena.SIZE + arena.y + int(arena.SIZE/2);
+					addChild(sp);
 				}
-			}
+				
+				if (sp is IPiege)
+				{
+					sp.x = (sp as IPiege).col * arena.SIZE + arena.x + int(arena.SIZE/2);
+					sp.y = (sp as IPiege).lig * arena.SIZE + arena.y + int(arena.SIZE/2);
+					addChild(sp);
+				}				
+			}			
 			
-			
-			
+		}
+		
+		private function nextPhase():void
+		{
+			GameManager.instance.nextPhase();
 		}
 		
 		private function onTouch(e:TouchEvent):void
@@ -80,22 +108,9 @@ package screens
 			var touch:Touch = e.getTouch(this);
 			if (touch.phase == TouchPhase.ENDED)
 			{
-				trace(GameManager.instance.nextPhase());
+				GameManager.instance.nextPhase();
 			}
-		
 		}
-		
-		private function drawRect(x:Number, y:Number, width:Number, height:Number, color:uint):void
-		{
-			var sh:Shape = new Shape
-			sh.graphics.clear();
-			sh.graphics.beginFill(color);
-			sh.graphics.drawRect(0, 0, width, height);
-			sh.x = x;
-			sh.y = y;
-			SB.nativeStage.addChild(sh);
-		}
-	
 	}
 
 }
