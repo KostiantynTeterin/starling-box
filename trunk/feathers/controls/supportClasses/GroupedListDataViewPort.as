@@ -62,6 +62,7 @@ package feathers.controls.supportClasses
 		private static const HELPER_BOUNDS:ViewPortBounds = new ViewPortBounds();
 		private static const HELPER_LAYOUT_RESULT:LayoutBoundsResult = new LayoutBoundsResult();
 		private static const HELPER_VECTOR:Vector.<int> = new <int>[];
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		public function GroupedListDataViewPort()
 		{
@@ -1704,6 +1705,7 @@ package feathers.controls.supportClasses
 			for(var i:int = 0; i < rendererCount; i++)
 			{
 				var itemRenderer:IGroupedListItemRenderer = this._inactiveItemRenderers[i];
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, itemRenderer);
 				delete this._itemRendererMap[itemRenderer.data];
 			}
 
@@ -1713,6 +1715,7 @@ package feathers.controls.supportClasses
 				for(i = 0; i < rendererCount; i++)
 				{
 					itemRenderer = this._inactiveFirstItemRenderers[i];
+					this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, itemRenderer);
 					delete this._firstItemRendererMap[itemRenderer.data];
 				}
 			}
@@ -1723,6 +1726,7 @@ package feathers.controls.supportClasses
 				for(i = 0; i < rendererCount; i++)
 				{
 					itemRenderer = this._inactiveLastItemRenderers[i];
+					this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, itemRenderer);
 					delete this._lastItemRendererMap[itemRenderer.data];
 				}
 			}
@@ -1733,6 +1737,7 @@ package feathers.controls.supportClasses
 				for(i = 0; i < rendererCount; i++)
 				{
 					itemRenderer = this._inactiveSingleItemRenderers[i];
+					this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, itemRenderer);
 					delete this._singleItemRendererMap[itemRenderer.data];
 				}
 			}
@@ -1741,6 +1746,7 @@ package feathers.controls.supportClasses
 			for(i = 0; i < rendererCount; i++)
 			{
 				var headerOrFooterRenderer:IGroupedListHeaderOrFooterRenderer = this._inactiveHeaderRenderers[i];
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, headerOrFooterRenderer);
 				delete this._headerRendererMap[headerOrFooterRenderer.data];
 			}
 
@@ -1748,6 +1754,7 @@ package feathers.controls.supportClasses
 			for(i = 0; i < rendererCount; i++)
 			{
 				headerOrFooterRenderer = this._inactiveFooterRenderers[i];
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, headerOrFooterRenderer);
 				delete this._footerRendererMap[headerOrFooterRenderer.data];
 			}
 		}
@@ -1891,6 +1898,7 @@ package feathers.controls.supportClasses
 				activeRenderers.push(renderer);
 				displayRenderer.addEventListener(Event.CHANGE, renderer_changeHandler);
 				displayRenderer.addEventListener(FeathersEventType.RESIZE, itemRenderer_resizeHandler);
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_ADD, false, renderer);
 			}
 
 			return renderer;
@@ -1932,6 +1940,7 @@ package feathers.controls.supportClasses
 				this._headerRendererMap[header] = renderer;
 				this._activeHeaderRenderers.push(renderer);
 				displayRenderer.addEventListener(FeathersEventType.RESIZE, headerOrFooterRenderer_resizeHandler);
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_ADD, false, renderer);
 			}
 
 			return renderer;
@@ -1973,6 +1982,7 @@ package feathers.controls.supportClasses
 				this._footerRendererMap[footer] = renderer;
 				this._activeFooterRenderers.push(renderer);
 				displayRenderer.addEventListener(FeathersEventType.RESIZE, headerOrFooterRenderer_resizeHandler);
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_ADD, false, renderer);
 			}
 
 			return renderer;
@@ -2142,7 +2152,7 @@ package feathers.controls.supportClasses
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this);
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				return;
@@ -2160,12 +2170,12 @@ package feathers.controls.supportClasses
 				}
 				if(!touch)
 				{
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					this.touchPointID = -1;
-					return;
 				}
 			}
 			else
@@ -2176,10 +2186,11 @@ package feathers.controls.supportClasses
 					{
 						this.touchPointID = touch.id;
 						this._isScrolling = false;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 	}
 }

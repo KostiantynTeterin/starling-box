@@ -31,7 +31,6 @@ package feathers.controls.text
 	import flash.display3D.textures.Texture;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -91,6 +90,16 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
+		protected var _previousTextFieldWidth:Number = 0;
+
+		/**
+		 * @private
+		 */
+		protected var _previousTextFieldHeight:Number = 0;
+
+		/**
+		 * @private
+		 */
 		protected var _snapshotWidth:int = 0;
 
 		/**
@@ -102,11 +111,6 @@ package feathers.controls.text
 		 * @private
 		 */
 		protected var _needsNewBitmap:Boolean = false;
-
-		/**
-		 * @private
-		 */
-		protected var _frameCount:int = 0;
 
 		/**
 		 * @private
@@ -126,13 +130,14 @@ package feathers.controls.text
 		 */
 		public function set text(value:String):void
 		{
-			if(!value)
-			{
-				value = "";
-			}
 			if(this._text == value)
 			{
 				return;
+			}
+			if(value === null)
+			{
+				//flash.text.TextField won't accept a null value
+				value = "";
 			}
 			this._text = value;
 			this.invalidate(INVALIDATION_FLAG_DATA);
@@ -258,11 +263,12 @@ package feathers.controls.text
 
 		/**
 		 * Determines if the text should be snapped to the nearest whole pixel
-		 * when rendered.
+		 * when rendered. When this is <code>false</code>, text may be displayed
+		 * on sub-pixels, which often results in blurred rendering.
 		 */
 		public function get snapToPixels():Boolean
 		{
-			return _snapToPixels;
+			return this._snapToPixels;
 		}
 
 		/**
@@ -276,7 +282,7 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function render(support:RenderSupport, alpha:Number):void
+		override public function render(support:RenderSupport, parentAlpha:Number):void
 		{
 			if(this._textSnapshot)
 			{
@@ -285,19 +291,13 @@ package feathers.controls.text
 					this.getTransformationMatrix(this.stage, HELPER_MATRIX);
 					this._textSnapshot.x = Math.round(HELPER_MATRIX.tx) - HELPER_MATRIX.tx;
 					this._textSnapshot.y = Math.round(HELPER_MATRIX.ty) - HELPER_MATRIX.ty;
-					const scrollRect:Rectangle = this.scrollRect;
-					if(scrollRect)
-					{
-						this._textSnapshot.x += Math.round(scrollRect.x) - scrollRect.x;
-						this._textSnapshot.y += Math.round(scrollRect.y) - scrollRect.y;
-					}
 				}
 				else
 				{
 					this._textSnapshot.x = this._textSnapshot.y = 0;
 				}
 			}
-			super.render(support, alpha);
+			super.render(support, parentAlpha);
 		}
 
 		/**
@@ -342,6 +342,7 @@ package feathers.controls.text
 				this._textField = new TextField();
 				this._textField.mouseEnabled = this._textField.mouseWheelEnabled = false;
 				this._textField.selectable = false;
+				this._textField.multiline = true;
 				this._textField.antiAliasType = AntiAliasType.ADVANCED;
 			}
 		}
@@ -447,14 +448,20 @@ package feathers.controls.text
 				this._needsNewBitmap = this._needsNewBitmap || !this._textSnapshotBitmapData || this._snapshotWidth != this._textSnapshotBitmapData.width || this._snapshotHeight != this._textSnapshotBitmapData.height;
 			}
 
-			if(stylesInvalid || dataInvalid || this._needsNewBitmap)
+			//instead of checking sizeInvalid, which will often be triggered by
+			//changing maxWidth or something for measurement, we check against
+			//the previous actualWidth/Height used for the snapshot.
+			if(stylesInvalid || dataInvalid || this._needsNewBitmap ||
+				this.actualWidth != this._previousTextFieldWidth ||
+				this.actualHeight != this._previousTextFieldHeight)
 			{
+				this._previousTextFieldWidth = this.actualWidth;
+				this._previousTextFieldHeight = this.actualHeight;
 				const hasText:Boolean = this._text.length > 0;
 				if(hasText)
 				{
-					//we need to wait a frame (sometimes two!) for the TextField
-					//to render properly. yes, really.
-					this._frameCount = 0;
+					//we need to wait a frame for the TextField to render
+					//properly. sometimes two, and this is a known issue.
 					this.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 				}
 				if(this._textSnapshot)
@@ -562,13 +569,11 @@ package feathers.controls.text
 			}
 		}
 
+		/**
+		 * @private
+		 */
 		protected function enterFrameHandler(event:Event):void
 		{
-			this._frameCount++;
-			if(this._frameCount < 2)
-			{
-				return;
-			}
 			this.removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			this.refreshSnapshot();
 		}

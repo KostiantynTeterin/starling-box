@@ -55,20 +55,21 @@ package KeosTactics
 				case PHASE_PIEGE: 
 					_fsm.state = PHASE_DEPLOIEMENT;
 					break;
-				
+					
 				case PHASE_DEPLOIEMENT: 
 					_fsm.state = PHASE_ACTION;
 					break;
-				
+					
 				case PHASE_ACTION: 
 					_fsm.state = PHASE_RESOLUTION;
 					break;
-				
+					
 				case PHASE_RESOLUTION: 
 					_fsm.state = PHASE_ACTION
 					break;
+					
 				default: 
-					throw new Error("Ahem... il y a une erreur imprévue dans GameManager->nextPhase().");
+					throw new Error("Ahem... il y a une erreur imprévue dans GameManager->nextPhase().");					
 			}
 			
 			return _fsm.state;
@@ -77,6 +78,4 @@ package KeosTactics
 
 }
 
-internal class SingletonLock
-{
-}
+internal class SingletonLock{}

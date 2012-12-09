@@ -25,18 +25,20 @@
 package feathers.controls.renderers
 {
 	import feathers.controls.Button;
+	import feathers.controls.ImageLoader;
 	import feathers.controls.text.BitmapFontTextRenderer;
 	import feathers.core.FeathersControl;
 	import feathers.core.IFeathersControl;
 	import feathers.core.ITextRenderer;
 	import feathers.core.PropertyProxy;
+	import feathers.events.FeathersEventType;
 
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
 
 	import starling.display.DisplayObject;
-	import starling.display.Image;
+	import starling.events.Event;
 	import starling.events.TouchEvent;
 	import starling.textures.Texture;
 
@@ -52,6 +54,53 @@ package feathers.controls.renderers
 		public static const DEFAULT_CHILD_NAME_ACCESSORY_LABEL:String = "feathers-item-renderer-accessory-label";
 
 		/**
+		 * The accessory will be positioned above its origin.
+		 */
+		public static const ACCESSORY_POSITION_TOP:String = "top";
+
+		/**
+		 * The accessory will be positioned to the right of its origin.
+		 */
+		public static const ACCESSORY_POSITION_RIGHT:String = "right";
+
+		/**
+		 * The accessory will be positioned below its origin.
+		 */
+		public static const ACCESSORY_POSITION_BOTTOM:String = "bottom";
+
+		/**
+		 * The accessory will be positioned to the left of its origin.
+		 */
+		public static const ACCESSORY_POSITION_LEFT:String = "left";
+
+		/**
+		 * The accessory will be positioned manually with no relation to another
+		 * child. Use <code>accessoryOffsetX</code> and <code>accessoryOffsetY</code>
+		 * to set the accessory position.
+		 *
+		 * <p>The <code>accessoryPositionOrigin</code> property will be ignored
+		 * if <code>accessoryPosition</code> is set to <code>ACCESSORY_POSITION_MANUAL</code>.</p>
+		 *
+		 * @see #accessoryOffsetX
+		 * @see #accessoryOffsetY
+		 */
+		public static const ACCESSORY_POSITION_MANUAL:String = "manual";
+
+		/**
+		 * The layout order will be the label first, then the accessory relative
+		 * to the label, then the icon relative to both. Best used when the
+		 * accessory should be between the label and the icon or when the icon
+		 * position shouldn't be affected by the accessory.
+		 */
+		public static const LAYOUT_ORDER_LABEL_ACCESSORY_ICON:String = "labelAccessoryIcon";
+
+		/**
+		 * The layout order will be the label first, then the icon relative to
+		 * label, then the accessory relative to both.
+		 */
+		public static const LAYOUT_ORDER_LABEL_ICON_ACCESSORY:String = "labelIconAccessory";
+
+		/**
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
@@ -64,9 +113,9 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected static function defaultImageFactory(texture:Texture):Image
+		protected static function defaultLoaderFactory():ImageLoader
 		{
-			return new Image(texture);
+			return new ImageLoader();
 		}
 
 		/**
@@ -86,12 +135,12 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var iconImage:Image;
+		protected var iconImage:ImageLoader;
 
 		/**
 		 * @private
 		 */
-		protected var accessoryImage:Image;
+		protected var accessoryImage:ImageLoader;
 
 		/**
 		 * @private
@@ -210,6 +259,162 @@ package feathers.controls.renderers
 		public function set itemHasIcon(value:Boolean):void
 		{
 			this._itemHasIcon = value;
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _accessoryPosition:String = ACCESSORY_POSITION_RIGHT;
+
+		[Inspectable(type="String",enumeration="top,right,bottom,left,manual")]
+		/**
+		 * The location of the accessory, relative to one of the other children.
+		 * Use <code>ACCESSORY_POSITION_MANUAL</code> to position the accessory
+		 * from the top-left corner.
+		 *
+		 * @see #layoutOrder
+		 */
+		public function get accessoryPosition():String
+		{
+			return this._accessoryPosition;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set accessoryPosition(value:String):void
+		{
+			if(this._accessoryPosition == value)
+			{
+				return;
+			}
+			this._accessoryPosition = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _layoutOrder:String = LAYOUT_ORDER_LABEL_ICON_ACCESSORY;
+
+		[Inspectable(type="String",enumeration="labelIconAccessory,labelAccessoryIcon")]
+		/**
+		 * The accessory's position will be based on which other child (the
+		 * label or the icon) the accessory should be relative to.
+		 *
+		 * <p>The <code>accessoryPositionOrigin</code> property will be ignored
+		 * if <code>accessoryPosition</code> is set to <code>ACCESSORY_POSITION_MANUAL</code>.</p>
+		 *
+		 * @see #accessoryPosition
+		 * @see #iconPosition
+		 * @see LAYOUT_ORDER_LABEL_ICON_ACCESSORY
+		 * @see LAYOUT_ORDER_LABEL_ACCESSORY_ICON
+		 */
+		public function get layoutOrder():String
+		{
+			return this._layoutOrder;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set layoutOrder(value:String):void
+		{
+			if(this._layoutOrder == value)
+			{
+				return;
+			}
+			this._layoutOrder = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _accessoryOffsetX:Number = 0;
+
+		/**
+		 * Offsets the x position of the accessory by a certain number of pixels.
+		 */
+		public function get accessoryOffsetX():Number
+		{
+			return this._accessoryOffsetX;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set accessoryOffsetX(value:Number):void
+		{
+			if(this._accessoryOffsetX == value)
+			{
+				return;
+			}
+			this._accessoryOffsetX = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _accessoryOffsetY:Number = 0;
+
+		/**
+		 * Offsets the y position of the accessory by a certain number of pixels.
+		 */
+		public function get accessoryOffsetY():Number
+		{
+			return this._accessoryOffsetY;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set accessoryOffsetY(value:Number):void
+		{
+			if(this._accessoryOffsetY == value)
+			{
+				return;
+			}
+			this._accessoryOffsetY = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _accessoryGap:Number = NaN;
+
+		/**
+		 * The space, in pixels, between the accessory and the other child it is
+		 * positioned relative to. Applies to either horizontal or vertical
+		 * spacing, depending on the value of <code>accessoryPosition</code>. If
+		 * the value is <code>NaN</code>, the value of the <code>gap</code>
+		 * property will be used instead.
+		 *
+		 * <p>If <code>accessoryGap</code> is set to <code>Number.POSITIVE_INFINITY</code>,
+		 * the accessory and the component it is relative to will be positioned
+		 * as far apart as possible.</p>
+		 *
+		 * @see #gap
+		 * @see #accessoryPosition
+		 */
+		public function get accessoryGap():Number
+		{
+			return this._accessoryGap;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set accessoryGap(value:Number):void
+		{
+			if(this._accessoryGap == value)
+			{
+				return;
+			}
+			this._accessoryGap = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
@@ -342,15 +547,15 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the icon fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>iconTextureFunction</code></li>
-		 *     <li><code>iconTextureField</code></li>
+		 *     <li><code>iconSourceFunction</code></li>
+		 *     <li><code>iconSourceField</code></li>
 		 *     <li><code>iconFunction</code></li>
 		 *     <li><code>iconField</code></li>
 		 * </ol>
 		 *
 		 * @see #iconFunction
-		 * @see #iconTextureField
-		 * @see #iconTextureFunction
+		 * @see #iconSourceField
+		 * @see #iconSourceFunction
 		 */
 		public function get iconField():String
 		{
@@ -383,15 +588,15 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the icon fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>iconTextureFunction</code></li>
-		 *     <li><code>iconTextureField</code></li>
+		 *     <li><code>iconSourceFunction</code></li>
+		 *     <li><code>iconSourceField</code></li>
 		 *     <li><code>iconFunction</code></li>
 		 *     <li><code>iconField</code></li>
 		 * </ol>
 		 *
 		 * @see #iconField
-		 * @see #iconTextureField
-		 * @see #iconTextureFunction
+		 * @see #iconSourceField
+		 * @see #iconSourceFunction
 		 */
 		public function get iconFunction():Function
 		{
@@ -414,90 +619,106 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _iconTextureField:String = "iconTexture";
+		protected var _iconSourceField:String = "iconSource";
 
 		/**
-		 * The field in the item that contains a texture to be used for the
-		 * renderer's icon. The renderer will automatically manage and reuse an
-		 * internal <code>Image</code>. This <code>Image</code> may be
-		 * customized by changing the <code>iconImageFactory</code>.
+		 * The field in the item that contains a <code>starling.textures.Texture</code>
+		 * or a URL that points to a bitmap to be used as the item renderer's
+		 * icon. The renderer will automatically manage and reuse an internal
+		 * <code>ImageLoader</code> sub-component and this value will be passed
+		 * to the <code>source</code> property. The <code>ImageLoader</code> may
+		 * be customized by changing the <code>iconLoaderFactory</code>.
+		 *
+		 * <p>Using an icon source will result in better performance than
+		 * passing in an <code>ImageLoader</code> or <code>Image</code> through
+		 * a <code>iconField</code> or <code>iconFunction</code>
+		 * because the renderer can avoid costly display list manipulation.</p>
 		 *
 		 * <p>All of the icon fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>iconTextureFunction</code></li>
-		 *     <li><code>iconTextureField</code></li>
+		 *     <li><code>iconSourceFunction</code></li>
+		 *     <li><code>iconSourceField</code></li>
 		 *     <li><code>iconFunction</code></li>
 		 *     <li><code>iconField</code></li>
 		 * </ol>
 		 *
-		 * @see #iconImageFactory
-		 * @see #iconTextureFunction
+		 * @see feathers.controls.ImageLoader#source
+		 * @see #iconLoaderFactory
+		 * @see #iconSourceFunction
 		 * @see #iconField
 		 * @see #iconFunction
-		 * @see starling.textures.Texture
 		 */
-		public function get iconTextureField():String
+		public function get iconSourceField():String
 		{
-			return this._iconTextureField;
+			return this._iconSourceField;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set iconTextureField(value:String):void
+		public function set iconSourceField(value:String):void
 		{
-			if(this._iconTextureField == value)
+			if(this._iconSourceField == value)
 			{
 				return;
 			}
-			this._iconTextureField = value;
+			this._iconSourceField = value;
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _iconTextureFunction:Function;
+		protected var _iconSourceFunction:Function;
 
 		/**
-		 * A function used to generate a texture to be used for the renderer's
+		 * A function used to generate a <code>starling.textures.Texture</code>
+		 * or a URL that points to a bitmap to be used as the item renderer's
 		 * icon. The renderer will automatically manage and reuse an internal
-		 * <code>Image</code> and swap the texture when the renderer's data
-		 * changes. This <code>Image</code> may be customized by changing the
-		 * <code>iconImageFactory</code>.
+		 * <code>ImageLoader</code> sub-component and this value will be passed
+		 * to the <code>source</code> property. The <code>ImageLoader</code> may
+		 * be customized by changing the <code>iconLoaderFactory</code>.
+		 *
+		 * <p>Using an icon source will result in better performance than
+		 * passing in an <code>ImageLoader</code> or <code>Image</code> through
+		 * a <code>iconField</code> or <code>iconFunction</code>
+		 * because the renderer can avoid costly display list manipulation.</p>
 		 *
 		 * <p>The function is expected to have the following signature:</p>
-		 * <pre>function( item:Object ):Texture</pre>
+		 * <pre>function( item:Object ):Object</pre>
+		 *
+		 * <p>The return value is a valid value for the <code>source</code>
+		 * property of an <code>ImageLoader</code> component.</p>
 		 *
 		 * <p>All of the icon fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>iconTextureFunction</code></li>
-		 *     <li><code>iconTextureField</code></li>
+		 *     <li><code>iconSourceFunction</code></li>
+		 *     <li><code>iconSourceField</code></li>
 		 *     <li><code>iconFunction</code></li>
 		 *     <li><code>iconField</code></li>
 		 * </ol>
 		 *
-		 * @see #iconImageFactory
-		 * @see #iconTextureField
+		 * @see feathers.controls.ImageLoader#source
+		 * @see #iconLoaderFactory
+		 * @see #iconSourceField
 		 * @see #iconField
 		 * @see #iconFunction
-		 * @see starling.textures.Texture
 		 */
-		public function get iconTextureFunction():Function
+		public function get iconSourceFunction():Function
 		{
-			return this._iconTextureFunction;
+			return this._iconSourceFunction;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set iconTextureFunction(value:Function):void
+		public function set iconSourceFunction(value:Function):void
 		{
-			if(this._iconTextureFunction == value)
+			if(this._iconSourceFunction == value)
 			{
 				return;
 			}
-			this._iconTextureFunction = value;
+			this._iconSourceFunction = value;
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
@@ -510,21 +731,21 @@ package feathers.controls.renderers
 		 * The field in the item that contains a display object to be positioned
 		 * in the accessory position of the renderer. If you wish to display an
 		 * <code>Image</code> in the accessory position, it's better for
-		 * performance to use <code>accessoryTextureField</code> instead.
+		 * performance to use <code>accessorySourceField</code> instead.
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
 		 *     <li><code>accessoryField</code></li>
 		 * </ol>
 		 *
-		 * @see #accessoryTextureField
+		 * @see #accessorySourceField
 		 * @see #accessoryFunction
-		 * @see #accessoryTextureFunction
+		 * @see #accessorySourceFunction
 		 * @see #accessoryLabelField
 		 * @see #accessoryLabelFunction
 		 */
@@ -555,15 +776,15 @@ package feathers.controls.renderers
 		 * A function that returns a display object to be positioned in the
 		 * accessory position of the renderer. If you wish to display an
 		 * <code>Image</code> in the accessory position, it's better for
-		 * performance to use <code>accessoryTextureFunction</code> instead.
+		 * performance to use <code>accessorySourceFunction</code> instead.
 		 *
 		 * <p>The function is expected to have the following signature:</p>
 		 * <pre>function( item:Object ):DisplayObject</pre>
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
@@ -571,8 +792,8 @@ package feathers.controls.renderers
 		 * </ol>
 		 *
 		 * @see #accessoryField
-		 * @see #accessoryTextureField
-		 * @see #accessoryTextureFunction
+		 * @see #accessorySourceField
+		 * @see #accessorySourceFunction
 		 * @see #accessoryLabelField
 		 * @see #accessoryLabelFunction
 		 */
@@ -597,109 +818,114 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _accessoryTextureField:String = "accessoryTexture";
+		protected var _accessorySourceField:String = "accessorySource";
 
 		/**
-		 * The field in the item that contains a texture to be displayed in a
-		 * renderer-managed <code>Image</code> in the accessory position of the
-		 * renderer. The renderer will automatically reuse an internal
-		 * <code>Image</code> and swap the texture when the renderer's data
-		 * changes. This <code>Image</code> may be customized by
-		 * changing the <code>accessoryImageFactory</code>.
+		 * A field in the item that contains a <code>starling.textures.Texture</code>
+		 * or a URL that points to a bitmap to be used as the item renderer's
+		 * accessory. The renderer will automatically manage and reuse an internal
+		 * <code>ImageLoader</code> sub-component and this value will be passed
+		 * to the <code>source</code> property. The <code>ImageLoader</code> may
+		 * be customized by changing the <code>accessoryLoaderFactory</code>.
 		 *
-		 * <p>Using an accessory texture will result in better performance than
-		 * passing in an <code>Image</code> through a <code>accessoryField</code>
-		 * or <code>accessoryFunction</code> because the renderer can avoid
-		 * costly display list manipulation.</p>
+		 * <p>Using an accessory source will result in better performance than
+		 * passing in an <code>ImageLoader</code> or <code>Image</code> through
+		 * a <code>accessoryField</code> or <code>accessoryFunction</code> because
+		 * the renderer can avoid costly display list manipulation.</p>
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
 		 *     <li><code>accessoryField</code></li>
 		 * </ol>
 		 *
-		 * @see #accessoryImageFactory
-		 * @see #accessoryTextureFunction
+		 * @see feathers.controls.ImageLoader#source
+		 * @see #accessoryLoaderFactory
+		 * @see #accessorySourceFunction
 		 * @see #accessoryField
 		 * @see #accessoryFunction
 		 * @see #accessoryLabelField
 		 * @see #accessoryLabelFunction
 		 */
-		public function get accessoryTextureField():String
+		public function get accessorySourceField():String
 		{
-			return this._accessoryTextureField;
+			return this._accessorySourceField;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set accessoryTextureField(value:String):void
+		public function set accessorySourceField(value:String):void
 		{
-			if(this._accessoryTextureField == value)
+			if(this._accessorySourceField == value)
 			{
 				return;
 			}
-			this._accessoryTextureField = value;
+			this._accessorySourceField = value;
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _accessoryTextureFunction:Function;
+		protected var _accessorySourceFunction:Function;
 
 		/**
-		 * A function that returns a texture to be displayed in a
-		 * renderer-managed <code>Image</code> in the accessory position of the
-		 * renderer. The renderer will automatically reuse an internal
-		 * <code>Image</code> and swap the texture when the renderer's data
-		 * changes. This <code>Image</code> may be customized by
-		 * changing the <code>accessoryImageFactory</code>.
+		 * A function that generates a <code>starling.textures.Texture</code>
+		 * or a URL that points to a bitmap to be used as the item renderer's
+		 * accessory. The renderer will automatically manage and reuse an internal
+		 * <code>ImageLoader</code> sub-component and this value will be passed
+		 * to the <code>source</code> property. The <code>ImageLoader</code> may
+		 * be customized by changing the <code>accessoryLoaderFactory</code>.
 		 *
-		 * <p>Using an accessory texture will result in better performance than
-		 * passing in an <code>Image</code> through a <code>accessoryField</code>
-		 * or <code>accessoryFunction</code> because the renderer can avoid
-		 * costly display list manipulation.</p>
+		 * <p>Using an accessory source will result in better performance than
+		 * passing in an <code>ImageLoader</code> or <code>Image</code> through
+		 * a <code>accessoryField</code> or <code>accessoryFunction</code>
+		 * because the renderer can avoid costly display list manipulation.</p>
 		 *
 		 * <p>The function is expected to have the following signature:</p>
-		 * <pre>function( item:Object ):Texture</pre>
+		 * <pre>function( item:Object ):Object</pre>
+		 *
+		 * <p>The return value is a valid value for the <code>source</code>
+		 * property of an <code>ImageLoader</code> component.</p>
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
 		 *     <li><code>accessoryField</code></li>
 		 * </ol>
 		 *
-		 * @see #accessoryImageFactory
-		 * @see #accessoryTextureField
+		 * @see feathers.controls.ImageLoader#source
+		 * @see #accessoryLoaderFactory
+		 * @see #accessorySourceField
 		 * @see #accessoryField
 		 * @see #accessoryFunction
 		 * @see #accessoryLabelField
 		 * @see #accessoryLabelFunction
 		 */
-		public function get accessoryTextureFunction():Function
+		public function get accessorySourceFunction():Function
 		{
-			return this._accessoryTextureFunction;
+			return this._accessorySourceFunction;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set accessoryTextureFunction(value:Function):void
+		public function set accessorySourceFunction(value:Function):void
 		{
-			if(this.accessoryTextureFunction == value)
+			if(this._accessorySourceFunction == value)
 			{
 				return;
 			}
-			this._accessoryTextureFunction = value;
+			this._accessorySourceFunction = value;
 			this.invalidate(INVALIDATION_FLAG_DATA);
 		}
 
@@ -723,8 +949,8 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
@@ -735,8 +961,8 @@ package feathers.controls.renderers
 		 * @see #accessoryLabelFunction
 		 * @see #accessoryField
 		 * @see #accessoryFunction
-		 * @see #accessoryTextureField
-		 * @see #accessoryTextureFunction
+		 * @see #accessorySourceField
+		 * @see #accessorySourceFunction
 		 */
 		public function get accessoryLabelField():String
 		{
@@ -779,8 +1005,8 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
@@ -791,8 +1017,8 @@ package feathers.controls.renderers
 		 * @see #accessoryLabelField
 		 * @see #accessoryField
 		 * @see #accessoryFunction
-		 * @see #accessoryTextureField
-		 * @see #accessoryTextureFunction
+		 * @see #accessorySourceField
+		 * @see #accessorySourceFunction
 		 */
 		public function get accessoryLabelFunction():Function
 		{
@@ -815,70 +1041,74 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected var _iconImageFactory:Function = defaultImageFactory;
+		protected var _iconLoaderFactory:Function = defaultLoaderFactory;
 
 		/**
-		 * A function that generates an <code>Image</code> that uses the result
-		 * of <code>iconTextureField</code> or <code>iconTextureFunction</code>.
-		 * Useful for transforming the <code>Image</code> in some way. For
-		 * example, you might want to scale it for current DPI.
+		 * A function that generates an <code>ImageLoader</code> that uses the result
+		 * of <code>iconSourceField</code> or <code>iconSourceFunction</code>.
+		 * Useful for transforming the <code>ImageLoader</code> in some way. For
+		 * example, you might want to scale the texture for current DPI or apply
+		 * pixel snapping.
 		 *
 		 * <p>The function is expected to have the following signature:</p>
-		 * <pre>function():Image</pre>
+		 * <pre>function():ImageLoader</pre>
 		 *
-		 * @see #iconTextureField;
-		 * @see #iconTextureFunction;
+		 * @see feathers.controls.ImageLoader
+		 * @see #iconSourceField
+		 * @see #iconSourceFunction
 		 */
-		public function get iconImageFactory():Function
+		public function get iconLoaderFactory():Function
 		{
-			return this._iconImageFactory;
+			return this._iconLoaderFactory;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set iconImageFactory(value:Function):void
+		public function set iconLoaderFactory(value:Function):void
 		{
-			if(this._iconImageFactory == value)
+			if(this._iconLoaderFactory == value)
 			{
 				return;
 			}
-			this._iconImageFactory = value;
+			this._iconLoaderFactory = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
 		/**
 		 * @private
 		 */
-		protected var _accessoryImageFactory:Function = defaultImageFactory;
+		protected var _accessoryLoaderFactory:Function = defaultLoaderFactory;
 
 		/**
-		 * A function that generates an <code>Image</code> that uses the result
-		 * of <code>accessoryTextureField</code> or <code>accessoryTextureFunction</code>.
-		 * Useful for transforming the <code>Image</code> in some way. For
-		 * example, you might want to scale it for current DPI.
+		 * A function that generates an <code>ImageLoader</code> that uses the result
+		 * of <code>accessorySourceField</code> or <code>accessorySourceFunction</code>.
+		 * Useful for transforming the <code>ImageLoader</code> in some way. For
+		 * example, you might want to scale the texture for current DPI or apply
+		 * pixel snapping.
 		 *
 		 * <p>The function is expected to have the following signature:</p>
-		 * <pre>function():Image</pre>
+		 * <pre>function():ImageLoader</pre>
 		 *
-		 * @see #accessoryTextureField;
-		 * @see #accessoryTextureFunction;
+		 * @see feathers.controls.ImageLoader
+		 * @see #accessorySourceField;
+		 * @see #accessorySourceFunction;
 		 */
-		public function get accessoryImageFactory():Function
+		public function get accessoryLoaderFactory():Function
 		{
-			return this._accessoryImageFactory;
+			return this._accessoryLoaderFactory;
 		}
 
 		/**
 		 * @private
 		 */
-		public function set accessoryImageFactory(value:Function):void
+		public function set accessoryLoaderFactory(value:Function):void
 		{
-			if(this._accessoryImageFactory == value)
+			if(this._accessoryLoaderFactory == value)
 			{
 				return;
 			}
-			this._accessoryImageFactory = value;
+			this._accessoryLoaderFactory = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
@@ -890,13 +1120,15 @@ package feathers.controls.renderers
 		/**
 		 * A function that generates <code>ITextRenderer</code> that uses the result
 		 * of <code>accessoryLabelField</code> or <code>accessoryLabelFunction</code>.
-		 * Useful for skinning the <code>ITextRenderer</code>.
+		 * CAn be used to set properties on the <code>ITextRenderer</code>.
 		 *
 		 * <p>The function is expected to have the following signature:</p>
 		 * <pre>function():ITextRenderer</pre>
 		 *
-		 * @see #accessoryLabelField;
-		 * @see #accessoryLabelFunction;
+		 * @see feathers.core.ITextRenderer
+		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
+		 * @see #accessoryLabelField
+		 * @see #accessoryLabelFunction
 		 */
 		public function get accessoryLabelFactory():Function
 		{
@@ -931,6 +1163,7 @@ package feathers.controls.renderers
 		 * you can use the following syntax:</p>
 		 * <pre>list.scrollerProperties.&#64;verticalScrollBarProperties.&#64;thumbProperties.defaultSkin = new Image(texture);</pre>
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #accessoryLabelField
 		 * @see #accessoryLabelFunction
 		 */
@@ -982,31 +1215,8 @@ package feathers.controls.renderers
 		 */
 		override public function dispose():void
 		{
-			if(this.iconImage)
-			{
-				this.iconImage.removeFromParent(true);
-			}
-
-			//the accessory may have come from outside of this class. it's up
-			//to that code to dispose of the accessory. in fact, if we disposed
-			//of it here, we might screw something up!
-			if(this.accessory)
-			{
-				this.accessory.removeFromParent();
-			}
-
-			//however, we need to dispose these, if they exist, since we made
-			//them here.
-			if(this.accessoryImage)
-			{
-				this.accessoryImage.dispose();
-				this.accessoryImage = null;
-			}
-			if(this.accessoryLabel)
-			{
-				DisplayObject(this.accessoryLabel).dispose();
-				this.accessoryLabel = null;
-			}
+			this.replaceIcon(null);
+			this.replaceAccessory(null);
 			super.dispose();
 		}
 
@@ -1043,24 +1253,24 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the icon fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>iconTextureFunction</code></li>
-		 *     <li><code>iconTextureField</code></li>
+		 *     <li><code>iconSourceFunction</code></li>
+		 *     <li><code>iconSourceField</code></li>
 		 *     <li><code>iconFunction</code></li>
 		 *     <li><code>iconField</code></li>
 		 * </ol>
 		 */
 		protected function itemToIcon(item:Object):DisplayObject
 		{
-			if(this._iconTextureFunction != null)
+			if(this._iconSourceFunction != null)
 			{
-				var texture:Texture = this._iconTextureFunction(item) as Texture;
-				this.refreshIconTexture(texture);
+				var source:Object = this._iconSourceFunction(item);
+				this.refreshIconSource(source);
 				return this.iconImage;
 			}
-			else if(this._iconTextureField != null && item && item.hasOwnProperty(this._iconTextureField))
+			else if(this._iconSourceField != null && item && item.hasOwnProperty(this._iconSourceField))
 			{
-				texture = item[this._iconTextureField] as Texture;
-				this.refreshIconTexture(texture);
+				source = item[this._iconSourceField];
+				this.refreshIconSource(source);
 				return this.iconImage;
 			}
 			else if(this._iconFunction != null)
@@ -1081,8 +1291,8 @@ package feathers.controls.renderers
 		 *
 		 * <p>All of the accessory fields and functions, ordered by priority:</p>
 		 * <ol>
-		 *     <li><code>accessoryTextureFunction</code></li>
-		 *     <li><code>accessoryTextureField</code></li>
+		 *     <li><code>accessorySourceFunction</code></li>
+		 *     <li><code>accessorySourceField</code></li>
 		 *     <li><code>accessoryLabelFunction</code></li>
 		 *     <li><code>accessoryLabelField</code></li>
 		 *     <li><code>accessoryFunction</code></li>
@@ -1091,16 +1301,16 @@ package feathers.controls.renderers
 		 */
 		protected function itemToAccessory(item:Object):DisplayObject
 		{
-			if(this._accessoryTextureFunction != null)
+			if(this._accessorySourceFunction != null)
 			{
-				var texture:Texture = this._accessoryTextureFunction(item) as Texture;
-				this.refreshAccessoryTexture(texture);
+				var source:Texture = this._accessorySourceFunction(item);
+				this.refreshAccessorySource(source);
 				return this.accessoryImage;
 			}
-			else if(this._accessoryTextureField != null && item && item.hasOwnProperty(this._accessoryTextureField))
+			else if(this._accessorySourceField != null && item && item.hasOwnProperty(this._accessorySourceField))
 			{
-				texture = item[this._accessoryTextureField] as Texture;
-				this.refreshAccessoryTexture(texture);
+				source = item[this._accessorySourceField];
+				this.refreshAccessorySource(source);
 				return this.accessoryImage;
 			}
 			else if(this._accessoryLabelFunction != null)
@@ -1156,37 +1366,33 @@ package feathers.controls.renderers
 			{
 				return false;
 			}
+			this.refreshMaxLabelWidth(true);
 			this.labelTextRenderer.measureText(HELPER_POINT);
 			if(this.accessory is IFeathersControl)
 			{
 				IFeathersControl(this.accessory).validate();
 			}
+			if(this.currentIcon is IFeathersControl)
+			{
+				IFeathersControl(this.currentIcon).validate();
+			}
 			var newWidth:Number = this.explicitWidth;
 			if(needsWidth)
 			{
-				if(this.currentIcon && this.label)
-				{
-					if(this._iconPosition != ICON_POSITION_TOP && this._iconPosition != ICON_POSITION_BOTTOM)
-					{
-						var adjustedGap:Number = this._gap == Number.POSITIVE_INFINITY ? Math.min(this._paddingLeft, this._paddingRight) : this._gap;
-						newWidth = this.currentIcon.width + adjustedGap + HELPER_POINT.x;
-					}
-					else
-					{
-						newWidth = Math.max(this.currentIcon.width, HELPER_POINT.x);
-					}
-				}
-				else if(this.currentIcon)
-				{
-					newWidth = this.currentIcon.width;
-				}
-				else if(this.label)
+				if(this._label)
 				{
 					newWidth = HELPER_POINT.x;
 				}
-				if(this.accessory)
+				var adjustedGap:Number = this._gap == Number.POSITIVE_INFINITY ? Math.min(this._paddingLeft, this._paddingRight) : this._gap;
+				if(this._layoutOrder == LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
 				{
-					newWidth += this.accessory.width
+					newWidth = this.addAccessoryWidth(newWidth, adjustedGap);
+					newWidth = this.addIconWidth(newWidth, adjustedGap);
+				}
+				else
+				{
+					newWidth = this.addIconWidth(newWidth, adjustedGap);
+					newWidth = this.addAccessoryWidth(newWidth, adjustedGap);
 				}
 				newWidth += this._paddingLeft + this._paddingRight;
 				if(isNaN(newWidth))
@@ -1197,34 +1403,29 @@ package feathers.controls.renderers
 				{
 					newWidth = Math.max(newWidth, this._originalSkinWidth);
 				}
+				if(isNaN(newWidth))
+				{
+					newWidth = 0;
+				}
 			}
 
 			var newHeight:Number = this.explicitHeight;
 			if(needsHeight)
 			{
-				if(this.currentIcon && this.label)
-				{
-					if(this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM)
-					{
-						adjustedGap = this._gap == Number.POSITIVE_INFINITY ? Math.min(this._paddingTop, this._paddingBottom) : this._gap;
-						newHeight = this.currentIcon.height + adjustedGap + HELPER_POINT.y;
-					}
-					else
-					{
-						newHeight = Math.max(this.currentIcon.height, HELPER_POINT.y);
-					}
-				}
-				else if(this.currentIcon)
-				{
-					newHeight = this.currentIcon.height;
-				}
-				else if(this.label)
+				if(this._label)
 				{
 					newHeight = HELPER_POINT.y;
 				}
-				if(this.accessory)
+				adjustedGap = this._gap == Number.POSITIVE_INFINITY ? Math.min(this._paddingTop, this._paddingBottom) : this._gap;
+				if(this._layoutOrder == LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
 				{
-					newHeight = Math.max(newHeight, this.accessory.height);
+					newHeight = this.addAccessoryHeight(newHeight, adjustedGap);
+					newHeight = this.addIconHeight(newHeight, adjustedGap);
+				}
+				else
+				{
+					newHeight = this.addIconHeight(newHeight, adjustedGap);
+					newHeight = this.addAccessoryHeight(newHeight, adjustedGap);
 				}
 				newHeight += this._paddingTop + this._paddingBottom;
 				if(isNaN(newHeight))
@@ -1235,9 +1436,105 @@ package feathers.controls.renderers
 				{
 					newHeight = Math.max(newHeight, this._originalSkinHeight);
 				}
+				if(isNaN(newHeight))
+				{
+					newHeight = 0;
+				}
 			}
 
 			return this.setSizeInternal(newWidth, newHeight, false);
+		}
+
+		/**
+		 * @private
+		 */
+		protected function addIconWidth(width:Number, gap:Number):Number
+		{
+			if(!this.currentIcon || isNaN(this.currentIcon.width))
+			{
+				return width;
+			}
+			if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE || this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
+			{
+				width += this.currentIcon.width + gap;
+			}
+			else
+			{
+				width = Math.max(width, this.currentIcon.width);
+			}
+			return width;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function addAccessoryWidth(width:Number, gap:Number):Number
+		{
+			if(!this.accessory || isNaN(this.accessory.width))
+			{
+				return width;
+			}
+
+			if(this._accessoryPosition == ACCESSORY_POSITION_LEFT || this._accessoryPosition == ACCESSORY_POSITION_RIGHT)
+			{
+				var adjustedAccessoryGap:Number = isNaN(this._accessoryGap) ? gap : this._accessoryGap;
+				if(adjustedAccessoryGap == Number.POSITIVE_INFINITY)
+				{
+					adjustedAccessoryGap = Math.min(this._paddingLeft, this._paddingRight, this._gap);
+				}
+				width += this.accessory.width + adjustedAccessoryGap;
+			}
+			else
+			{
+				width = Math.max(width, this.accessory.width);
+			}
+			return width;
+		}
+
+
+		/**
+		 * @private
+		 */
+		protected function addIconHeight(height:Number, gap:Number):Number
+		{
+			if(!this.currentIcon || isNaN(this.currentIcon.height))
+			{
+				return height;
+			}
+			if(this._iconPosition == ICON_POSITION_TOP || this._iconPosition == ICON_POSITION_BOTTOM)
+			{
+				height += this.currentIcon.height + gap;
+			}
+			else
+			{
+				height = Math.max(height, this.currentIcon.height);
+			}
+			return height;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function addAccessoryHeight(height:Number, gap:Number):Number
+		{
+			if(!this.accessory || isNaN(this.accessory.height))
+			{
+				return height;
+			}
+			if(this._accessoryPosition == ACCESSORY_POSITION_TOP || this._accessoryPosition == ACCESSORY_POSITION_BOTTOM)
+			{
+				var adjustedAccessoryGap:Number = isNaN(this._accessoryGap) ? gap : this._accessoryGap;
+				if(adjustedAccessoryGap == Number.POSITIVE_INFINITY)
+				{
+					adjustedAccessoryGap = Math.min(this._paddingTop, this._paddingBottom, this._gap);
+				}
+				height += this.accessory.height + adjustedAccessoryGap;
+			}
+			else
+			{
+				height = Math.max(height, this.accessory.height);
+			}
+			return height;
 		}
 
 		/**
@@ -1253,26 +1550,11 @@ package feathers.controls.renderers
 				}
 				if(this._itemHasIcon)
 				{
-					this.defaultIcon = this.itemToIcon(this._data);
+					const newIcon:DisplayObject = this.itemToIcon(this._data);
+					this.replaceIcon(newIcon);
 				}
 				const newAccessory:DisplayObject = this.itemToAccessory(this._data);
-				if(newAccessory != this.accessory)
-				{
-					if(this.accessory)
-					{
-						this.accessory.removeEventListener(TouchEvent.TOUCH, accessory_touchHandler);
-						this.accessory.removeFromParent();
-					}
-					this.accessory = newAccessory;
-					if(this.accessory)
-					{
-						if(this.accessory is IFeathersControl && !(this.accessory is BitmapFontTextRenderer))
-						{
-							this.accessory.addEventListener(TouchEvent.TOUCH, accessory_touchHandler);
-						}
-						this.addChild(this.accessory);
-					}
-				}
+				this.replaceAccessory(newAccessory);
 			}
 			else
 			{
@@ -1282,13 +1564,78 @@ package feathers.controls.renderers
 				}
 				if(this._itemHasIcon)
 				{
-					this.defaultIcon = null;
+					this.replaceIcon(null);
 				}
 				if(this.accessory)
 				{
-					this.accessory.removeFromParent();
-					this.accessory = null;
+					this.replaceAccessory(null);
 				}
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		protected function replaceIcon(newIcon:DisplayObject):void
+		{
+			if(this.iconImage && this.iconImage != newIcon)
+			{
+				this.iconImage.removeEventListener(Event.COMPLETE, loader_completeOrErrorHandler);
+				this.iconImage.removeEventListener(FeathersEventType.ERROR, loader_completeOrErrorHandler);
+				this.iconImage.dispose();
+				this.iconImage = null;
+			}
+
+			this.defaultIcon = newIcon;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function replaceAccessory(newAccessory:DisplayObject):void
+		{
+			if(this.accessory == newAccessory)
+			{
+				return;
+			}
+
+			if(this.accessory)
+			{
+				this.accessory.removeEventListener(TouchEvent.TOUCH, accessory_touchHandler);
+
+				//the accessory may have come from outside of this class. it's
+				//up to that code to dispose of the accessory. in fact, if we
+				//disposed of it here, we will probably screw something up, so
+				//let's just remove it.
+				this.accessory.removeFromParent();
+			}
+
+			if(this.accessoryLabel && this.accessoryLabel != newAccessory)
+			{
+				//we can dispose this one, though, since we created it
+				this.accessoryLabel.dispose();
+				this.accessoryLabel = null;
+			}
+
+			if(this.accessoryImage && this.accessoryImage != newAccessory)
+			{
+				this.accessoryImage.removeEventListener(Event.COMPLETE, loader_completeOrErrorHandler);
+				this.accessoryImage.removeEventListener(FeathersEventType.ERROR, loader_completeOrErrorHandler);
+
+				//same ability to dispose here
+				this.accessoryImage.dispose();
+				this.accessoryImage = null;
+			}
+
+			this.accessory = newAccessory;
+
+			if(this.accessory)
+			{
+				if(this.accessory is IFeathersControl && !(this.accessory is BitmapFontTextRenderer))
+				{
+					this.accessory.addEventListener(TouchEvent.TOUCH, accessory_touchHandler);
+				}
+				this.addChild(this.accessory);
 			}
 		}
 
@@ -1315,49 +1662,29 @@ package feathers.controls.renderers
 		/**
 		 * @private
 		 */
-		protected function refreshIconTexture(texture:Texture):void
+		protected function refreshIconSource(source:Object):void
 		{
-			if(texture)
+			if(!this.iconImage)
 			{
-				if(!this.iconImage)
-				{
-					this.iconImage = this._iconImageFactory(texture);
-				}
-				else
-				{
-					this.iconImage.texture = texture;
-					this.iconImage.readjustSize();
-				}
+				this.iconImage = this._iconLoaderFactory();
+				this.iconImage.addEventListener(Event.COMPLETE, loader_completeOrErrorHandler);
+				this.iconImage.addEventListener(FeathersEventType.ERROR, loader_completeOrErrorHandler);
 			}
-			else if(this.iconImage)
-			{
-				this.iconImage.removeFromParent(true);
-				this.iconImage = null;
-			}
+			this.iconImage.source = source;
 		}
 
 		/**
 		 * @private
 		 */
-		protected function refreshAccessoryTexture(texture:Texture):void
+		protected function refreshAccessorySource(source:Object):void
 		{
-			if(texture)
+			if(!this.accessoryImage)
 			{
-				if(!this.accessoryImage)
-				{
-					this.accessoryImage = this._accessoryImageFactory(texture);
-				}
-				else
-				{
-					this.accessoryImage.texture = texture;
-					this.accessoryImage.readjustSize();
-				}
+				this.accessoryImage = this._accessoryLoaderFactory();
+				this.accessoryImage.addEventListener(Event.COMPLETE, loader_completeOrErrorHandler);
+				this.accessoryImage.addEventListener(FeathersEventType.ERROR, loader_completeOrErrorHandler);
 			}
-			else if(this.accessoryImage)
-			{
-				this.accessoryImage.removeFromParent(true);
-				this.accessoryImage = null;
-			}
+			this.accessoryImage.source = source;
 		}
 
 		/**
@@ -1365,21 +1692,13 @@ package feathers.controls.renderers
 		 */
 		protected function refreshAccessoryLabel(label:String):void
 		{
-			if(label !== null)
+			if(!this.accessoryLabel)
 			{
-				if(!this.accessoryLabel)
-				{
-					const factory:Function = this._accessoryLabelFactory != null ? this._accessoryLabelFactory : FeathersControl.defaultTextRendererFactory;
-					this.accessoryLabel = ITextRenderer(factory());
-					this.accessoryLabel.nameList.add(this.accessoryLabelName);
-				}
-				this.accessoryLabel.text = label;
+				const factory:Function = this._accessoryLabelFactory != null ? this._accessoryLabelFactory : FeathersControl.defaultTextRendererFactory;
+				this.accessoryLabel = ITextRenderer(factory());
+				this.accessoryLabel.nameList.add(this.accessoryLabelName);
 			}
-			else if(this.accessoryLabel)
-			{
-				DisplayObject(this.accessoryLabel).removeFromParent(true);
-				this.accessoryLabel = null;
-			}
+			this.accessoryLabel.text = label;
 		}
 
 		/**
@@ -1387,66 +1706,266 @@ package feathers.controls.renderers
 		 */
 		override protected function layoutContent():void
 		{
+			this.refreshMaxLabelWidth(false);
+			if(this._label)
+			{
+				this.labelTextRenderer.validate();
+				const labelRenderer:DisplayObject = DisplayObject(this.labelTextRenderer);
+			}
 			if(this.accessory is IFeathersControl)
 			{
 				IFeathersControl(this.accessory).validate();
 			}
-			var labelMaxWidth:Number = this.actualWidth - this._paddingLeft - this._paddingRight;
-			var adjustedGap:Number = this._gap == Number.POSITIVE_INFINITY ? Math.min(this._paddingLeft, this._paddingRight) : this._gap;
-			if(this.currentIcon && (this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE ||
-				this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE))
+			if(this.currentIcon is IFeathersControl)
 			{
-				labelMaxWidth -= (this.currentIcon.width + adjustedGap);
-			}
-			if(this.accessory)
-			{
-				labelMaxWidth -= (this.accessory.width + adjustedGap);
+				IFeathersControl(this.currentIcon).validate();
 			}
 
-			this.labelTextRenderer.maxWidth = labelMaxWidth;
-			this.labelTextRenderer.validate();
-
-			if(this.label)
+			const iconIsInLayout:Boolean = this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL;
+			const accessoryIsInLayout:Boolean = this.accessory && this._accessoryPosition != ACCESSORY_POSITION_MANUAL;
+			const accessoryGap:Number = isNaN(this._accessoryGap) ? this._gap : this._accessoryGap;
+			if(this._label && iconIsInLayout && accessoryIsInLayout)
 			{
-				this.positionLabelOrIcon(DisplayObject(this.labelTextRenderer));
-				if(this.accessory)
+				this.positionSingleChild(labelRenderer);
+				if(this._layoutOrder == LAYOUT_ORDER_LABEL_ACCESSORY_ICON)
 				{
-					if(this._horizontalAlign == Button.HORIZONTAL_ALIGN_RIGHT)
+					this.positionRelativeToOthers(this.accessory, labelRenderer, null, this._accessoryPosition, accessoryGap);
+					var iconPosition:String = this._iconPosition;
+					if(iconPosition == ICON_POSITION_LEFT_BASELINE)
 					{
-						this.labelTextRenderer.x -= (this.accessory.width + adjustedGap);
+						iconPosition = ICON_POSITION_LEFT;
 					}
-					else if(this._horizontalAlign == Button.HORIZONTAL_ALIGN_CENTER)
+					else if(iconPosition == ICON_POSITION_RIGHT_BASELINE)
 					{
-						this.labelTextRenderer.x -= (this.accessory.width + adjustedGap) / 2;
+						iconPosition = ICON_POSITION_RIGHT;
 					}
+					this.positionRelativeToOthers(this.currentIcon, labelRenderer, this.accessory, iconPosition, this._gap);
 				}
-				if(this.currentIcon)
+				else
+				{
+					this.positionLabelAndIcon();
+					this.positionRelativeToOthers(this.accessory, labelRenderer, this.currentIcon, this._accessoryPosition, accessoryGap);
+				}
+			}
+			else if(this._label)
+			{
+				this.positionSingleChild(labelRenderer);
+				//we won't position both the icon and accessory here, otherwise
+				//we would have gone into the previous conditional
+				if(iconIsInLayout)
 				{
 					this.positionLabelAndIcon();
 				}
-			}
-			else if(this.currentIcon)
-			{
-				this.positionLabelOrIcon(this.currentIcon);
-				if(this.accessory)
+				else if(accessoryIsInLayout)
 				{
-					if(this._horizontalAlign == Button.HORIZONTAL_ALIGN_RIGHT)
-					{
-						this.currentIcon.x -= (this.accessory.width + adjustedGap);
-					}
-					else if(this._horizontalAlign == Button.HORIZONTAL_ALIGN_CENTER)
-					{
-						this.currentIcon.x -= (this.accessory.width + adjustedGap) / 2;
-					}
+					this.positionRelativeToOthers(this.accessory, labelRenderer, null, this._accessoryPosition, accessoryGap);
 				}
 			}
+			else if(iconIsInLayout)
+			{
+				this.positionSingleChild(this.currentIcon);
+				if(accessoryIsInLayout)
+				{
+					this.positionRelativeToOthers(this.accessory, this.currentIcon, null, this._accessoryPosition, accessoryGap);
+				}
+			}
+			else if(accessoryIsInLayout)
+			{
+				this.positionSingleChild(this.accessory);
+			}
 
-			if(!this.accessory)
+			if(this.accessory)
+			{
+				if(!accessoryIsInLayout)
+				{
+					this.accessory.x = this._paddingLeft;
+					this.accessory.y = this._paddingTop;
+				}
+				this.accessory.x += this._accessoryOffsetX;
+				this.accessory.y += this._accessoryOffsetY;
+			}
+			if(this.currentIcon)
+			{
+				if(!iconIsInLayout)
+				{
+					this.currentIcon.x = this._paddingLeft;
+					this.currentIcon.y = this._paddingTop;
+				}
+				this.currentIcon.x += this._iconOffsetX;
+				this.currentIcon.y += this._iconOffsetY;
+			}
+			if(this._label)
+			{
+				this.labelTextRenderer.x += this._labelOffsetX;
+				this.labelTextRenderer.y += this._labelOffsetY;
+			}
+		}
+
+		/**
+		 * @private
+		 */
+		override protected function refreshMaxLabelWidth(forMeasurement:Boolean):void
+		{
+			if(!this._label)
 			{
 				return;
 			}
-			this.accessory.x = this.actualWidth - this._paddingRight - this.accessory.width;
-			this.accessory.y = (this.actualHeight - this.accessory.height) / 2;
+			var calculatedWidth:Number = this.actualWidth;
+			if(forMeasurement)
+			{
+				calculatedWidth = isNaN(this.explicitWidth) ? this._maxWidth : this.explicitWidth;
+			}
+			if(this.accessory is IFeathersControl)
+			{
+				IFeathersControl(this.accessory).validate();
+			}
+			if(this.currentIcon && (this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE ||
+				this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE))
+			{
+				calculatedWidth -= (this._gap + this.currentIcon.width);
+			}
+
+			if(this.accessory && (this._accessoryPosition == ACCESSORY_POSITION_LEFT || this._accessoryPosition == ACCESSORY_POSITION_RIGHT))
+			{
+				var accessoryGap:Number = (isNaN(this._accessoryGap) || this._accessoryGap == Number.POSITIVE_INFINITY) ? this._gap : this._accessoryGap;
+				calculatedWidth -= (accessoryGap + this.accessory.width);
+			}
+
+			this.labelTextRenderer.maxWidth = calculatedWidth - this._paddingLeft - this._paddingRight;
+		}
+
+		/**
+		 * @private
+		 */
+		protected function positionRelativeToOthers(object:DisplayObject, relativeTo:DisplayObject, relativeTo2:DisplayObject, position:String, gap:Number):void
+		{
+			const relativeToX:Number = relativeTo2 ? Math.min(relativeTo.x, relativeTo2.x) : relativeTo.x;
+			const relativeToY:Number = relativeTo2 ? Math.min(relativeTo.y, relativeTo2.y) : relativeTo.y;
+			const relativeToWidth:Number = relativeTo2 ? (Math.max(relativeTo.x + relativeTo.width, relativeTo2.x + relativeTo2.width) - relativeToX) : relativeTo.width;
+			const relativeToHeight:Number = relativeTo2 ? (Math.max(relativeTo.y + relativeTo.height, relativeTo2.y + relativeTo2.height) - relativeToY) : relativeTo.height;
+			var newRelativeToX:Number = relativeToX;
+			var newRelativeToY:Number = relativeToY;
+			if(position == ACCESSORY_POSITION_TOP)
+			{
+				if(gap == Number.POSITIVE_INFINITY)
+				{
+					object.y = this._paddingTop;
+					newRelativeToY = this.actualHeight - this._paddingBottom - relativeToHeight;
+				}
+				else
+				{
+					if(this._verticalAlign == VERTICAL_ALIGN_TOP)
+					{
+						newRelativeToY += object.height + gap;
+					}
+					else if(this._verticalAlign == VERTICAL_ALIGN_MIDDLE)
+					{
+						newRelativeToY += (object.height + gap) / 2;
+					}
+					object.y = newRelativeToY - object.height - gap;
+				}
+			}
+			else if(position == ACCESSORY_POSITION_RIGHT)
+			{
+				if(gap == Number.POSITIVE_INFINITY)
+				{
+					newRelativeToX = this._paddingLeft;
+					object.x = this.actualWidth - this._paddingRight - object.width;
+				}
+				else
+				{
+					if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
+					{
+						newRelativeToX -= (object.width + gap);
+					}
+					else if(this._horizontalAlign == HORIZONTAL_ALIGN_CENTER)
+					{
+						newRelativeToX -= (object.width + gap) / 2;
+					}
+					object.x = newRelativeToX + relativeToWidth + gap;
+				}
+			}
+			else if(position == ACCESSORY_POSITION_BOTTOM)
+			{
+				if(gap == Number.POSITIVE_INFINITY)
+				{
+					newRelativeToY = this._paddingTop;
+					object.y = this.actualHeight - this._paddingBottom - object.height;
+				}
+				else
+				{
+					if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
+					{
+						newRelativeToY -= (object.height + gap);
+					}
+					else if(this._verticalAlign == VERTICAL_ALIGN_MIDDLE)
+					{
+						newRelativeToY -= (object.height + gap) / 2;
+					}
+					object.y = newRelativeToY + relativeToHeight + gap;
+				}
+			}
+			else if(position == ACCESSORY_POSITION_LEFT)
+			{
+				if(gap == Number.POSITIVE_INFINITY)
+				{
+					object.x = this._paddingLeft;
+					newRelativeToX = this.actualWidth - this._paddingRight - relativeToWidth;
+				}
+				else
+				{
+					if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
+					{
+						newRelativeToX += gap + object.width;
+					}
+					else if(this._horizontalAlign == HORIZONTAL_ALIGN_CENTER)
+					{
+						newRelativeToX += (gap + object.width) / 2;
+					}
+					object.x = newRelativeToX - gap - object.width;
+				}
+			}
+
+			var offsetX:Number = newRelativeToX - relativeToX;
+			var offsetY:Number = newRelativeToY - relativeToY;
+			relativeTo.x += offsetX;
+			relativeTo.y += offsetY;
+			if(relativeTo2)
+			{
+				relativeTo2.x += offsetX;
+				relativeTo2.y += offsetY;
+			}
+
+			if(position == ACCESSORY_POSITION_LEFT || position == ACCESSORY_POSITION_RIGHT)
+			{
+				if(this._verticalAlign == VERTICAL_ALIGN_TOP)
+				{
+					object.y = this._paddingTop;
+				}
+				else if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
+				{
+					object.y = this.actualHeight - this._paddingBottom - object.height;
+				}
+				else
+				{
+					object.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - object.height) / 2;
+				}
+			}
+			else if(position == ACCESSORY_POSITION_TOP || position == ACCESSORY_POSITION_BOTTOM)
+			{
+				if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
+				{
+					object.x = this._paddingLeft;
+				}
+				else if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
+				{
+					object.x = this.actualWidth - this._paddingRight - object.width;
+				}
+				else
+				{
+					object.x = this._paddingLeft + (this.actualWidth - this._paddingLeft - this._paddingRight - object.width) / 2;
+				}
+			}
 		}
 
 		/**
@@ -1495,6 +2014,14 @@ package feathers.controls.renderers
 				return;
 			}
 			event.stopPropagation();
+		}
+
+		/**
+		 * @private
+		 */
+		protected function loader_completeOrErrorHandler(event:Event):void
+		{
+			this.invalidate(INVALIDATION_FLAG_SIZE);
 		}
 	}
 }

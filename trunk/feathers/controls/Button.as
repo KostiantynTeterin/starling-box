@@ -29,8 +29,6 @@ package feathers.controls
 	import feathers.core.ITextRenderer;
 	import feathers.core.IToggle;
 	import feathers.core.PropertyProxy;
-	import feathers.core.PropertyProxy;
-	import feathers.display.ScrollRectManager;
 	import feathers.skins.StateWithToggleValueSelector;
 
 	import flash.geom.Point;
@@ -58,7 +56,7 @@ package feathers.controls
 	 *
 	 * @eventType starling.events.Event.CHANGE
 	 */
-	[Event(name = "change", type = "starling.events.Event")]
+	[Event(name="change",type="starling.events.Event")]
 
 	/**
 	 * A push (or optionally, toggle) button control.
@@ -71,6 +69,11 @@ package feathers.controls
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		/**
 		 * The default value added to the <code>nameList</code> of the label.
@@ -119,7 +122,11 @@ package feathers.controls
 
 		/**
 		 * The icon will be positioned manually with no relation to the position
-		 * of the label.
+		 * of the label. Use <code>iconOffsetX</code> and <code>iconOffsetY</code>
+		 * to set the icon's position.
+		 *
+		 * @see #iconOffsetX
+		 * @see #iconOffsetY
 		 */
 		public static const ICON_POSITION_MANUAL:String = "manual";
 		
@@ -266,7 +273,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _label:String = "";
+		protected var _label:String = null;
 		
 		/**
 		 * The text displayed on the button.
@@ -281,10 +288,6 @@ package feathers.controls
 		 */
 		public function set label(value:String):void
 		{
-			if(value === null)
-			{
-				value = "";
-			}
 			if(this._label == value)
 			{
 				return;
@@ -374,7 +377,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected var _gap:Number = 10;
+		protected var _gap:Number = 0;
 		
 		/**
 		 * The space, in pixels, between the icon and the label. Applies to
@@ -567,6 +570,58 @@ package feathers.controls
 				return;
 			}
 			this._paddingLeft = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _labelOffsetX:Number = 0;
+
+		/**
+		 * Offsets the x position of the label by a certain number of pixels.
+		 */
+		public function get labelOffsetX():Number
+		{
+			return this._labelOffsetX;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set labelOffsetX(value:Number):void
+		{
+			if(this._labelOffsetX == value)
+			{
+				return;
+			}
+			this._labelOffsetX = value;
+			this.invalidate(INVALIDATION_FLAG_STYLES);
+		}
+
+		/**
+		 * @private
+		 */
+		protected var _labelOffsetY:Number = 0;
+
+		/**
+		 * Offsets the y position of the label by a certain number of pixels.
+		 */
+		public function get labelOffsetY():Number
+		{
+			return this._labelOffsetY;
+		}
+
+		/**
+		 * @private
+		 */
+		public function set labelOffsetY(value:Number):void
+		{
+			if(this._labelOffsetY == value)
+			{
+				return;
+			}
+			this._labelOffsetY = value;
 			this.invalidate(INVALIDATION_FLAG_STYLES);
 		}
 
@@ -1031,6 +1086,7 @@ package feathers.controls
 		 * <pre>function():ITextRenderer</pre>
 		 *
 		 * @see feathers.core.ITextRenderer
+		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
 		 */
 		public function get labelFactory():Function
 		{
@@ -1061,6 +1117,7 @@ package feathers.controls
 		 * other properties are defined for the button's current state. Intended
 		 * for use when multiple states should use the same properties.
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultSelectedLabelProperties
 		 * @see #upLabelProperties
 		 * @see #downLabelProperties
@@ -1108,7 +1165,8 @@ package feathers.controls
 		 * A set of key/value pairs to be passed down ot the button's label
 		 * instance when the button is in the up state. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> is used instead.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #selectedUpLabelProperties
 		 */
@@ -1149,7 +1207,8 @@ package feathers.controls
 		 * A set of key/value pairs to be passed down ot the button's label
 		 * instance when the button is in the down state. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> is used instead.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #selectedDownLabelProperties
 		 */
@@ -1191,6 +1250,7 @@ package feathers.controls
 		 * instance when the button is in the hover state. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> is used instead.
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #selectedHoverLabelProperties
 		 */
@@ -1231,7 +1291,8 @@ package feathers.controls
 		 * A set of key/value pairs to be passed down ot the button's label
 		 * instance when the button is in the disabled state. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> is used instead.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #selectedDisabledLabelProperties
 		 */
@@ -1274,7 +1335,8 @@ package feathers.controls
 		 * the button is selected and no other properties are defined for the
 		 * button's current state. If <code>null</code>, then
 		 * <code>defaultLabelProperties</code> is used instead.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #selectedUpLabelProperties
 		 * @see #selectedDownLabelProperties
@@ -1320,7 +1382,8 @@ package feathers.controls
 		 * <code>null</code>, then <code>defaultSelectedLabelProperties</code>
 		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
 		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 */
@@ -1363,7 +1426,8 @@ package feathers.controls
 		 * <code>null</code>, then <code>defaultSelectedLabelProperties</code>
 		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
 		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
-		 * 
+		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 */
@@ -1407,6 +1471,7 @@ package feathers.controls
 		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
 		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 */
@@ -1450,6 +1515,7 @@ package feathers.controls
 		 * is used instead. If <code>defaultSelectedLabelProperties</code> is also
 		 * <code>null</code>, then <code>defaultLabelProperties</code> is used.
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #defaultLabelProperties
 		 * @see #defaultSelectedLabelProperties
 		 */
@@ -1970,7 +2036,7 @@ package feathers.controls
 		protected function refreshLabelData():void
 		{
 			this.labelTextRenderer.text = this._label;
-			this.labelTextRenderer.visible = this._label.length > 0;
+			this.labelTextRenderer.visible = this._label && this._label.length > 0;
 		}
 
 		/**
@@ -2077,24 +2143,24 @@ package feathers.controls
 		protected function layoutContent():void
 		{
 			this.refreshMaxLabelWidth(false);
-			if(this.label && this.currentIcon)
+			if(this._label && this.currentIcon)
 			{
 				this.labelTextRenderer.validate();
-				this.positionLabelOrIcon(DisplayObject(this.labelTextRenderer));
+				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
 				if(this._iconPosition != ICON_POSITION_MANUAL)
 				{
 					this.positionLabelAndIcon();
 				}
 
 			}
-			else if(this.label && !this.currentIcon)
+			else if(this._label && !this.currentIcon)
 			{
 				this.labelTextRenderer.validate();
-				this.positionLabelOrIcon(DisplayObject(this.labelTextRenderer));
+				this.positionSingleChild(DisplayObject(this.labelTextRenderer));
 			}
-			else if(!this.label && this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL)
+			else if(!this._label && this.currentIcon && this._iconPosition != ICON_POSITION_MANUAL)
 			{
-				this.positionLabelOrIcon(this.currentIcon)
+				this.positionSingleChild(this.currentIcon)
 			}
 
 			if(this.currentIcon)
@@ -2106,6 +2172,11 @@ package feathers.controls
 				}
 				this.currentIcon.x += this._iconOffsetX;
 				this.currentIcon.y += this._iconOffsetY;
+			}
+			if(this._label)
+			{
+				this.labelTextRenderer.x += this._labelOffsetX;
+				this.labelTextRenderer.y += this._labelOffsetY;
 			}
 		}
 
@@ -2119,7 +2190,7 @@ package feathers.controls
 			{
 				calculatedWidth = isNaN(this.explicitWidth) ? this._maxWidth : this.explicitWidth;
 			}
-			if(this.label && this.currentIcon)
+			if(this._label && this.currentIcon)
 			{
 				if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_LEFT_BASELINE ||
 					this._iconPosition == ICON_POSITION_RIGHT || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
@@ -2133,7 +2204,7 @@ package feathers.controls
 				}
 
 			}
-			else if(this.label && !this.currentIcon)
+			else if(this._label && !this.currentIcon)
 			{
 				this.labelTextRenderer.maxWidth = calculatedWidth - this._paddingLeft - this._paddingRight;
 			}
@@ -2142,7 +2213,7 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function positionLabelOrIcon(displayObject:DisplayObject):void
+		protected function positionSingleChild(displayObject:DisplayObject):void
 		{
 			if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
 			{
@@ -2258,25 +2329,36 @@ package feathers.controls
 			
 			if(this._iconPosition == ICON_POSITION_LEFT || this._iconPosition == ICON_POSITION_RIGHT)
 			{
-				this.currentIcon.y = this.labelTextRenderer.y + (this.labelTextRenderer.height - this.currentIcon.height) / 2;
+				if(this._verticalAlign == VERTICAL_ALIGN_TOP)
+				{
+					this.currentIcon.y = this._paddingTop;
+				}
+				else if(this._verticalAlign == VERTICAL_ALIGN_BOTTOM)
+				{
+					this.currentIcon.y = this.actualHeight - this._paddingBottom - this.currentIcon.height;
+				}
+				else
+				{
+					this.currentIcon.y = this._paddingTop + (this.actualHeight - this._paddingTop - this._paddingBottom - this.currentIcon.height) / 2;
+				}
 			}
 			else if(this._iconPosition == ICON_POSITION_LEFT_BASELINE || this._iconPosition == ICON_POSITION_RIGHT_BASELINE)
 			{
 				this.currentIcon.y = this.labelTextRenderer.y + (this.labelTextRenderer.baseline) - this.currentIcon.height;
 			}
-			else
+			else //top or bottom
 			{
 				if(this._horizontalAlign == HORIZONTAL_ALIGN_LEFT)
 				{
-					this.currentIcon.x = this.labelTextRenderer.x;
+					this.currentIcon.x = this._paddingLeft;
 				}
 				else if(this._horizontalAlign == HORIZONTAL_ALIGN_RIGHT)
 				{
-					this.currentIcon.x = this.labelTextRenderer.x + this.labelTextRenderer.width - this.currentIcon.width;
+					this.currentIcon.x = this.actualWidth - this._paddingRight - this.currentIcon.width;
 				}
 				else
 				{
-					this.currentIcon.x = this.labelTextRenderer.x + (this.labelTextRenderer.width - this.currentIcon.width) / 2;
+					this.currentIcon.x = this._paddingLeft + (this.actualWidth - this._paddingLeft - this._paddingRight - this.currentIcon.width) / 2;
 				}
 			}
 		}
@@ -2308,7 +2390,7 @@ package feathers.controls
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this);
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				//end of hover
@@ -2331,11 +2413,11 @@ package feathers.controls
 				{
 					//end of hover
 					this.currentState = STATE_UP;
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 
 				touch.getLocation(this, HELPER_POINT);
-				ScrollRectManager.adjustTouchLocation(HELPER_POINT, this);
 				var isInBounds:Boolean = this.hitTest(HELPER_POINT, true) != null;
 				if(touch.phase == TouchPhase.MOVED)
 				{
@@ -2347,7 +2429,6 @@ package feathers.controls
 					{
 						this.currentState = STATE_UP;
 					}
-					return;
 				}
 				else if(touch.phase == TouchPhase.ENDED)
 				{
@@ -2379,7 +2460,6 @@ package feathers.controls
 					{
 						this.currentState = STATE_UP;
 					}
-					return;
 				}
 			}
 			else //if we get here, we don't have a saved touch ID yet
@@ -2390,16 +2470,17 @@ package feathers.controls
 					{
 						this.currentState = STATE_DOWN;
 						this._touchPointID = touch.id;
-						return;
+						break;
 					}
 					else if(touch.phase == TouchPhase.HOVER)
 					{
 						this.currentState = STATE_HOVER;
 						this._isHoverSupported = true;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 	}
 }

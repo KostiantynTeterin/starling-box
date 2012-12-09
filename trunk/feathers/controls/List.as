@@ -61,6 +61,26 @@ package feathers.controls
 	 */
 	[Event(name="scrollComplete",type="starling.events.Event")]
 
+	/**
+	 * Dispatched when an item renderer is added to the list. When the layout is
+	 * virtualized, item renderers may not exist for every item in the data
+	 * provider. This event can be used to track which items currently have
+	 * renderers.
+	 *
+	 * @eventType feathers.events.FeathersEventType.RENDERER_ADD
+	 */
+	[Event(name="rendererAdd",type="starling.events.Event")]
+
+	/**
+	 * Dispatched when an item renderer is removed from the list. When the layout is
+	 * virtualized, item renderers may not exist for every item in the data
+	 * provider. This event can be used to track which items currently have
+	 * renderers.
+	 *
+	 * @eventType feathers.events.FeathersEventType.RENDERER_REMOVE
+	 */
+	[Event(name="rendererRemove",type="starling.events.Event")]
+
 	[DefaultProperty("dataProvider")]
 	/**
 	 * Displays a one-dimensional list of items. Supports scrolling, custom
@@ -484,9 +504,8 @@ package feathers.controls
 		 * you can use the following syntax:</p>
 		 * <pre>list.scrollerProperties.&#64;verticalScrollBarProperties.&#64;thumbProperties.defaultSkin = new Image(texture);</pre>
 		 *
+		 * @see feathers.controls.renderers.IListItemRenderer
 		 * @see #itemRendererFactory
-		 * 
-		 * @default <code>new PropertyProxy(childProperties_onChange)</code>
 		 */
 		public function get itemRendererProperties():Object
 		{
@@ -728,6 +747,7 @@ package feathers.controls
 		/**
 		 * The class used to instantiate item renderers.
 		 *
+		 * @see feathers.controls.renderer.IListItemRenderer
 		 * @see #itemRendererFactory
 		 */
 		public function get itemRendererType():Class
@@ -764,7 +784,8 @@ package feathers.controls
 		 * <p>The function is expected to have the following signature:</p>
 		 *
 		 * <pre>function():IListItemRenderer</pre>
-		 * 
+		 *
+		 * @see feathers.controls.renderers.IListItemRenderer
 		 * @see #itemRendererType
 		 */
 		public function get itemRendererFactory():Function

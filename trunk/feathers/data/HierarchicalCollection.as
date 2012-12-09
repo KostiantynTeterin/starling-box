@@ -100,7 +100,7 @@ package feathers.data
 	 * Wraps a two-dimensional data source with a common API for use with UI
 	 * controls that support this type of data.
 	 */
-	public final class HierarchicalCollection extends EventDispatcher
+	public class HierarchicalCollection extends EventDispatcher
 	{
 		public function HierarchicalCollection(data:Object = null)
 		{
@@ -115,7 +115,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		private var _data:Object;
+		protected var _data:Object;
 
 		/**
 		 * The data source for this collection. May be any type of data, but a
@@ -145,7 +145,7 @@ package feathers.data
 		/**
 		 * @private
 		 */
-		private var _dataDescriptor:IHierarchicalCollectionDataDescriptor = new ArrayChildrenHierarchicalCollectionDataDescriptor();
+		protected var _dataDescriptor:IHierarchicalCollectionDataDescriptor = new ArrayChildrenHierarchicalCollectionDataDescriptor();
 
 		/**
 		 * Describes the underlying data source by translating APIs.
@@ -238,8 +238,8 @@ package feathers.data
 		 */
 		public function removeItemAt(index:int, ...rest:Array):Object
 		{
-			rest.push(index);
-			rest.push(this._data);
+			rest.unshift(index);
+			rest.unshift(this._data);
 			const item:Object = this._dataDescriptor.removeItemAt.apply(null, rest);
 			this.dispatchEventWith(Event.CHANGE);
 			rest.shift();
@@ -255,7 +255,14 @@ package feathers.data
 			const location:Vector.<int> = this.getItemLocation(item);
 			if(location)
 			{
-				this.removeItemAt.apply(this, location);
+				//this is hacky. a future version probably won't use rest args.
+				const locationAsArray:Array = [];
+				const indexCount:int = location.length;
+				for(var i:int = 0; i < indexCount; i++)
+				{
+					locationAsArray.push(location[i]);
+				}
+				this.removeItemAt.apply(this, locationAsArray);
 			}
 		}
 
@@ -264,9 +271,9 @@ package feathers.data
 		 */
 		public function setItemAt(item:Object, index:int, ...rest:Array):void
 		{
-			rest.push(index);
-			rest.push(item);
-			rest.push(this._data);
+			rest.unshift(index);
+			rest.unshift(item);
+			rest.unshift(this._data);
 			this._dataDescriptor.setItemAt.apply(null, rest);
 			rest.shift();
 			rest.shift();

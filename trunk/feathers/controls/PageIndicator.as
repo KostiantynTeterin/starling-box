@@ -25,7 +25,6 @@
 package feathers.controls
 {
 	import feathers.core.FeathersControl;
-	import feathers.display.ScrollRectManager;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.ILayout;
 	import feathers.layout.IVirtualLayout;
@@ -71,6 +70,11 @@ package feathers.controls
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		/**
 		 * The page indicator's symbols will be positioned vertically, from top
@@ -448,6 +452,8 @@ package feathers.controls
 		 *
 		 * <p>This function should have the following signature:</p>
 		 * <pre>function():DisplayObject</pre>
+		 *
+		 * @see starling.display.DisplayObject
 		 */
 		public function get normalSymbolFactory():Function
 		{
@@ -477,6 +483,8 @@ package feathers.controls
 		 *
 		 * <p>This function should have the following signature:</p>
 		 * <pre>function():DisplayObject</pre>
+		 *
+		 * @see starling.display.DisplayObject
 		 */
 		public function get selectedSymbolFactory():Function
 		{
@@ -634,7 +642,7 @@ package feathers.controls
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this);
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				//end of hover
@@ -655,6 +663,7 @@ package feathers.controls
 				if(!touch)
 				{
 					//end of hover
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 
@@ -662,7 +671,6 @@ package feathers.controls
 				{
 					this.touchPointID = -1;
 					touch.getLocation(this, HELPER_POINT);
-					ScrollRectManager.adjustTouchLocation(HELPER_POINT, this);
 					const isInBounds:Boolean = this.hitTest(HELPER_POINT, true) != null;
 					if(isInBounds)
 					{
@@ -698,10 +706,11 @@ package feathers.controls
 					if(touch.phase == TouchPhase.BEGAN)
 					{
 						this.touchPointID = touch.id;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 	}

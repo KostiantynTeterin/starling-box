@@ -26,7 +26,6 @@ package feathers.controls
 {
 	import feathers.core.FeathersControl;
 	import feathers.core.PopUpManager;
-	import feathers.display.ScrollRectManager;
 
 	import flash.events.KeyboardEvent;
 	import flash.geom.Rectangle;
@@ -104,6 +103,11 @@ package feathers.controls
 		 * @private
 		 */
 		private static var helperRect:Rectangle = new Rectangle();
+
+		/**
+		 * @private
+		 */
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		/**
 		 * @private
@@ -194,13 +198,13 @@ package feathers.controls
 			const overlayFactory:Function = calloutOverlayFactory != null ? calloutOverlayFactory : PopUpManager.defaultOverlayFactory;
 			PopUpManager.addPopUp(callout, isModal, false, overlayFactory);
 
-			var globalBounds:Rectangle = ScrollRectManager.getBounds(origin, Starling.current.stage);
+			var globalBounds:Rectangle = origin.getBounds(Starling.current.stage);
 			positionCalloutByDirection(callout, globalBounds, direction);
 			callouts.push(callout);
 
 			function enterFrameHandler(event:EnterFrameEvent):void
 			{
-				ScrollRectManager.getBounds(origin, Starling.current.stage, helperRect);
+				origin.getBounds(Starling.current.stage, helperRect);
 				if(globalBounds.equals(helperRect))
 				{
 					return;
@@ -1261,7 +1265,7 @@ package feathers.controls
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this.stage);
+			const touches:Vector.<Touch> = event.getTouches(this.stage, null, HELPER_TOUCHES_VECTOR);
 			const touchCount:int = touches.length;
 			for(var i:int = 0; i < touchCount; i++)
 			{
@@ -1274,6 +1278,7 @@ package feathers.controls
 					break;
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**

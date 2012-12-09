@@ -1,37 +1,16 @@
 package
 {
 	import flash.events.Event;
-	import screens.AirStick;
-	import screens.KeosTacticsMain;
-	import screens.StarlingPageFlipTest;
 	import starling.display.Sprite;
 	import starlingBox.SB;
-	import screens.NapeHillsMain;
-	//import screens.Keos_GuildScreen;
-	//import screens.KeoS_TitleScreen;
-	//import KeoS.Config;
+	import screens.*;	
 	
+	/*
+	 * revoir la gestion du viewport
+	 * 
+	 * 
+	 * */
 	
-	/**
-	 * * * TODO STARLING BOX * * *
-	 * deplacer les assets du jeu dans une classe assets
-	 * tester le system.pause et le system.resume
-	 * starling.start(); ou starling.stop(); 
-	 * gerer le added dans les screen
-	 * verifier que la displaylist ne monte pas
-	 * faire un flash de transition entre 2 screen
-	 * une phase d'initialisation avec un loader le temps que les objets soient crées
-	 * pb de pause/reprise d'un son avec le SM
-	 * integration de nape avec le juggler de starling
-	 * passer du monocle
-	 * 
-	 * * * TODO ALIEN FLEET >> QUANTIC HATE * * *
-	 * un ecran titre pour mettre ce todo ^^
-	 * 
-	 * * * CONTROLE TACTILE * * *
-	 * creer un joy tactile (en cours)
-	 * 
-	 */	
 	 
 	public class Main extends Sprite
 	{
@@ -43,11 +22,10 @@ package
 			
 			//SB.screen = new StarlingPageFlipTest;
 			
-			// SB.screen	= new AirStick;			
+			//SB.screen	= new AirStick;			
 			
+			// don't build :/
 			//SB.screen	= new NapeHillsMain;			
-			
-			//SB.screen	= new Rectpacking;
 			
 			//SB.screen	= new Keos_GuildScreen;
 			//SB.screen	= new Niveau1;
