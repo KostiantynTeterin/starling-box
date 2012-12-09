@@ -2,6 +2,7 @@ package screens
 {
 	import KeosTactics.Config;
 	import KeosTactics.products.structures.IPiege;
+	import KeosTactics.ui.FenetrePiege;
 	import starling.display.Sprite;
 	import flash.display.Shape;
 	import KeosTactics.Background;
@@ -57,7 +58,10 @@ package screens
 			arena.x = 120;
 			arena.y = 150;
 			SB.nativeStage.addChild(arena.debug);
-
+			
+			addChild( new FenetrePiege );
+			
+			/*
 			// creation des pieges du joueur 1
 			arena.setValeur(3, 0, Players.instance.getMe().pieges[0]);
 			arena.setValeur(2, 1, Players.instance.getMe().pieges[1]);
@@ -94,7 +98,8 @@ package screens
 					sp.y = (sp as IPiege).lig * arena.SIZE + arena.y + int(arena.SIZE/2);
 					addChild(sp);
 				}				
-			}			
+			}
+			*/
 			
 		}
 		
@@ -108,7 +113,7 @@ package screens
 			var touch:Touch = e.getTouch(this);
 			if (touch.phase == TouchPhase.ENDED)
 			{
-				GameManager.instance.nextPhase();
+				nextPhase();
 			}
 		}
 	}

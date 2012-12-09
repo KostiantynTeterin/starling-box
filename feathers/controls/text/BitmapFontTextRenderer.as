@@ -30,7 +30,6 @@ package feathers.controls.text
 
 	import flash.geom.Matrix;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.text.TextFormatAlign;
 
 	import starling.core.RenderSupport;
@@ -161,7 +160,7 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		protected var _text:String = "";
+		protected var _text:String = null;
 		
 		/**
 		 * The text to display.
@@ -311,25 +310,19 @@ package feathers.controls.text
 		/**
 		 * @private
 		 */
-		override public function render(support:RenderSupport, alpha:Number):void
+		override public function render(support:RenderSupport, parentAlpha:Number):void
 		{
 			if(this._snapToPixels)
 			{
 				this.getTransformationMatrix(this.stage, HELPER_MATRIX);
 				this._characterBatch.x = Math.round(HELPER_MATRIX.tx) - HELPER_MATRIX.tx;
 				this._characterBatch.y = Math.round(HELPER_MATRIX.ty) - HELPER_MATRIX.ty;
-				const scrollRect:Rectangle = this.scrollRect;
-				if(scrollRect)
-				{
-					this._characterBatch.x += Math.round(scrollRect.x) - scrollRect.x;
-					this._characterBatch.y += Math.round(scrollRect.y) - scrollRect.y;
-				}
 			}
 			else
 			{
 				this._characterBatch.x = this._characterBatch.y = 0;
 			}
-			super.render(support, alpha);
+			super.render(support, parentAlpha);
 		}
 		
 		/**
@@ -350,7 +343,7 @@ package feathers.controls.text
 			{
 				result.x = result.y = 0;
 			}
-			if(!this.currentTextFormat)
+			if(!this.currentTextFormat || !this._text)
 			{
 				return result;
 			}
@@ -367,7 +360,7 @@ package feathers.controls.text
 			var currentX:Number = 0;
 			var currentY:Number = 0;
 			var previousCharID:Number = NaN;
-			var charCount:int = this._text ? this._text.length : 0;
+			var charCount:int = this._text.length;
 			var startXOfPreviousWord:Number = 0;
 			var widthOfWhitespaceAfterWord:Number = 0;
 			var wordCountForLine:int = 0;
@@ -473,7 +466,7 @@ package feathers.controls.text
 			if(dataInvalid || stylesInvalid || sizeInvalid)
 			{
 				this._characterBatch.reset();
-				if(!this.currentTextFormat)
+				if(!this.currentTextFormat || !this._text)
 				{
 					this.setSizeInternal(0, 0, false);
 					return;
@@ -704,11 +697,6 @@ package feathers.controls.text
 			HELPER_IMAGE.scaleX = HELPER_IMAGE.scaleY = scale;
 			HELPER_IMAGE.x = x;
 			HELPER_IMAGE.y = y;
-			if(this._snapToPixels)
-			{
-				HELPER_IMAGE.x = Math.round(HELPER_IMAGE.x);
-				HELPER_IMAGE.y = Math.round(HELPER_IMAGE.y);
-			}
 			HELPER_IMAGE.color = this.currentTextFormat.color;
 			HELPER_IMAGE.smoothing = this._smoothing;
 
@@ -735,6 +723,11 @@ package feathers.controls.text
 		 */
 		protected function getTruncatedText():String
 		{
+			if(!this._text)
+			{
+				//this shouldn't be called if _text is null, but just in case...
+				return "";
+			}
 			//if the maxWidth is infinity or the string is multiline, don't
 			//allow truncation
 			if(this._maxWidth == Number.POSITIVE_INFINITY || this._wordWrap || this._text.indexOf(String.fromCharCode(CHARACTER_ID_LINE_FEED)) >= 0 || this._text.indexOf(String.fromCharCode(CHARACTER_ID_CARRIAGE_RETURN)) >= 0)
@@ -749,7 +742,7 @@ package feathers.controls.text
 			const scale:Number = isNaN(customSize) ? 1 : (customSize / font.size);
 			var currentX:Number = 0;
 			var previousCharID:Number = NaN;
-			var charCount:int = this._text ? this._text.length : 0;
+			var charCount:int = this._text.length;
 			var truncationIndex:int = -1;
 			for(var i:int = 0; i < charCount; i++)
 			{

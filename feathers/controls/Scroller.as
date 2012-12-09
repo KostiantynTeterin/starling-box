@@ -37,8 +37,6 @@ package feathers.controls
 	import feathers.controls.supportClasses.IViewPort;
 	import feathers.core.FeathersControl;
 	import feathers.core.PropertyProxy;
-	import feathers.display.ScrollRectManager;
-	import feathers.display.Sprite;
 	import feathers.events.FeathersEventType;
 	import feathers.system.DeviceCapabilities;
 	import feathers.utils.math.clamp;
@@ -56,6 +54,7 @@ package feathers.controls
 	import starling.animation.Tween;
 	import starling.core.Starling;
 	import starling.display.DisplayObject;
+	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
@@ -114,6 +113,11 @@ package feathers.controls
 		 * @private
 		 */
 		private static const HELPER_POINT:Point = new Point();
+
+		/**
+		 * @private
+		 */
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		/**
 		 * @private
@@ -536,6 +540,8 @@ package feathers.controls
 		 * <p>This function is expected to have the following signature:</p>
 		 *
 		 * <pre>function():IScrollBar</pre>
+		 *
+		 * @see feathers.controls.IScrollBar
 		 */
 		public function get horizontalScrollBarFactory():Function
 		{
@@ -572,6 +578,7 @@ package feathers.controls
 		 * you can use the following syntax:</p>
 		 * <pre>list.scrollerProperties.&#64;verticalScrollBarProperties.&#64;thumbProperties.defaultSkin = new Image(texture);</pre>
 		 *
+		 * @see feathers.controls.IScrollBar
 		 * @see #horizontalScrollBarFactory
 		 */
 		public function get horizontalScrollBarProperties():Object
@@ -628,6 +635,8 @@ package feathers.controls
 		 * <p>This function is expected to have the following signature:</p>
 		 *
 		 * <pre>function():IScrollBar</pre>
+		 *
+		 * @see feathers.controls.IScrollBar
 		 */
 		public function get verticalScrollBarFactory():Function
 		{
@@ -664,6 +673,7 @@ package feathers.controls
 		 * you can use the following syntax:</p>
 		 * <pre>list.scrollerProperties.&#64;verticalScrollBarProperties.&#64;thumbProperties.defaultSkin = new Image(texture);</pre>
 		 *
+		 * @see feathers.controls.IScrollBar
 		 * @see #verticalScrollBarFactory
 		 */
 		public function get verticalScrollBarProperties():Object
@@ -2014,19 +2024,19 @@ package feathers.controls
 				((this._interactionMode == INTERACTION_MODE_TOUCH && this._hasElasticEdges) ||
 					this._maxHorizontalScrollPosition > 0 || this._maxVerticalScrollPosition > 0))
 			{
-				if(!this.scrollRect)
+				if(!this.clipRect)
 				{
-					this.scrollRect = new Rectangle();
+					this.clipRect = new Rectangle();
 				}
 				
-				const scrollRect:Rectangle = this.scrollRect;
-				scrollRect.width = this.actualWidth;
-				scrollRect.height = this.actualHeight;
-				this.scrollRect = scrollRect;
+				const clipRect:Rectangle = this.clipRect;
+				clipRect.width = this.actualWidth;
+				clipRect.height = this.actualHeight;
+				this.clipRect = clipRect;
 			}
 			else
 			{
-				this.scrollRect = null;
+				this.clipRect = null;
 			}
 
 			this._viewPortWrapper.x = -this._horizontalScrollPosition + offsetX;
@@ -2556,9 +2566,10 @@ package feathers.controls
 		 */
 		protected function stage_touchHandler(event:TouchEvent):void
 		{
-			const touches:Vector.<Touch> = event.getTouches(this.stage);
+			const touches:Vector.<Touch> = event.getTouches(this.stage, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0 || this._touchPointID < 0)
 			{
+				HELPER_TOUCHES_VECTOR.length = 0;
 				return;
 			}
 			var touch:Touch;
@@ -2572,6 +2583,7 @@ package feathers.controls
 			}
 			if(!touch)
 			{
+				HELPER_TOUCHES_VECTOR.length = 0;
 				return;
 			}
 
@@ -2603,6 +2615,7 @@ package feathers.controls
 				}
 				if(isFinishingHorizontally && isFinishingVertically)
 				{
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				
@@ -2643,6 +2656,7 @@ package feathers.controls
 					this.hideVerticalScrollBar();
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**
@@ -2698,7 +2712,7 @@ package feathers.controls
 				return;
 			}
 			const displayHorizontalScrollBar:DisplayObject = DisplayObject(event.currentTarget);
-			const touches:Vector.<Touch> = event.getTouches(displayHorizontalScrollBar);
+			const touches:Vector.<Touch> = event.getTouches(displayHorizontalScrollBar, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				//end hover
@@ -2720,19 +2734,18 @@ package feathers.controls
 				{
 					//end hover
 					this.hideHorizontalScrollBar();
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					this._horizontalScrollBarTouchPointID = -1;
 					touch.getLocation(displayHorizontalScrollBar, HELPER_POINT);
-					ScrollRectManager.adjustTouchLocation(HELPER_POINT, displayHorizontalScrollBar);
 					const isInBounds:Boolean = displayHorizontalScrollBar.hitTest(HELPER_POINT, true) != null;
 					if(!isInBounds)
 					{
 						this.hideHorizontalScrollBar();
 					}
-					return;
 				}
 			}
 			else
@@ -2747,15 +2760,16 @@ package feathers.controls
 							this._horizontalScrollBarHideTween = null;
 						}
 						displayHorizontalScrollBar.alpha = 1;
-						return;
+						break;
 					}
 					else if(touch.phase == TouchPhase.BEGAN)
 					{
 						this._horizontalScrollBarTouchPointID = touch.id;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**
@@ -2769,7 +2783,7 @@ package feathers.controls
 				return;
 			}
 			const displayVerticalScrollBar:DisplayObject = DisplayObject(event.currentTarget);
-			const touches:Vector.<Touch> = event.getTouches(displayVerticalScrollBar);
+			const touches:Vector.<Touch> = event.getTouches(displayVerticalScrollBar, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				//end hover
@@ -2791,19 +2805,18 @@ package feathers.controls
 				{
 					//end hover
 					this.hideVerticalScrollBar();
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					this._verticalScrollBarTouchPointID = -1;
 					touch.getLocation(displayVerticalScrollBar, HELPER_POINT);
-					ScrollRectManager.adjustTouchLocation(HELPER_POINT, displayVerticalScrollBar);
 					const isInBounds:Boolean = displayVerticalScrollBar.hitTest(HELPER_POINT, true) != null;
 					if(!isInBounds)
 					{
 						this.hideVerticalScrollBar();
 					}
-					return;
 				}
 			}
 			else
@@ -2818,15 +2831,16 @@ package feathers.controls
 							this._verticalScrollBarHideTween = null;
 						}
 						displayVerticalScrollBar.alpha = 1;
-						return;
+						break;
 					}
 					else if(touch.phase == TouchPhase.BEGAN)
 					{
 						this._verticalScrollBarTouchPointID = touch.id;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**

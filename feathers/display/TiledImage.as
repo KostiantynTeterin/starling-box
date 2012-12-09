@@ -30,6 +30,7 @@ package feathers.display
 
 	import starling.core.RenderSupport;
 	import starling.display.DisplayObject;
+	import starling.display.Image;
 	import starling.display.QuadBatch;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -155,7 +156,7 @@ package feathers.display
 			this._texture = value;
 			if(!this._image)
 			{
-				this._image = new Image(value);
+				this._image = new feathers.display.Image(value);
 				this._image.touchable = false;
 			}
 			else

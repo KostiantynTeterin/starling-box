@@ -61,6 +61,7 @@ package feathers.controls.supportClasses
 		private static const HELPER_BOUNDS:ViewPortBounds = new ViewPortBounds();
 		private static const HELPER_LAYOUT_RESULT:LayoutBoundsResult = new LayoutBoundsResult();
 		private static const HELPER_VECTOR:Vector.<int> = new <int>[];
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
 
 		public function ListDataViewPort()
 		{
@@ -687,6 +688,7 @@ package feathers.controls.supportClasses
 			for(var i:int = 0; i < itemCount; i++)
 			{
 				var renderer:IListItemRenderer = this._inactiveRenderers[i];
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_REMOVE, false, renderer);
 				delete this._rendererMap[renderer.data];
 			}
 		}
@@ -736,6 +738,7 @@ package feathers.controls.supportClasses
 				const displayRenderer:DisplayObject = DisplayObject(renderer);
 				displayRenderer.addEventListener(Event.CHANGE, renderer_changeHandler);
 				displayRenderer.addEventListener(FeathersEventType.RESIZE, renderer_resizeHandler);
+				this._owner.dispatchEventWith(FeathersEventType.RENDERER_ADD, false, renderer);
 			}
 
 			return renderer;
@@ -833,7 +836,7 @@ package feathers.controls.supportClasses
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this);
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				return;
@@ -851,12 +854,12 @@ package feathers.controls.supportClasses
 				}
 				if(!touch)
 				{
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				if(touch.phase == TouchPhase.ENDED)
 				{
 					this.touchPointID = -1;
-					return;
 				}
 			}
 			else
@@ -867,10 +870,11 @@ package feathers.controls.supportClasses
 					{
 						this.touchPointID = touch.id;
 						this._isScrolling = false;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 	}
 }

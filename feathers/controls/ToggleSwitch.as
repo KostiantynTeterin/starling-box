@@ -28,7 +28,6 @@ package feathers.controls
 	import feathers.core.ITextRenderer;
 	import feathers.core.IToggle;
 	import feathers.core.PropertyProxy;
-	import feathers.display.IDisplayObjectWithScrollRect;
 	import feathers.system.DeviceCapabilities;
 
 	import flash.geom.Point;
@@ -64,6 +63,11 @@ package feathers.controls
 
 		/**
 		 * @private
+		 */
+		private static const HELPER_TOUCHES_VECTOR:Vector.<Touch> = new <Touch>[];
+
+		/**
+		 * @private
 		 * The minimum physical distance (in inches) that a touch must move
 		 * before the scroller starts scrolling.
 		 */
@@ -90,19 +94,22 @@ package feathers.controls
 		public static const TRACK_LAYOUT_MODE_SINGLE:String = "single";
 
 		/**
-		 * The switch's on and off track skins will by resized by changing
-		 * their width and height values. Consider using a special display
-		 * object such as a Scale9Image, Scale3Image or a TiledImage if the
-		 * skins should be resizable.
+		 * The toggle switch has two tracks, stretching to fill each side of the
+		 * scroll bar with the thumb in the middle. The tracks will be resized
+		 * as the thumb moves. This layout mode is designed for toggle switches
+		 * where the two sides of the track may be colored differently to better
+		 * differentiate between the on state and the off state.
+		 *
+		 * <p>Since the width and height of the tracks will change, consider
+		 * sing a special display object such as a <code>Scale9Image</code>,
+		 * <code>Scale3Image</code> or a <code>TiledImage</code> that is
+		 * designed to be resized dynamically.</p>
+		 *
+		 * @see feathers.display.Scale9Image
+		 * @see feathers.display.Scale3Image
+		 * @see feathers.display.TiledImage
 		 */
-		public static const TRACK_LAYOUT_MODE_STRETCH:String = "stretch";
-
-		/**
-		 * The switch's on and off track skins will be resized and cropped
-		 * using a scrollRect to ensure that the skins maintain a static
-		 * appearance without altering the aspect ratio.
-		 */
-		public static const TRACK_LAYOUT_MODE_SCROLL:String = "scroll";
+		public static const TRACK_LAYOUT_MODE_ON_OFF:String = "onOff";
 
 		/**
 		 * The default value added to the <code>nameList</code> of the off label.
@@ -302,9 +309,13 @@ package feathers.controls
 		 */
 		protected var _trackLayoutMode:String = TRACK_LAYOUT_MODE_SINGLE;
 
-		[Inspectable(type="String",enumeration="single,stretch,scroll")]
+		[Inspectable(type="String",enumeration="single,onOff")]
 		/**
 		 * Determines how the on and off track skins are positioned and sized.
+		 *
+		 * @default TRACK_LAYOUT_MODE_SINGLE
+		 * @see #TRACK_LAYOUT_MODE_SINGLE
+		 * @see #TRACK_LAYOUT_MODE_ON_OFF
 		 */
 		public function get trackLayoutMode():String
 		{
@@ -335,6 +346,7 @@ package feathers.controls
 		 * takes priority. For the OFF label, <code>offLabelProperties</code>
 		 * takes priority.
 		 *
+		 * @see feathers.core.ITextRenderer
 		 * @see #onLabelProperties
 		 * @see #offLabelProperties
 		 * @see #disabledLabelProperties
@@ -377,6 +389,8 @@ package feathers.controls
 		/**
 		 * The key/value pairs to pass to the labels, if the toggle switch is
 		 * disabled.
+		 *
+		 * @see feathers.core.ITextRenderer
 		 */
 		public function get disabledLabelProperties():Object
 		{
@@ -416,6 +430,8 @@ package feathers.controls
 		/**
 		 * The key/value pairs passed to the ON label. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> will be used instead.
+		 *
+		 * @see feathers.core.ITextRenderer
 		 */
 		public function get onLabelProperties():Object
 		{
@@ -455,6 +471,8 @@ package feathers.controls
 		/**
 		 * The key/value pairs passed to the OFF label. If <code>null</code>,
 		 * then <code>defaultLabelProperties</code> will be used instead.
+		 *
+		 * @see feathers.core.ITextRenderer
 		 */
 		public function get offLabelProperties():Object
 		{
@@ -525,6 +543,7 @@ package feathers.controls
 		 * <pre>function():ITextRenderer</pre>
 		 *
 		 * @see feathers.core.ITextRenderer
+		 * @see feathers.core.FeathersControl#defaultTextRendererFactory
 		 */
 		public function get labelFactory():Function
 		{
@@ -924,7 +943,6 @@ package feathers.controls
 			{
 				this.onTrack = new Button();
 				this.onTrack.nameList.add(this.onTrackName);
-				this.onTrack.scrollRect = new Rectangle();
 				this.onTrack.label = "";
 				this.onTrack.keepDownStateOnRollOut = true;
 				this.addChild(this.onTrack);
@@ -1065,12 +1083,18 @@ package feathers.controls
 			const factory:Function = this._labelFactory != null ? this._labelFactory : FeathersControl.defaultTextRendererFactory;
 			this.offTextRenderer = ITextRenderer(factory());
 			this.offTextRenderer.nameList.add(this.offLabelName);
-			IDisplayObjectWithScrollRect(this.offTextRenderer).scrollRect = new Rectangle();
+			if(this.offTextRenderer is FeathersControl)
+			{
+				FeathersControl(this.offTextRenderer).clipRect = new Rectangle();
+			}
 			this.addChildAt(DisplayObject(this.offTextRenderer), index);
 
 			this.onTextRenderer = ITextRenderer(factory());
 			this.onTextRenderer.nameList.add(this.onLabelName);
-			IDisplayObjectWithScrollRect(this.onTextRenderer).scrollRect = new Rectangle();
+			if(this.onTextRenderer is FeathersControl)
+			{
+				FeathersControl(this.onTextRenderer).clipRect = new Rectangle();
+			}
 			this.addChildAt(DisplayObject(this.onTextRenderer), index);
 		}
 
@@ -1258,20 +1282,24 @@ package feathers.controls
 				labelHeight = Math.max(this.onTextRenderer.baseline, this.offTextRenderer.baseline);
 			}
 
-			var onScrollRect:Rectangle = IDisplayObjectWithScrollRect(this.onTextRenderer).scrollRect;
-			onScrollRect.width = maxLabelWidth;
-			onScrollRect.height = totalLabelHeight;
-			IDisplayObjectWithScrollRect(this.onTextRenderer).scrollRect = onScrollRect;
+			if(this.onTextRenderer is FeathersControl)
+			{
+				var clipRect:Rectangle = FeathersControl(this.onTextRenderer).clipRect;
+				clipRect.width = maxLabelWidth;
+				clipRect.height = totalLabelHeight;
+				FeathersControl(this.onTextRenderer).clipRect = clipRect;
+			}
 
-			this.onTextRenderer.x = this._paddingLeft;
 			this.onTextRenderer.y = (this.actualHeight - labelHeight) / 2;
 
-			var offScrollRect:Rectangle = IDisplayObjectWithScrollRect(this.offTextRenderer).scrollRect;
-			offScrollRect.width = maxLabelWidth;
-			offScrollRect.height = totalLabelHeight;
-			IDisplayObjectWithScrollRect(this.offTextRenderer).scrollRect = offScrollRect;
+			if(this.offTextRenderer is FeathersControl)
+			{
+				clipRect = FeathersControl(this.offTextRenderer).clipRect;
+				clipRect.width = maxLabelWidth;
+				clipRect.height = totalLabelHeight;
+				FeathersControl(this.offTextRenderer).clipRect = clipRect;
+			}
 
-			this.offTextRenderer.x = this.actualWidth - this._paddingRight - maxLabelWidth;
 			this.offTextRenderer.y = (this.actualHeight - labelHeight) / 2;
 		}
 
@@ -1283,23 +1311,29 @@ package feathers.controls
 			const maxLabelWidth:Number = Math.max(0, this.actualWidth - this.thumb.width - this._paddingLeft - this._paddingRight);
 			const thumbOffset:Number = this.thumb.x - this._paddingLeft;
 
-			const displayOnLabelRenderer:IDisplayObjectWithScrollRect = IDisplayObjectWithScrollRect(this.onTextRenderer);
-			const displayOffLabelRenderer:IDisplayObjectWithScrollRect = IDisplayObjectWithScrollRect(this.offTextRenderer);
-			var currentScrollRect:Rectangle = displayOnLabelRenderer.scrollRect;
-			currentScrollRect.x = maxLabelWidth - thumbOffset - (maxLabelWidth - DisplayObject(displayOnLabelRenderer).width) / 2;
-			displayOnLabelRenderer.scrollRect = currentScrollRect;
-
-			currentScrollRect = displayOffLabelRenderer.scrollRect;
-			currentScrollRect.x = -thumbOffset - (maxLabelWidth - DisplayObject(displayOffLabelRenderer).width) / 2;
-			displayOffLabelRenderer.scrollRect = currentScrollRect;
-
-			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_SCROLL)
+			var onScrollOffset:Number = maxLabelWidth - thumbOffset - (maxLabelWidth - this.onTextRenderer.width) / 2;
+			if(this.onTextRenderer is FeathersControl)
 			{
-				this.layoutTrackWithScrollRect();
+				const displayOnLabelRenderer:FeathersControl = FeathersControl(this.onTextRenderer);
+				var currentClipRect:Rectangle = displayOnLabelRenderer.clipRect;
+				currentClipRect.x = onScrollOffset
+				displayOnLabelRenderer.clipRect = currentClipRect;
 			}
-			else if(this._trackLayoutMode == TRACK_LAYOUT_MODE_STRETCH)
+			this.onTextRenderer.x = this._paddingLeft - onScrollOffset;
+
+			var offScrollOffset:Number = -thumbOffset - (maxLabelWidth - this.offTextRenderer.width) / 2;
+			if(this.offTextRenderer is FeathersControl)
 			{
-				this.layoutTrackWithStretch();
+				const displayOffLabelRenderer:FeathersControl = FeathersControl(this.offTextRenderer);
+				currentClipRect = displayOffLabelRenderer.clipRect;
+				currentClipRect.x = offScrollOffset
+				displayOffLabelRenderer.clipRect = currentClipRect;
+			}
+			this.offTextRenderer.x = this.actualWidth - this._paddingRight - maxLabelWidth - offScrollOffset;
+
+			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_ON_OFF)
+			{
+				this.layoutTrackWithOnOff();
 			}
 			else
 			{
@@ -1310,17 +1344,8 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutTrackWithStretch():void
+		protected function layoutTrackWithOnOff():void
 		{
-			if(this.onTrack.scrollRect)
-			{
-				this.onTrack.scrollRect = null;
-			}
-			if(this.offTrack.scrollRect)
-			{
-				this.offTrack.scrollRect = null;
-			}
-
 			this.onTrack.x = 0;
 			this.onTrack.y = 0;
 			this.onTrack.width = this.thumb.x + this.thumb.width / 2;
@@ -1335,54 +1360,8 @@ package feathers.controls
 		/**
 		 * @private
 		 */
-		protected function layoutTrackWithScrollRect():void
-		{
-			//we want to scale the skins to match the height of the slider,
-			//but we also want to keep the original aspect ratio.
-			const onTrackScaledWidth:Number = this.onTrackSkinOriginalWidth * this.actualHeight / this.onTrackSkinOriginalHeight;
-			const offTrackScaledWidth:Number = this.offTrackSkinOriginalWidth * this.actualHeight / this.offTrackSkinOriginalHeight;
-			this.onTrack.width = onTrackScaledWidth;
-			this.onTrack.height = this.actualHeight;
-			this.offTrack.width = offTrackScaledWidth;
-			this.offTrack.height = this.actualHeight;
-
-			var middleOfThumb:Number = this.thumb.x + this.thumb.width / 2;
-			this.onTrack.x = 0;
-			this.onTrack.y = 0;
-			var currentScrollRect:Rectangle = this.onTrack.scrollRect;
-			if(!currentScrollRect)
-			{
-				currentScrollRect = new Rectangle();
-			}
-			currentScrollRect.x = 0;
-			currentScrollRect.y = 0;
-			currentScrollRect.width = Math.min(onTrackScaledWidth, middleOfThumb);
-			currentScrollRect.height = this.actualHeight;
-			this.onTrack.scrollRect = currentScrollRect;
-
-			this.offTrack.x = Math.max(this.actualWidth - offTrackScaledWidth, middleOfThumb);
-			this.offTrack.y = 0;
-			currentScrollRect = this.offTrack.scrollRect;
-			if(!currentScrollRect)
-			{
-				currentScrollRect = new Rectangle();
-			}
-			currentScrollRect.width = Math.min(offTrackScaledWidth, this.actualWidth - middleOfThumb);
-			currentScrollRect.height = this.actualHeight;
-			currentScrollRect.x = Math.max(0, offTrackScaledWidth - currentScrollRect.width);
-			currentScrollRect.y = 0;
-			this.offTrack.scrollRect = currentScrollRect;
-		}
-
-		/**
-		 * @private
-		 */
 		protected function layoutTrackWithSingle():void
 		{
-			if(this.onTrack.scrollRect)
-			{
-				this.onTrack.scrollRect = null;
-			}
 			this.onTrack.x = 0;
 			this.onTrack.y = 0;
 			this.onTrack.width = this.actualWidth;
@@ -1394,7 +1373,7 @@ package feathers.controls
 		 */
 		protected function createOrDestroyOffTrackIfNeeded():void
 		{
-			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_SCROLL || this._trackLayoutMode == TRACK_LAYOUT_MODE_STRETCH)
+			if(this._trackLayoutMode == TRACK_LAYOUT_MODE_ON_OFF)
 			{
 				if(!this.offTrack)
 				{
@@ -1444,7 +1423,7 @@ package feathers.controls
 				return;
 			}
 
-			const touches:Vector.<Touch> = event.getTouches(this);
+			const touches:Vector.<Touch> = event.getTouches(this, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				return;
@@ -1461,6 +1440,7 @@ package feathers.controls
 			}
 			if(!touch || touch.phase != TouchPhase.ENDED)
 			{
+				HELPER_TOUCHES_VECTOR.length = 0;
 				return;
 			}
 
@@ -1471,6 +1451,7 @@ package feathers.controls
 				this.isSelected = !this._isSelected;
 				this._isSelectionChangedByUser = true;
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**
@@ -1482,7 +1463,7 @@ package feathers.controls
 			{
 				return;
 			}
-			const touches:Vector.<Touch> = event.getTouches(this.thumb);
+			const touches:Vector.<Touch> = event.getTouches(this.thumb, null, HELPER_TOUCHES_VECTOR);
 			if(touches.length == 0)
 			{
 				return;
@@ -1500,6 +1481,7 @@ package feathers.controls
 				}
 				if(!touch)
 				{
+					HELPER_TOUCHES_VECTOR.length = 0;
 					return;
 				}
 				touch.getLocation(this, HELPER_POINT);
@@ -1510,7 +1492,6 @@ package feathers.controls
 					const xPosition:Number = Math.min(Math.max(this._paddingLeft, this._thumbStartX + xOffset), this._paddingLeft + trackScrollableWidth);
 					this.thumb.x = xPosition;
 					this.layout();
-					return;
 				}
 				else if(touch.phase == TouchPhase.ENDED)
 				{
@@ -1522,7 +1503,6 @@ package feathers.controls
 						this._isSelectionChangedByUser = true;
 						this._ignoreTapHandler = true;
 					}
-					return;
 				}
 			}
 			else
@@ -1535,10 +1515,11 @@ package feathers.controls
 						this._touchPointID = touch.id;
 						this._thumbStartX = this.thumb.x;
 						this._touchStartX = HELPER_POINT.x;
-						return;
+						break;
 					}
 				}
 			}
+			HELPER_TOUCHES_VECTOR.length = 0;
 		}
 
 		/**

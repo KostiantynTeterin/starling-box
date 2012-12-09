@@ -62,6 +62,26 @@ package feathers.controls
 	 */
 	[Event(name="scrollComplete",type="starling.events.Event")]
 
+	/**
+	 * Dispatched when an item renderer is added to the list. When the layout is
+	 * virtualized, item renderers may not exist for every item in the data
+	 * provider. This event can be used to track which items currently have
+	 * renderers.
+	 *
+	 * @eventType feathers.events.FeathersEventType.RENDERER_ADD
+	 */
+	[Event(name="rendererAdd",type="starling.events.Event")]
+
+	/**
+	 * Dispatched when an item renderer is removed from the list. When the layout is
+	 * virtualized, item renderers may not exist for every item in the data
+	 * provider. This event can be used to track which items currently have
+	 * renderers.
+	 *
+	 * @eventType feathers.events.FeathersEventType.RENDERER_REMOVE
+	 */
+	[Event(name="rendererRemove",type="starling.events.Event")]
+
 	[DefaultProperty("dataProvider")]
 	/**
 	 * Displays a list of items divided into groups or sections. Takes a
@@ -737,6 +757,7 @@ package feathers.controls
 		/**
 		 * The class used to instantiate item renderers.
 		 *
+		 * @see feathers.controls.renderer.IGroupedListItemRenderer
 		 * @see #itemRendererFactory
 		 * @see #firstItemRendererType
 		 * @see #firstItemRendererFactory
@@ -780,6 +801,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListItemRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListItemRenderer
 		 * @see #itemRendererType
 		 * @see #firstItemRendererType
 		 * @see #firstItemRendererFactory
@@ -885,6 +907,7 @@ package feathers.controls
 		 * you can use the following syntax:</p>
 		 * <pre>list.scrollerProperties.&#64;verticalScrollBarProperties.&#64;thumbProperties.defaultSkin = new Image(texture);</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListItemRenderer
 		 * @see #itemRendererFactory
 		 */
 		public function get itemRendererProperties():Object
@@ -939,6 +962,7 @@ package feathers.controls
 		 * The class used to instantiate the item renderer for the first item in
 		 * a group.
 		 *
+		 * @see feathers.controls.renderer.IGroupedListItemRenderer
 		 * @see #firstItemRendererFactory
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -983,6 +1007,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListItemRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListItemRenderer
 		 * @see #firstItemRendererType
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -1054,6 +1079,7 @@ package feathers.controls
 		 * The class used to instantiate the item renderer for the last item in
 		 * a group.
 		 *
+		 * @see feathers.controls.renderer.IGroupedListItemRenderer
 		 * @see #lastItemRendererFactory
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -1098,6 +1124,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListItemRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListItemRenderer
 		 * @see #lastItemRendererType
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -1169,6 +1196,7 @@ package feathers.controls
 		 * The class used to instantiate the item renderer for an item in a
 		 * group with no other items.
 		 *
+		 * @see feathers.controls.renderer.IGroupedListItemRenderer
 		 * @see #singleItemRendererFactory
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -1213,6 +1241,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListItemRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListItemRenderer
 		 * @see #singleItemRendererType
 		 * @see #itemRendererType
 		 * @see #itemRendererFactory
@@ -1284,6 +1313,7 @@ package feathers.controls
 		/**
 		 * The class used to instantiate header renderers.
 		 *
+		 * @see feathers.controls.renderers.IGroupedListHeaderOrFooterRenderer
 		 * @see #headerRendererFactory
 		 */
 		public function get headerRendererType():Class
@@ -1322,6 +1352,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListHeaderOrFooterRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListHeaderOrFooterRenderer
 		 * @see #headerRendererType
 		 */
 		public function get headerRendererFactory():Function
@@ -1473,6 +1504,7 @@ package feathers.controls
 		/**
 		 * The class used to instantiate footer renderers.
 		 *
+		 * @see feathers.controls.renderers.IGroupedListHeaderOrFooterRenderer
 		 * @see #footerRendererFactory
 		 */
 		public function get footerRendererType():Class
@@ -1511,6 +1543,7 @@ package feathers.controls
 		 *
 		 * <pre>function():IGroupedListHeaderOrFooterRenderer</pre>
 		 *
+		 * @see feathers.controls.renderers.IGroupedListHeaderOrFooterRenderer
 		 * @see #footerRendererType
 		 */
 		public function get footerRendererFactory():Function
