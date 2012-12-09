@@ -1,5 +1,7 @@
 package screens
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import KeosTactics.Config;
 	import KeosTactics.products.structures.IPiege;
 	import KeosTactics.ui.FenetrePiege;
@@ -60,6 +62,11 @@ package screens
 			SB.nativeStage.addChild(arena.debug);
 			
 			addChild( new FenetrePiege );
+			
+			var data:BitmapData = new BitmapData(480, 480, true, 0x5f3759df);
+			var bmp:Bitmap = new Bitmap( data );
+			SB.nativeStage.addChild( bmp );
+			
 			
 			/*
 			// creation des pieges du joueur 1

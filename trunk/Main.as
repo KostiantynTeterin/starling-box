@@ -4,6 +4,8 @@ package
 	import starling.display.Sprite;
 	import starlingBox.SB;
 	import screens.*;	
+	import KeoS.Config;
+	import starlingBox.ConfigXML;
 	
 	/*
 	 * revoir la gestion du viewport
@@ -44,14 +46,14 @@ package
 			Config.LANG = SB.flashvar("lang", "FR");
 			ConfigXML.instance.loadDatas( '/lockpickers/assets/lang/'+Config.LANG+'.xml' );
 			ConfigXML.instance.addEventListener(Event.COMPLETE, _onDataComplete, false, 0, true);
-			ConfigXML.instance.addEventListener(Event.CLOSE, _onDataError, false, 0, true);			
+			ConfigXML.instance.addEventListener(Event.CLOSE, _onDataError, false, 0, true);						
 			*/
 		}
 		
 		private function _onDataComplete(e:Event):void 
 		{
 			e.stopImmediatePropagation();
-			//SB.screen	= new KeoS_TitleScreen;
+			SB.screen	= new KeoS_TitleScreen;
 		}
 		
 		private function _onDataError(e:Event):void 

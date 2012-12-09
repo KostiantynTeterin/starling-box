@@ -61,7 +61,7 @@ package screens
 			_panelEntree = new PanelEntree();
 			_panelEntree.visible = false;			
 			
-			SB.addConsole(this);						
+			SB.addConsole();						
 		}		
 		
 		override public function destroy():void
