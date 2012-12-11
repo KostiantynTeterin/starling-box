@@ -1,7 +1,7 @@
 ﻿package starlingBox.game.utils 
 {
 	
-	public interface IColor 
+	public interface OLDIColor 
 	{
 		/**
 		 * 24bit Color (0xRRGGBB)

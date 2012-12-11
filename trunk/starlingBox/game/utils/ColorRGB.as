@@ -1,7 +1,7 @@
 ﻿package starlingBox.game.utils 
 {
 	
-	public class ColorRGB implements IColor
+	public class OLDColorRGB implements IColor
 	{	
 		private var _r:uint;
 		private var _g:uint;
@@ -16,7 +16,7 @@
 		 * @param	b_	Blue [0,255]
 		 * @param	a_	Alpha [0,1]
 		 */
-		public function ColorRGB( r:uint=0, g:uint=0, b:uint=0, a:Number=1.0 )
+		public function OLDColorRGB( r:uint=0, g:uint=0, b:uint=0, a:Number=1.0 )
 		{
 			rgb( r, g, b );
 			_a = a;
