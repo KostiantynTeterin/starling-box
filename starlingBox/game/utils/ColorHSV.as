@@ -1,7 +1,7 @@
 ﻿package starlingBox.game.utils 
 {
 	
-	public class ColorHSV implements IColor
+	public class OLDColorHSV implements IColor
 	{
 		
 		private var _h:Number;	//Hue
@@ -21,7 +21,7 @@
 		 * @param	v_	Brightness [0.0,1.0]
 		 * @param	a	Alpha [0.0,1.0]
 		 */
-		public function ColorHSV( h_:Number=0.0, s_:Number = 1.0, v_:Number = 1.0, a:Number = 1.0  ) 
+		public function OLDColorHSV( h_:Number=0.0, s_:Number = 1.0, v_:Number = 1.0, a:Number = 1.0  ) 
 		{
 			hsv( h_, s_, v_ );
 			_a = a;
