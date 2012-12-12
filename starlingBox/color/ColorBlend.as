@@ -28,7 +28,7 @@
 // contact : face(at)nutsu.com
 //
 
-package frocessing.color {
+package starlingBox.color {
 	
 	/**
 	 * 2つの色をブレンドするメソッドを提供します.

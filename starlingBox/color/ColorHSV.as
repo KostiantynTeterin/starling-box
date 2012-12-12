@@ -28,7 +28,7 @@
 // contact : face(at)nutsu.com
 //
 
-package frocessing.color {
+package starlingBox.color {
 	
 	/**
 	 * 色相（Hue） 彩度(Saturation) 明度(Value・Brightness) で色を定義するクラスです.

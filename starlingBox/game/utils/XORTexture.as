@@ -1,9 +1,9 @@
 ﻿package starlingBox.game.utils
 {
 	import flash.display.BitmapData;
+	import starlingBox.color.ColorRGB;
 	
-	public class XORTexture extends BitmapData
-	{
+	public class XORTexture extends BitmapData	{
 		
 		public function XORTexture(width:int, height:int, coul:uint) 
 		{

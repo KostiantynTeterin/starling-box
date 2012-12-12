@@ -28,7 +28,7 @@
 // contact : face(at)nutsu.com
 //
 
-package frocessing.color {
+package starlingBox.color {
 	
 	/**
 	 * シアン（Cyan） マゼンタ(Magenta) イエロー(Yellow) による減法混色を定義するクラスです.
