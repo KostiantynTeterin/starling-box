@@ -28,7 +28,7 @@
 // contact : face(at)nutsu.com
 //
 
-package frocessing.color {
+package starlingBox.color {
 	
 	/**
 	 * 赤(Red) 緑(Green) 青(Blue) で色を定義するクラスです.

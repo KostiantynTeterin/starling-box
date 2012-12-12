@@ -7,47 +7,112 @@ package KeosTactics.ui
 	
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
+	import feathers.controls.Header;
 	import feathers.controls.Label;
+	import feathers.controls.Screen;
+	import feathers.controls.TabBar;
+	import feathers.controls.text.TextFieldTextRenderer;
+	import feathers.data.ListCollection;
 	import feathers.themes.MetalWorksMobileTheme;
+	import flash.text.TextFormat;
 	
 	import starling.display.Sprite;
+	import starling.display.DisplayObject;
 	import starling.events.Event;
 	
-	public class FenetrePiege extends Sprite
+	public class FenetrePiege extends Screen
 	{
 		protected var theme:MetalWorksMobileTheme;
-		protected var button:Button;
+		
+		private var _header:Header;
+		private var _tabBar:TabBar;
+		private var _label:Label;
+		private var _desc:TextFieldTextRenderer;
+		
+		// un bouton valider 
+		// une image du piege
+		// de la mise en page
 		
 		public function FenetrePiege()
 		{
-			this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			trace("#1");			
 		}
 		
-		protected function addedToStageHandler(event:Event):void
+		override protected function initialize():void
 		{
-			this.removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			this.theme = new MetalWorksMobileTheme(this.stage);
+			trace("#2");
+			// -- theme
+			theme = new MetalWorksMobileTheme(stage);			
+			setSize(640, 480);
 			
-			this.button = new Button();
-			this.button.label = "Click Me";
+			// -- tabs
+			_tabBar = new TabBar();
+			_tabBar.dataProvider = new ListCollection(
+			[
+				{ label: "Trou" },
+				{ label: "Mur" },
+				{ label: "Mine" }
+			]);			
+			addChild(_tabBar);
+			_tabBar.addEventListener(Event.CHANGE, tabBar_changeHandler);
 			
-			this.button.addEventListener(Event.TRIGGERED, button_triggeredHandler);
+			// -- label
+			_label = new Label();
+			_label.setSize(100,20);
+			_label.text = "selectedIndex: " + _tabBar.selectedIndex.toString();
+			addChild( DisplayObject(_label) );			
 			
-			this.addChild(this.button);
+			// --
+			var fmt:TextFormat = new TextFormat;
+			fmt.color = 0xFFFFFF;
+			fmt.size = 18;
+			_desc = new TextFieldTextRenderer();
+			_desc.textFormat = fmt;
+			_desc.wordWrap = true;
+			_desc.setSize( 300, 200 ); 
+			_desc.text  = "* * *";
+			addChild(_desc);
 			
-			this.button.validate();
-			
-			this.button.x = (this.stage.stageWidth - this.button.width) / 2;
-			this.button.y = (this.stage.stageHeight - this.button.height) / 2;
+			// -- header
+			_header = new Header();
+			_header.title = "Tab Bar";
+			addChild(this._header);			
 		}
 		
-		protected function button_triggeredHandler(event:Event):void
+		override protected function draw():void
 		{
-			const label:Label = new Label();
-			label.text = "Hi, I'm Feathers!\nHave a nice day.";
-			Callout.show(label, this.button);
+			trace("#3", this.actualWidth);
+			this._header.width = this.actualWidth;
+			this._header.validate();
+
+			this._tabBar.width = this.actualWidth;
+			this._tabBar.validate();
+			this._tabBar.y = this.actualHeight - this._tabBar.height;
+
+			this._label.x = (this.actualWidth - this._label.width) / 2;
+			this._label.y = 100; // this._header.height + (this.actualHeight - this._header.height - this._tabBar.height - this._label.height) / 2;
+			
+			this._desc.x = (actualWidth - _label.width) / 2;
+			this._desc.y = _label.y + _label.height + 50; 
+			
+		}		
+		
+		private function tabBar_changeHandler(event:Event):void
+		{
+			trace("#4");
+			_label.text = "selectedIndex: " + _tabBar.selectedIndex.toString();
+			
+			if (_tabBar.selectedIndex == 0) {
+				_desc.text = "Le trou est le piege qui a la plus grande priorité (il bat tous les autres pieges), il bloque le passage mais laisse passer les tirs";
+			}else if (_tabBar.selectedIndex == 1) {
+				_desc.text = "Le mur bloque le passage et le champ de vision des snipers";
+			}else {
+				_desc.text = "La mine est invisible aux yeux de votre adversaire.";
+			}
+			
+			
 		}
-	
+
 	}
 
 }

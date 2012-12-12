@@ -59,14 +59,9 @@ package screens
 			arena.type = Config.ARENA_4_6;
 			arena.x = 120;
 			arena.y = 150;
-			SB.nativeStage.addChild(arena.debug);
+			//SB.nativeStage.addChild(arena.debug);
 			
 			addChild( new FenetrePiege );
-			
-			var data:BitmapData = new BitmapData(480, 480, true, 0x5f3759df);
-			var bmp:Bitmap = new Bitmap( data );
-			SB.nativeStage.addChild( bmp );
-			
 			
 			/*
 			// creation des pieges du joueur 1
