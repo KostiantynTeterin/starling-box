@@ -3,7 +3,6 @@ package KeosTactics.states
 	import starlingBox.game.fsm.IState;
 	import starlingBox.SB;
 	import starlingBox.game.fsm.IState;
-	import starlingBox.SB;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;		
@@ -28,7 +27,7 @@ package KeosTactics.states
 			_textfield.autoSize = TextFieldAutoSize.LEFT;
 			_textfield.defaultTextFormat = fmt;
 			
-			_textfield.text = "-- PIEGE --";				
+			_textfield.text = "-- PHASE PIEGE --";				
 		}
 		
 		public function enter():void

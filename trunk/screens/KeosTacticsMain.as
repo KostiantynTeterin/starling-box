@@ -1,29 +1,24 @@
 package screens
 {
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import KeosTactics.Config;
-	import KeosTactics.products.structures.IPiege;
-	import KeosTactics.ui.FenetrePiege;
-	import starling.display.Sprite;
-	import flash.display.Shape;
+	import com.furusystems.dconsole2.DConsole;
+	import feathers.controls.ScreenNavigator;
+	import feathers.controls.ScreenNavigatorItem;
+	import feathers.motion.transitions.ScreenSlidingStackTransitionManager;
+	import feathers.themes.MetalWorksMobileTheme;
 	import KeosTactics.Background;
+	import KeosTactics.board.Arena;
+	import KeosTactics.Config;
 	import KeosTactics.factory.StangFactory;
 	import KeosTactics.GameManager;
 	import KeosTactics.players.Player;
-	import KeosTactics.products.units.IUnit;
-	import KeosTactics.products.units.Sniper;
-	import KeosTactics.products.units.Tank;
-	import KeosTactics.products.units.Scout;
+	import KeosTactics.players.Players;
+	import KeosTactics.ui.FenetrePiege;
+	import KeosTactics.ui.FenetreDeploiement;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starlingBox.SB;
 	import starlingBox.Screen;
-	import KeosTactics.players.Players;
-	import KeosTactics.products.units.AbstractUnit;
-	import KeosTactics.board.Arena;
-	import com.furusystems.dconsole2.DConsole;
 	
 	/**
 	 * ...
@@ -35,9 +30,16 @@ package screens
 	 * jeu
 	 * fin jeu
 	 *
+	 * resolution : 960 * 640
+	 * 
+	 * 
 	 */
-	public class KeosTacticsMain extends Screen
+	public class KeosTacticsMain extends starlingBox.Screen
 	{
+		private var _theme:MetalWorksMobileTheme;
+		private var _navigator:ScreenNavigator;
+		private var _transitionManager:ScreenSlidingStackTransitionManager;
+		
 		// [ECRAN DE JEU]
 		public function KeosTacticsMain()
 		{
@@ -61,7 +63,18 @@ package screens
 			arena.y = 150;
 			//SB.nativeStage.addChild(arena.debug);
 			
-			addChild( new FenetrePiege );
+			_theme = new MetalWorksMobileTheme(this);
+			
+			this._navigator = new ScreenNavigator();
+			this.addChild(this._navigator);
+			
+			this._navigator.addScreen( GameManager.PHASE_PIEGE, new ScreenNavigatorItem(FenetrePiege ,{ complete: GameManager.PHASE_DEPLOIEMENT} ) );
+			this._navigator.addScreen( GameManager.PHASE_DEPLOIEMENT, new ScreenNavigatorItem(FenetreDeploiement ,{ complete: GameManager.PHASE_PIEGE} ) );
+			
+			this._navigator.showScreen(GameManager.PHASE_PIEGE);
+			this._transitionManager = new ScreenSlidingStackTransitionManager(this._navigator);
+			this._transitionManager.duration = 0.8;
+			
 			
 			/*
 			// creation des pieges du joueur 1
@@ -102,6 +115,7 @@ package screens
 				}				
 			}
 			*/
+			
 			
 		}
 		

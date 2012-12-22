@@ -1,6 +1,10 @@
 package KeosTactics.board
 {
 	import flash.display.Shape;
+	import KeosTactics.products.structures.Mine;
+	import KeosTactics.products.structures.Mur;
+	import KeosTactics.products.structures.Trou;
+	import KeosTactics.products.units.AbstractUnit;
 	import starling.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
@@ -162,6 +166,31 @@ package KeosTactics.board
 		{
 			debug.y = value;
 			_y = value;
+		}
+		
+		public function dump():String
+		{
+			var str:String = "";
+			for (var row:Number = 0; row < _lignes ; row++)			
+			{
+				for (var col:Number = 0; col < _colonnes ; col++)
+				{
+					if (getValeur(col, row) is Mur) {
+						str += "W";
+					}else if (getValeur(col, row) is Trou) {
+						str += "0";
+					}else if (getValeur(col, row) is Mine) {
+						str += "X";
+					}else if (getValeur(col, row) is AbstractUnit) {
+						str += "I";
+					}else{
+						str += "-";
+					}
+				}
+				str += "\n";
+			}			
+			
+			return str;
 		}
 	
 	}

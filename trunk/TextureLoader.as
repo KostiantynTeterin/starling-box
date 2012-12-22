@@ -29,11 +29,11 @@ package
 			return _instance;
 		}
 		
-		public function TextureLoader(p_key:SingletonLock):void
+		public function TextureLoader(singletonLock:SingletonLock):void
 		{
-			if (p_key == null)
+			if (singletonLock == null)
 			{
-				throw new Error("This is a Singleton. Use TextureLoader.instance");
+				throw new Error("Singleton");
 			}
 		}
 		

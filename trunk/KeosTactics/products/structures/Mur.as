@@ -29,7 +29,7 @@ package KeosTactics.products.structures
 		
 		override public function speech():void
 		{
-			trace(this, _owner.id,"KABOOOOM !");
+			trace(this, _owner.id,"You shall not pass !");
 		}			
 		
 	}
