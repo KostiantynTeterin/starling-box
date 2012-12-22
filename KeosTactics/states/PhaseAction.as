@@ -26,7 +26,7 @@ package KeosTactics.states
 			_textfield.autoSize = TextFieldAutoSize.LEFT;
 			_textfield.defaultTextFormat = fmt;
 			
-			_textfield.text = "-- ACTION --";
+			_textfield.text = "-- PHASE ACTION --";
 		}
 		
 		public function enter():void

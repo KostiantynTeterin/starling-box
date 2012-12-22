@@ -70,7 +70,7 @@ package feathers.display
 		private var _hitArea:Rectangle;
 
 		private var _batch:QuadBatch;
-		private var _image:Image;
+		private var _image:starling.display.Image;
 
 		private var _originalImageWidth:Number;
 		private var _originalImageHeight:Number;
